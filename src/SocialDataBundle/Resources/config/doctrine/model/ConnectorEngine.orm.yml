@@ -1,0 +1,22 @@
+SocialDataBundle\Model\ConnectorEngine:
+    type: entity
+    table: social_data_connector_engine
+    fields:
+        id:
+            type: integer
+            column: id
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            column: '`name`'
+            nullable: false
+            type: string
+            unique: true
+        enabled:
+            column: enabled
+            type: boolean
+        configuration:
+            column: configuration
+            type: object
+            nullable: true

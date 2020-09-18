@@ -1,0 +1,12 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Repository\ConnectorEngineRepositoryInterface: '@SocialDataBundle\Repository\ConnectorEngineRepository'
+    SocialDataBundle\Repository\ConnectorEngineRepository: ~
+
+    SocialDataBundle\Repository\LogRepositoryInterface: '@SocialDataBundle\Repository\LogRepository'
+    SocialDataBundle\Repository\LogRepository: ~

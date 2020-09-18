@@ -1,0 +1,42 @@
+{
+    "name": "dachcom-digital/social-data",
+    "type": "pimcore-bundle",
+    "license": "GPL-3.0-or-later",
+    "description": "Pimcore Social Data Bundle",
+    "keywords": ["pimcore", "social", "feed", "social wall", "facebook", "instagram"],
+    "homepage": "https://github.com/dachcom-digital/pimcore-social-data",
+    "authors": [
+        {
+            "name": "DACHCOM.DIGITAL Stefan Hagspiel",
+            "email": "shagspiel@dachcom.ch",
+            "homepage": "http://www.dachcom.com/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SocialDataBundle\\": "src/SocialDataBundle"
+        }
+    },
+    "extra": {
+        "pimcore": {
+            "bundles": [
+                "SocialDataBundle\\SocialDataBundle"
+            ]
+        }
+    },
+    "require": {
+        "google/apiclient": "^2.0",
+        "pimcore/pimcore": "^6.0.0",
+        "doctrine/orm": "^2.7"
+    },
+    "require-dev": {
+        "codeception/codeception": "~2.4.0",
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-symfony": "^0.12",
+        "symplify/easy-coding-standard": "^5.4"
+    },
+    "suggest": {
+        "dachcom-digital/schema": "^1.0"
+    }
+}

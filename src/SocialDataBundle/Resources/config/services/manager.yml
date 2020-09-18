@@ -1,0 +1,14 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Manager\ConnectorManagerInterface: '@SocialDataBundle\Manager\ConnectorManager'
+    SocialDataBundle\Manager\ConnectorManager:
+        arguments:
+            $availableConnectors: '%social_data.connectors.available%'
+
+    SocialDataBundle\Manager\LogManagerInterface: '@SocialDataBundle\Manager\LogManager'
+    SocialDataBundle\Manager\LogManager: ~

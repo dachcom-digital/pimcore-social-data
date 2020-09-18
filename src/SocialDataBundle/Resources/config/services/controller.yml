@@ -1,0 +1,18 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    SocialDataBundle\Controller\Admin\SettingsController:
+        calls:
+            - [setContainer, ['@service_container']]
+
+    SocialDataBundle\Controller\Admin\LogController:
+        calls:
+            - [setContainer, ['@service_container']]
+
+    SocialDataBundle\Controller\Admin\FacebookController:
+        calls:
+            - [setContainer, ['@service_container']]

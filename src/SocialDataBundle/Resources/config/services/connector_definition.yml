@@ -1,0 +1,10 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Connector\Facebook\ConnectorDefinition:
+        tags:
+            - {name: social_data.connector_definition, identifier: facebook}

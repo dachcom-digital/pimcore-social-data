@@ -1,0 +1,10 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    SocialDataBundle\Tool\Install:
+        arguments:
+            $bundle: "@=service('kernel').getBundle('SocialDataBundle')"

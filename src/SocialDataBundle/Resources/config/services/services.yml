@@ -1,0 +1,12 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Connector\ConnectorServiceInterface: '@SocialDataBundle\Connector\ConnectorService'
+    SocialDataBundle\Connector\ConnectorService: ~
+
+    SocialDataBundle\Service\EnvironmentServiceInterface: '@SocialDataBundle\Service\EnvironmentService'
+    SocialDataBundle\Service\EnvironmentService: ~

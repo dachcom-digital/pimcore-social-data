@@ -1,0 +1,38 @@
+# Admin Routes
+social_data_admin_settings_connectors:
+    path: /admin/social-data/settings/get-connectors
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::getConnectorsAction }
+
+social_data_admin_settings_data_class_health_check:
+    path: /admin/social-data/settings/data-class-health-check
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::dataClassHealthCheckAction }
+
+social_data_admin_settings_connector_install:
+    path: /admin/social-data/settings/install-connector/{connectorName}
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::installConnectorAction }
+
+social_data_admin_settings_connector_uninstall:
+    path: /admin/social-data/settings/uninstall-connector/{connectorName}
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::uninstallConnectorAction }
+
+social_data_admin_settings_change_connector_state:
+    path: /admin/social-data/settings/change-connector-type/{connectorName}/{stateType}/{flag}
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::changeConnectorStateAction }
+
+social_data_admin_settings_save_connector_configuration:
+    path: /admin/social-data/settings/save-connector-configuration/{connectorName}
+    methods: [POST]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::saveConnectorConfigurationAction }
+
+##
+## Connector Specific Routes
+##
+
+# Facebook
+social_data_connector_facebook_connect:
+    path: /admin/social-data/connector/facebook/connect
+    defaults: { _controller: SocialDataBundle\Controller\Admin\FacebookController::connectAction }
+
+social_data_connector_connect_check:
+    path: /admin/social-data/connector/facebook/check
+    defaults: { _controller: SocialDataBundle\Controller\Admin\FacebookController::checkAction }

@@ -1,0 +1,34 @@
+SocialDataBundle\Model\LogEntry:
+    type: entity
+    table: social_data_log
+    fields:
+        id:
+            type: integer
+            id: true
+            column: id
+            generator:
+                strategy: AUTO
+        objectId:
+            column: object_id
+            nullable: true
+            type: integer
+        type:
+            column: '`type`'
+            nullable: false
+            type: string
+        message:
+            column: message
+            nullable: false
+            type: text
+        creationDate:
+            column: creation_date
+            type: datetime
+            nullable: false
+    manyToOne:
+        connectorEngine:
+            targetEntity: SocialDataBundle\Model\ConnectorEngine
+            orphanRemoval: true
+            joinColumn:
+                name: connector
+                referencedColumnName: id
+                onDelete: CASCADE
