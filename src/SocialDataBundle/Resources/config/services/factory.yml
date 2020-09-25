@@ -1,0 +1,9 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Factory\SocialPostFactoryInterface: '@SocialDataBundle\Factory\SocialPostFactory'
+    SocialDataBundle\Factory\SocialPostFactory: ~

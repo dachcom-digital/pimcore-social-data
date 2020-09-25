@@ -42,41 +42,9 @@ class LogManager implements LogManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getForObject(int $objectId)
-    {
-        return $this->logRepository->findForObject($objectId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getForConnectorEngine(int $connectorEngineId, int $offset, int $limit)
     {
         return $this->logRepository->findForConnectorEngine($connectorEngineId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getForConnectorEngineAndObject(int $connectorEngineId, int $objectId, int $offset, int $limit)
-    {
-        return $this->logRepository->findForConnectorEngineAndObject($connectorEngineId, $objectId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteForConnectorEngineAndObject(int $connectorEngineId, int $objectId)
-    {
-        return $this->logRepository->deleteForConnectorEngineAndObject($connectorEngineId, $objectId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteForObject(int $objectId)
-    {
-        return $this->logRepository->deleteForObject($objectId);
     }
 
     /**

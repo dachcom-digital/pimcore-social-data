@@ -1,4 +1,13 @@
-# Admin Routes
+
+# Import Connector Specific Routes
+
+connector_facebook:
+    resource: '@SocialDataBundle/Resources/config/services/connector/facebook/routing.yml'
+
+######### Core #########
+
+# Admin Routes [Settings]
+
 social_data_admin_settings_connectors:
     path: /admin/social-data/settings/get-connectors
     defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::getConnectorsAction }
@@ -24,15 +33,29 @@ social_data_admin_settings_save_connector_configuration:
     methods: [POST]
     defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::saveConnectorConfigurationAction }
 
-##
-## Connector Specific Routes
-##
+# Admin Routes [Walls]
 
-# Facebook
-social_data_connector_facebook_connect:
-    path: /admin/social-data/connector/facebook/connect
-    defaults: { _controller: SocialDataBundle\Controller\Admin\FacebookController::connectAction }
+social_data_admin_walls_fetch_walls:
+    path: /admin/social-data/walls/fetch-walls
+    methods: [GET]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::fetchAllWallsAction }
 
-social_data_connector_connect_check:
-    path: /admin/social-data/connector/facebook/check
-    defaults: { _controller: SocialDataBundle\Controller\Admin\FacebookController::checkAction }
+social_data_admin_walls_fetch_wall:
+    path: /admin/social-data/walls/fetch-wall
+    methods: [GET]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::fetchWallAction }
+
+social_data_admin_walls_create_new_wall:
+    path: /admin/social-data/walls/add-wall
+    methods: [POST]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::addWallAction }
+
+social_data_admin_walls_delete_wall:
+    path: /admin/social-data/walls/delete-wall/{wallId}
+    methods: [POST]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::deleteWallAction }
+
+social_data_admin_walls_save_wall:
+    path: /admin/social-data/walls/save-wall/{wallId}
+    methods: [POST]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::saveWallAction }

@@ -17,6 +17,16 @@ interface ConnectorDefinitionInterface
     public function getConnectorEngine();
 
     /**
+     * @param SocialPostBuilderInterface $builder
+     */
+    public function setSocialPostBuilder(SocialPostBuilderInterface $builder);
+
+    /**
+     * @return SocialPostBuilderInterface
+     */
+    public function getSocialPostBuilder();
+
+    /**
      * @param array $configuration
      *
      * @throws \Exception
@@ -36,19 +46,16 @@ interface ConnectorDefinitionInterface
     public function isOnline();
 
     /**
+     * @return void
      * @throws \Exception
      */
     public function beforeEnable();
 
     /**
+     * @return void
      * @throws \Exception
      */
     public function beforeDisable();
-
-    /**
-     * @return bool
-     */
-    public function allowMultipleContextItems();
 
     /**
      * @return bool
@@ -60,8 +67,16 @@ interface ConnectorDefinitionInterface
      */
     public function isConnected();
 
+    /**
+     * @return void
+     * @throws \Exception
+     */
     public function connect();
 
+    /**
+     * @return void
+     * @throws \Exception
+     */
     public function disconnect();
 
     /**
@@ -85,14 +100,12 @@ interface ConnectorDefinitionInterface
     public function getEngineConfigurationClass();
 
     /**
-     * @return array|null
+     * @return string
      */
-    public function getEngineConfiguration();
+    public function getFeedConfigurationClass();
 
     /**
-     * @param array $data
-     *
      * @return ConnectorEngineConfigurationInterface|null
      */
-    public function mapEngineConfigurationFromBackend(array $data);
+    public function getEngineConfiguration();
 }

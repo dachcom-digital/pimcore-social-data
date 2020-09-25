@@ -23,7 +23,7 @@ SocialData.SettingsPanel = Class.create({
             id: 'social_data_bundle_settings',
             title: t('social_data.settings.configuration'),
             border: false,
-            iconCls: 'social_data_icon_bundle',
+            iconCls: 'social_data_icon_config',
             layout: 'border',
             closable: true,
             tbar: [

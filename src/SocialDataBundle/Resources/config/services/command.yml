@@ -1,0 +1,10 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Command\FetchSocialPostsCommand:
+        tags:
+            - { name: console.command, command: 'social-data:fetch:social-posts' }

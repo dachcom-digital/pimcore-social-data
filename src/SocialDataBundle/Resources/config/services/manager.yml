@@ -12,3 +12,9 @@ services:
 
     SocialDataBundle\Manager\LogManagerInterface: '@SocialDataBundle\Manager\LogManager'
     SocialDataBundle\Manager\LogManager: ~
+
+    SocialDataBundle\Manager\WallManagerInterface: '@SocialDataBundle\Manager\WallManager'
+    SocialDataBundle\Manager\WallManager: ~
+
+    SocialDataBundle\Manager\FeedPostManagerInterface: '@SocialDataBundle\Manager\FeedPostManager'
+    SocialDataBundle\Manager\FeedPostManager: ~

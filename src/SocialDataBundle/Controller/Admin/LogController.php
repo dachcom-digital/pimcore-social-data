@@ -2,9 +2,9 @@
 
 namespace SocialDataBundle\Controller\Admin;
 
+use Symfony\Component\HttpFoundation\Request;
 use SocialDataBundle\Manager\LogManagerInterface;
 use Pimcore\Bundle\AdminBundle\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Pimcore\Bundle\AdminBundle\Controller\AdminController;
 
 class LogController extends AdminController

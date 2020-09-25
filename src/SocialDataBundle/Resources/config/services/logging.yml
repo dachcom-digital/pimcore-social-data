@@ -1,0 +1,35 @@
+parameters:
+    social_data.console.logger.options:
+        format: "[%%datetime%%] %%level_name%%: %%start_tag%%%%message%%%%end_tag%% %%extra%%\n"
+
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Logger\ProviderContextProcessor:
+        tags:
+            - { name: monolog.processor, handler: social_data_db_logging }
+
+    SocialDataBundle\Logger\ProviderContextConsoleProcessor:
+        tags:
+            - { name: monolog.processor, handler: social_data_console_logging }
+
+    SocialDataBundle\Logger\LoggerInterface: '@SocialDataBundle\Logger\Logger'
+    SocialDataBundle\Logger\Logger:
+        tags:
+            - { name: monolog.logger, channel: social_data }
+
+    social_data.log.db_entry_handler:
+        class: SocialDataBundle\Logger\MonologEntryHandler
+        calls:
+            - [setLogManager, ['@SocialDataBundle\Manager\LogManagerInterface']]
+        arguments:
+            $level: 'warning'
+
+    social_data.log.formatter.console.provider:
+        class: Symfony\Bridge\Monolog\Formatter\ConsoleFormatter
+        arguments:
+            - '%social_data.console.logger.options%'

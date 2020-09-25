@@ -9,10 +9,10 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
-    SocialDataBundle\Controller\Admin\LogController:
+    SocialDataBundle\Controller\Admin\WallsController:
         calls:
             - [setContainer, ['@service_container']]
 
-    SocialDataBundle\Controller\Admin\FacebookController:
+    SocialDataBundle\Controller\Admin\LogController:
         calls:
             - [setContainer, ['@service_container']]

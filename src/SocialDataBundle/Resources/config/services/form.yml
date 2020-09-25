@@ -1,0 +1,22 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\Form\Admin\Type\Wall\WallType:
+        tags:
+            - { name: form.type }
+
+    SocialDataBundle\Form\Admin\Type\Wall\FeedType:
+        tags:
+            - { name: form.type }
+
+    SocialDataBundle\Form\Admin\Type\Wall\FeedCollectionType:
+        tags:
+            - { name: form.type }
+
+    SocialDataBundle\Form\Admin\Type\Wall\Component\ConnectorEngineChoiceType:
+        tags:
+            - { name: form.type }

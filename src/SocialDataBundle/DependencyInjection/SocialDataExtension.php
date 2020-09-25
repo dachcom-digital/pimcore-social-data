@@ -53,8 +53,8 @@ class SocialDataExtension extends Extension
     {
         $dataClass = is_string($config['social_post_data_class']) ? $config['social_post_data_class'] : '';
 
-        $connectorServiceDefinition = $container->getDefinition(EnvironmentService::class);
-        $connectorServiceDefinition->setArgument('$socialPostDataClass', $dataClass);
+        $environmentServiceDefinition = $container->getDefinition(EnvironmentService::class);
+        $environmentServiceDefinition->setArgument('$socialPostDataClass', $dataClass);
     }
 
     /**

@@ -1,0 +1,14 @@
+SocialDataBundle\Model\Feed:
+    attributes:
+        id:
+            groups: [Default, ExtJs]
+        persistMedia:
+            groups: [Default, ExtJs]
+        configuration:
+            groups: [Default, ExtJs]
+        creationDate:
+            groups: [Default, ExtJs]
+        connector:
+            groups: [Default]
+        wall:
+            groups: [Default]

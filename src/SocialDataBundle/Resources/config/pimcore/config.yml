@@ -4,3 +4,25 @@ doctrine:
         entity_managers:
             default:
                 auto_mapping: true
+
+monolog:
+    channels: ['social_data']
+    handlers:
+        console:
+            type: console
+            channels:
+                type: exclusive
+                elements: ['!social_data']
+        social_data_db_logging:
+            type: service
+            channels: ['social_data']
+            id: social_data.log.db_entry_handler
+        social_data_console_logging:
+            type: console
+            verbosity_levels:
+                VERBOSITY_NORMAL: DEBUG
+                VERBOSITY_VERBOSE: DEBUG
+                VERBOSITY_VERY_VERBOSE: DEBUG
+                VERBOSITY_DEBUG: DEBUG
+            channels: ['social_data']
+            formatter: social_data.log.formatter.console.provider

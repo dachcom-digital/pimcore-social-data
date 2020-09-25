@@ -10,3 +10,9 @@ services:
 
     SocialDataBundle\Repository\LogRepositoryInterface: '@SocialDataBundle\Repository\LogRepository'
     SocialDataBundle\Repository\LogRepository: ~
+
+    SocialDataBundle\Repository\WallRepositoryInterface: '@SocialDataBundle\Repository\WallRepository'
+    SocialDataBundle\Repository\WallRepository: ~
+
+    SocialDataBundle\Repository\SocialPostRepositoryInterface: '@SocialDataBundle\Repository\SocialPostRepository'
+    SocialDataBundle\Repository\SocialPostRepository: ~

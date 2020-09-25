@@ -5,14 +5,7 @@ namespace SocialDataBundle\Connector;
 interface ConnectorEngineConfigurationInterface
 {
     /**
-     * @param string $param
-     *
-     * @return mixed
+     * @return string
      */
-    public function getConfigParam(string $param);
-
-    /**
-     * @return array
-     */
-    public function toBackendConfigArray();
+    public static function getFormClass();
 }

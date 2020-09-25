@@ -4,6 +4,9 @@ namespace SocialDataBundle\Connector\Facebook;
 
 use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Connector\ConnectorDefinitionInterface;
+use SocialDataBundle\Connector\Facebook\Model\EngineConfiguration;
+use SocialDataBundle\Connector\Facebook\Model\FeedConfiguration;
+use SocialDataBundle\Connector\SocialPostBuilderInterface;
 use SocialDataBundle\Model\ConnectorEngineInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,9 +18,27 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
     protected $connectorEngine;
 
     /**
+     * @var SocialPostBuilderInterface
+     */
+    protected $socialPostCollector;
+
+    /**
+     * @var SocialPostBuilderInterface
+     */
+    protected $socialPostBuilder;
+
+    /**
      * @var array
      */
     protected $definitionConfiguration;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConnectorEngine(?ConnectorEngineInterface $connectorEngine)
+    {
+        $this->connectorEngine = $connectorEngine;
+    }
 
     /**
      * {@inheritdoc}
@@ -30,9 +51,17 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function setConnectorEngine(?ConnectorEngineInterface $connectorEngine)
+    public function setSocialPostBuilder(SocialPostBuilderInterface $builder)
     {
-        $this->connectorEngine = $connectorEngine;
+        $this->socialPostBuilder = $builder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSocialPostBuilder()
+    {
+        return $this->socialPostBuilder;
     }
 
     /**
@@ -52,6 +81,14 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
         } catch (\Throwable $e) {
             throw new \Exception(sprintf('Invalid "%s" connector configuration. %s', 'facebook', $e->getMessage()));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefinitionConfiguration()
+    {
+        return $this->definitionConfiguration;
     }
 
     /**
@@ -110,14 +147,6 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function allowMultipleContextItems()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isAutoConnected()
     {
         return false;
@@ -161,14 +190,6 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefinitionConfiguration()
-    {
-        return $this->definitionConfiguration;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function needsEngineConfiguration()
     {
         return true;
@@ -193,6 +214,14 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
     /**
      * {@inheritdoc}
      */
+    public function getFeedConfigurationClass()
+    {
+        return FeedConfiguration::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getEngineConfiguration()
     {
         if (!$this->engineIsLoaded()) {
@@ -205,32 +234,5 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
         }
 
         return $engineConfiguration;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function mapEngineConfigurationFromBackend(array $data)
-    {
-        $engine = $this->getConnectorEngine();
-        if (!$engine instanceof ConnectorEngineInterface) {
-            return null;
-        }
-
-        if ($engine->getConfiguration() instanceof ConnectorEngineConfigurationInterface) {
-            $connectorConfiguration = clone $engine->getConfiguration();
-        } else {
-            $connectorEngineConfigurationClass = $this->getEngineConfigurationClass();
-            $connectorConfiguration = new $connectorEngineConfigurationClass();
-        }
-
-        if (!$connectorConfiguration instanceof EngineConfiguration) {
-            return null;
-        }
-
-        $connectorConfiguration->setAppId($data['appId']);
-        $connectorConfiguration->setAppSecret($data['appSecret']);
-
-        return $connectorConfiguration;
     }
 }

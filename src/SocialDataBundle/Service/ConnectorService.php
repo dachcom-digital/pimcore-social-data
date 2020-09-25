@@ -1,7 +1,8 @@
 <?php
 
-namespace SocialDataBundle\Connector;
+namespace SocialDataBundle\Service;
 
+use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Registry\ConnectorDefinitionRegistryInterface;
@@ -178,14 +179,6 @@ class ConnectorService implements ConnectorServiceInterface
         $connectorEngine = $connectorDefinition->getConnectorEngine();
         $connectorEngine->setConfiguration(clone $connectorConfiguration);
         $this->connectorManager->updateEngine($connectorEngine);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function connectorDefinitionIsEnabled(string $connectorDefinition)
-    {
-        return $this->connectorManager->connectorDefinitionIsEnabled($connectorDefinition);
     }
 
     /**

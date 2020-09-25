@@ -20,14 +20,24 @@ interface LogEntryInterface
     public function getConnectorEngine();
 
     /**
-     * @param int $objectId
+     * @param WallInterface $wall
      */
-    public function setObjectId(int $objectId);
+    public function setWall(WallInterface $wall);
 
     /**
-     * @return int
+     * @return WallInterface
      */
-    public function getObjectId();
+    public function getWall();
+
+    /**
+     * @param FeedInterface $feed
+     */
+    public function setFeed(FeedInterface $feed);
+
+    /**
+     * @return FeedInterface
+     */
+    public function getFeed();
 
     /**
      * @return string

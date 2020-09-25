@@ -1,0 +1,40 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    ## Social Post Services
+
+    SocialDataBundle\Connector\Facebook\Builder\SocialPostBuilder: ~
+
+    ## Definition
+
+    SocialDataBundle\Connector\Facebook\ConnectorDefinition:
+        tags:
+            - {
+                name: social_data.connector_definition,
+                identifier: facebook,
+                socialPostBuilder: SocialDataBundle\Connector\Facebook\Builder\SocialPostBuilder
+            }
+
+    ## API
+
+    SocialDataBundle\Connector\Facebook\Api\FacebookClient: ~
+
+    ## Controller
+
+    SocialDataBundle\Controller\Admin\Connector\FacebookController:
+        calls:
+            - [setContainer, ['@service_container']]
+
+    ## Form
+
+    SocialDataBundle\Connector\Facebook\Admin\Form\FacebookEngineType:
+        tags:
+            - { name: form.type }
+
+    SocialDataBundle\Connector\Facebook\Admin\Form\FacebookFeedType:
+        tags:
+            - { name: form.type }

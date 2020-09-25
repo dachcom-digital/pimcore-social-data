@@ -8,10 +8,6 @@ SocialDataBundle\Model\LogEntry:
             column: id
             generator:
                 strategy: AUTO
-        objectId:
-            column: object_id
-            nullable: true
-            type: integer
         type:
             column: '`type`'
             nullable: false
@@ -30,5 +26,19 @@ SocialDataBundle\Model\LogEntry:
             orphanRemoval: true
             joinColumn:
                 name: connector
+                referencedColumnName: id
+                onDelete: CASCADE
+        wall:
+            targetEntity: SocialDataBundle\Model\Wall
+            orphanRemoval: true
+            joinColumn:
+                name: wall
+                referencedColumnName: id
+                onDelete: CASCADE
+        feed:
+            targetEntity: SocialDataBundle\Model\Feed
+            orphanRemoval: true
+            joinColumn:
+                name: feed
                 referencedColumnName: id
                 onDelete: CASCADE

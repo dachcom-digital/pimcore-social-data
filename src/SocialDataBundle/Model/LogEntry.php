@@ -15,9 +15,14 @@ class LogEntry implements LogEntryInterface
     protected $connectorEngine;
 
     /**
-     * @var int
+     * @var FeedInterface
      */
-    protected $objectId;
+    protected $feed;
+
+    /**
+     * @var WallInterface
+     */
+    protected $wall;
 
     /**
      * @var string
@@ -35,7 +40,7 @@ class LogEntry implements LogEntryInterface
     protected $creationDate;
 
     /**
-     * {@inheritdoc}
+     * @param int $id
      */
     public function setId($id)
     {
@@ -69,17 +74,33 @@ class LogEntry implements LogEntryInterface
     /**
      * {@inheritdoc}
      */
-    public function setObjectId(int $objectId)
+    public function setWall(WallInterface $wall)
     {
-        $this->objectId = $objectId;
+        $this->wall = $wall;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getObjectId()
+    public function getWall()
     {
-        return $this->objectId;
+        return $this->wall;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFeed(FeedInterface $feed)
+    {
+        $this->feed = $feed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFeed()
+    {
+        return $this->feed;
     }
 
     /**

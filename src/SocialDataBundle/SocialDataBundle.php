@@ -71,10 +71,18 @@ class SocialDataBundle extends AbstractPimcoreBundle
     public function getJsPaths()
     {
         return [
+            '/bundles/socialdata/js/component/relation.js',
+            '/bundles/socialdata/js/component/relationTextField.js',
+
             '/bundles/socialdata/js/plugin.js',
             '/bundles/socialdata/js/settingsPanel.js',
-            '/bundles/socialdata/js/connector/abstractConnector.js',
-            '/bundles/socialdata/js/connector/facebook.js',
+            '/bundles/socialdata/js/wallsPanel.js',
+            '/bundles/socialdata/js/wall/mainPanel.js',
+
+            '/bundles/socialdata/js/connector/abstract-connector.js',
+            '/bundles/socialdata/js/connector/facebook-connector.js',
+            '/bundles/socialdata/js/feed/abstract-feed.js',
+            '/bundles/socialdata/js/feed/facebook-feed.js',
         ];
     }
 

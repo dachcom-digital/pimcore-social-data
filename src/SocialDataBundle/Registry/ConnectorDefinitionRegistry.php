@@ -53,4 +53,12 @@ class ConnectorDefinitionRegistry implements ConnectorDefinitionRegistryInterfac
     {
         return $this->connector;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllIdentifier()
+    {
+        return array_keys($this->connector);
+    }
 }

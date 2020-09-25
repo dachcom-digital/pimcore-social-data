@@ -1,7 +1,9 @@
 <?php
 
-namespace SocialDataBundle\Connector;
+namespace SocialDataBundle\Service;
 
+use SocialDataBundle\Connector\ConnectorDefinitionInterface;
+use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Model\ConnectorEngineInterface;
 
 interface ConnectorServiceInterface
@@ -44,13 +46,6 @@ interface ConnectorServiceInterface
      * @param ConnectorEngineConfigurationInterface $connectorConfiguration
      */
     public function updateConnectorEngineConfiguration(string $connectorName, ConnectorEngineConfigurationInterface $connectorConfiguration);
-
-    /**
-     * @param string $connectorDefinitionName
-     *
-     * @return bool
-     */
-    public function connectorDefinitionIsEnabled(string $connectorDefinitionName);
 
     /**
      * @param string $connectorDefinitionName

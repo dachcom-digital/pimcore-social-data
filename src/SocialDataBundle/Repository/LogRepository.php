@@ -33,19 +33,6 @@ class LogRepository implements LogRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findForObject(int $objectId)
-    {
-        $qb = $this->repository->createQueryBuilder('l');
-
-        $query = $qb->where('l.objectId = :objectId')
-            ->setParameter('objectId', $objectId);
-
-        return new Paginator($query);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findForConnectorEngine(int $connectorEngineId)
     {
         $qb = $this->repository->createQueryBuilder('l');
@@ -54,55 +41,6 @@ class LogRepository implements LogRepositoryInterface
             ->setParameter('connectorEngine', $connectorEngineId);
 
         return new Paginator($query);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findForConnectorEngineAndObject(int $connectorEngineId, int $objectId)
-    {
-        $qb = $this->repository->createQueryBuilder('l');
-
-        $query = $qb->where('l.objectId = :objectId')
-            ->andWhere('l.connectorEngine = :connectorEngine')
-            ->addOrderBy('l.creationDate', 'DESC')
-            ->addOrderBy('l.id', 'DESC')
-            ->setParameter('objectId', $objectId)
-            ->setParameter('connectorEngine', $connectorEngineId);
-
-        return new Paginator($query);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteForConnectorEngineAndObject(int $connectorEngineId, int $objectId)
-    {
-        $qb = $this->repository->createQueryBuilder('l');
-
-        $query = $qb->delete()
-            ->where('l.objectId = :objectId')
-            ->andWhere('l.connectorEngine = :connectorEngine')
-            ->setParameter('objectId', $objectId)
-            ->setParameter('connectorEngine', $connectorEngineId)
-            ->getQuery();
-
-        $query->execute();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteForObject(int $objectId)
-    {
-        $qb = $this->repository->createQueryBuilder('l');
-
-        $query = $qb->delete()
-            ->where('l.objectId = :objectId')
-            ->setParameter('objectId', $objectId)
-            ->getQuery();
-
-        $query->execute();
     }
 
     /**

@@ -8,16 +8,14 @@ use SocialDataBundle\Model\ConnectorEngineInterface;
 interface ConnectorManagerInterface
 {
     /**
-     * @param string $connectorDefinitionName
-     *
-     * @return bool
+     * @return array|ConnectorDefinitionInterface[]
      */
-    public function connectorDefinitionIsEnabled(string $connectorDefinitionName);
+    public function getAllActiveConnectorDefinitions();
 
     /**
      * @param bool $loadEngine
      *
-     * @return ConnectorDefinitionInterface[]
+     * @return array|ConnectorDefinitionInterface[]
      */
     public function getAllConnectorDefinitions(bool $loadEngine = false);
 

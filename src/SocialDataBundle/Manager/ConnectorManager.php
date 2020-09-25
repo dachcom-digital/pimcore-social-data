@@ -52,19 +52,13 @@ class ConnectorManager implements ConnectorManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function connectorDefinitionIsEnabled(string $connectorDefinitionName)
+    public function getAllActiveConnectorDefinitions()
     {
-        if (!in_array($connectorDefinitionName, $this->availableConnectors)) {
-            return false;
-        }
-
-        try {
-            $this->connectorDefinitionRegistry->get($connectorDefinitionName);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        return array_filter(
+            $this->getAllConnectorDefinitions(true),
+            function (ConnectorDefinitionInterface $connectorDefinition) {
+                return $connectorDefinition->engineIsLoaded() && $connectorDefinition->isConnected();
+            });
     }
 
     /**
@@ -76,6 +70,7 @@ class ConnectorManager implements ConnectorManagerInterface
         $allConnectorDefinitions = $this->connectorDefinitionRegistry->getAll();
 
         foreach ($allConnectorDefinitions as $connectorDefinitionName => $connectorDefinition) {
+
             if (!in_array($connectorDefinitionName, $this->availableConnectors)) {
                 continue;
             }

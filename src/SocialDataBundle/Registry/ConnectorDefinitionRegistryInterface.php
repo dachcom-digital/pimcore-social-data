@@ -26,4 +26,9 @@ interface ConnectorDefinitionRegistryInterface
      * @return ConnectorDefinitionInterface[]
      */
     public function getAll();
+
+    /**
+     * @return array
+     */
+    public function getAllIdentifier();
 }

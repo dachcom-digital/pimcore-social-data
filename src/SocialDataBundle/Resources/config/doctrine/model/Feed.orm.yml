@@ -1,0 +1,43 @@
+SocialDataBundle\Model\Feed:
+    type: entity
+    table: social_data_feed
+    namedNativeQueries:
+        findAll:
+            name: findAll
+            resultClass: Address
+            query: SELECT * FROM addresses
+
+    fields:
+        id:
+            type: integer
+            id: true
+            column: id
+            generator:
+                strategy: AUTO
+        persistMedia:
+            column: persist_media
+            nullable: false
+            type: boolean
+            unique: false
+        configuration:
+            column: configuration
+            type: object
+            nullable: true
+        creationDate:
+            column: creation_date
+            type: datetime
+            nullable: false
+    manyToOne:
+        connectorEngine:
+            targetEntity: SocialDataBundle\Model\ConnectorEngine
+            orphanRemoval: true
+            joinColumn:
+                name: connector
+                referencedColumnName: id
+                onDelete: CASCADE
+        wall:
+            targetEntity: SocialDataBundle\Model\Wall
+            inversedBy: channels
+            joinColumn:
+                name: wall
+                referencedColumnName: id

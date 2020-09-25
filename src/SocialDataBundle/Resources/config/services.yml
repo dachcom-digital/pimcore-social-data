@@ -1,2 +1,4 @@
 imports:
     - { resource: services/*.yml }
+    - { resource: services/connector/facebook/services.yml }
+    # - { resource: services/connector/instagram/services.yml }

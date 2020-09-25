@@ -1,6 +1,6 @@
 <?php
 
-namespace SocialDataBundle\Connector\Facebook\Session;
+namespace SocialDataBundle\Connector\Facebook\API\Session;
 
 use Facebook\PersistentData\PersistentDataInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

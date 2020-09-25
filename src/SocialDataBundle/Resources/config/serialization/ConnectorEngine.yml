@@ -1,0 +1,8 @@
+SocialDataBundle\Model\ConnectorEngine:
+    attributes:
+        name:
+            groups: [Default, ExtJs]
+        enabled:
+            groups: [Default, ExtJs]
+        configuration:
+            groups: [Default, ExtJs]
