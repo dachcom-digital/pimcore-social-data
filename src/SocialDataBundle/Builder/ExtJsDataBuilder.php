@@ -8,6 +8,7 @@ use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Manager\WallManagerInterface;
 use SocialDataBundle\Model\WallInterface;
 use Pimcore\Translation\Translator;
+use SocialDataBundle\Service\StatisticServiceInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -36,21 +37,29 @@ class ExtJsDataBuilder
     protected $wallManager;
 
     /**
+     * @var StatisticServiceInterface
+     */
+    protected $statisticService;
+
+    /**
      * @param NormalizerInterface       $serializer
      * @param Translator                $translator
      * @param ConnectorManagerInterface $connectorManager
      * @param WallManagerInterface      $wallManager
+     * @param StatisticServiceInterface $statisticService
      */
     public function __construct(
         NormalizerInterface $serializer,
         Translator $translator,
         ConnectorManagerInterface $connectorManager,
-        WallManagerInterface $wallManager
+        WallManagerInterface $wallManager,
+        StatisticServiceInterface $statisticService
     ) {
         $this->serializer = $serializer;
         $this->translator = $translator;
         $this->connectorManager = $connectorManager;
         $this->wallManager = $wallManager;
+        $this->statisticService = $statisticService;
     }
 
     /**
@@ -118,11 +127,20 @@ class ExtJsDataBuilder
     {
         $feeds = $this->serializer->normalize($wall->getFeeds(), 'array', $this->getExtJSSerializerContext());
 
+        $statisticData = [];
+        foreach ($this->statisticService->getWallStatistics($wall) as $identifier => $value) {
+            $statisticData[] = [
+                'label' => sprintf('social_data.statistic.%s', $identifier),
+                'value' => $value
+            ];
+        }
+
         $data = [
             'id'           => $wall->getId(),
             'name'         => $wall->getName(),
             'dataStorage'  => $wall->getDataStorage(),
             'assetStorage' => $wall->getAssetStorage(),
+            'statistics'   => $statisticData,
             'feeds'        => array_values($feeds)
         ];
 

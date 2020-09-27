@@ -1,16 +1,16 @@
 pimcore.registerNS('SocialData.Wall.MainPanel');
 SocialData.Wall.MainPanel = Class.create({
 
-    parentPanel: null,
-
-    formPanel: null,
     panel: null,
-
+    parentPanel: null,
+    formPanel: null,
+    feedPanel: null,
+    statisticPanel: null,
+    logPanel: null,
     feedPanelConfigClasses: null,
     wallData: null,
     wallId: null,
     wallName: null,
-
     feedStore: null,
 
     initialize: function (wallData, parentPanel) {
@@ -91,6 +91,8 @@ SocialData.Wall.MainPanel = Class.create({
                         assetStoragePathRelation
                     ]
                 },
+                this.getStatisticPanel(),
+                this.getLogPanel(),
                 this.getFeedPanel()
             ]
         });
@@ -136,6 +138,130 @@ SocialData.Wall.MainPanel = Class.create({
         this.parentPanel.getEditPanel().setActiveTab(this.panel);
     },
 
+    getStatisticPanel: function () {
+
+        var grid;
+
+        grid = new Ext.grid.GridPanel({
+            flex: 1,
+            style: {
+                marginTop: '10px',
+                marginBottom: '10px',
+            },
+            store: new Ext.data.Store({
+                fields: ['label', 'value'],
+                data: this.wallData.statistics
+            }),
+            border: true,
+            columnLines: true,
+            stripeRows: true,
+            title: false,
+            columns: [
+                {
+                    text: t('label'),
+                    sortable: false,
+                    dataIndex: 'label',
+                    hidden: false,
+                    flex: 2,
+                    renderer: function (value) {
+                        return t(value);
+                    }
+                },
+                {
+                    text: t('value'),
+                    sortable: false,
+                    dataIndex: 'value',
+                    hidden: false,
+                    flex: 1
+                }
+            ]
+        });
+
+        this.statisticPanel = new Ext.Panel({
+            iconCls: 'pimcore_icon_log',
+            collapsible: true,
+            collapsed: true,
+            bodyStyle: 'padding:0 10px;',
+            title: t('social_data.statistic.title'),
+            autoScroll: true,
+            border: false,
+            items: [grid]
+        });
+
+        return this.statisticPanel;
+    },
+
+    getLogPanel: function () {
+
+        var store, grid, bbar,
+            itemsPerPage = pimcore.helpers.grid.getDefaultPageSize(-1);
+
+        store = new Ext.data.Store({
+            pageSize: itemsPerPage,
+            proxy: {
+                type: 'ajax',
+                url: '/admin/social-data/logs/fetch-wall-logs/' + this.wallId,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'entries'
+                },
+                extraParams: {
+                    formId: this.formId
+                }
+            },
+            autoLoad: false,
+            fields: ['id', 'type', 'message', 'date']
+        });
+
+        bbar = pimcore.helpers.grid.buildDefaultPagingToolbar(store, {pageSize: itemsPerPage});
+
+        Ext.Array.each(bbar.query('tbtext'), function (tbTextComp) {
+            tbTextComp.setStyle({
+                fontSize: 'inherit !important',
+                lineHeight: 'inherit !important'
+            });
+        });
+
+        grid = new Ext.grid.GridPanel({
+            flex: 1,
+            height: 300,
+            style: {
+                marginTop: '10px',
+                marginBottom: '10px',
+            },
+            store: store,
+            border: true,
+            columnLines: true,
+            stripeRows: true,
+            title: false,
+            bbar: bbar,
+            listeners: {
+                afterrender: function () {
+                    store.load();
+                }
+            },
+            columns: [
+                {text: 'ID', sortable: false, dataIndex: 'id', hidden: true},
+                {text: t('type'), sortable: false, dataIndex: 'type', hidden: false},
+                {text: t('message'), sortable: false, dataIndex: 'message', flex: 3, renderer: Ext.util.Format.htmlEncode},
+                {text: t('date'), sortable: false, dataIndex: 'date', flex: 1},
+            ]
+        });
+
+        this.logPanel = new Ext.Panel({
+            iconCls: 'pimcore_icon_log',
+            collapsible: true,
+            collapsed: true,
+            bodyStyle: 'padding:0 10px;',
+            title: t('social_data.wall.logs'),
+            autoScroll: true,
+            border: false,
+            items: [grid]
+        });
+
+        return this.logPanel;
+    },
+
     getFeedPanel: function () {
 
         this.feedPanel = new Ext.Panel({
@@ -153,7 +279,6 @@ SocialData.Wall.MainPanel = Class.create({
 
         return this.feedPanel;
     },
-
 
     getAddControl: function () {
 
@@ -263,7 +388,7 @@ SocialData.Wall.MainPanel = Class.create({
                 items: [
                     {
                         xtype: 'checkbox',
-                        value: data.hasOwnProperty('persistMedia') ? data.persistMedia : null,
+                        value: data && data.hasOwnProperty('persistMedia') ? data.persistMedia : null,
                         fieldLabel: t('social_data.wall.feed.persist_media'),
                         name: 'persistMedia',
                         labelAlign: 'left',
@@ -302,16 +427,44 @@ SocialData.Wall.MainPanel = Class.create({
     },
 
     removeFeed: function (btn) {
-        var panel = btn.up('panel');
+
+        var feedDataClassToRemove = null,
+            panel = btn.up('panel');
+
+        btn.setDisabled(true);
 
         Ext.each(this.feedPanelConfigClasses, function (feed) {
-            if (feed.id === panel.id) {
-                Ext.Array.remove(this.feedPanelConfigClasses, feed);
+            if (feed.dataClass.getInternalId() === panel.id) {
+                feedDataClassToRemove = feed;
                 return false;
             }
         }.bind(this));
 
-        this.feedPanel.remove(panel);
+        if (feedDataClassToRemove === null) {
+            btn.setDisabled(false);
+            this.feedPanel.remove(panel);
+            return;
+        }
+
+        if (feedDataClassToRemove.dataClass.getFeedId() === null) {
+            btn.setDisabled(false);
+            Ext.Array.remove(this.feedPanelConfigClasses, feedDataClassToRemove);
+            this.feedPanel.remove(panel);
+            return;
+        }
+
+        Ext.Msg.confirm(
+            t('social_data.wall.feed.delete_title'),
+            t('social_data.wall.feed.delete_text'),
+            function (buttonId) {
+                btn.setDisabled(false);
+                if (buttonId === 'yes') {
+                    Ext.Array.remove(this.feedPanelConfigClasses, feedDataClassToRemove);
+                    this.feedPanel.remove(panel);
+                }
+            },
+            this
+        );
     },
 
     getFeedConfigPanel: function (data, feedConfig) {

@@ -9,12 +9,17 @@ interface LogManagerInterface
 {
     /**
      * @param int $connectorEngineId
-     * @param int $offset
-     * @param int $limit
      *
      * @return Paginator|LogEntryInterface[]
      */
-    public function getForConnectorEngine(int $connectorEngineId, int $offset, int $limit);
+    public function getForConnectorEngine(int $connectorEngineId);
+
+    /**
+     * @param int $wallId
+     *
+     * @return Paginator|LogEntryInterface[]
+     */
+    public function getForWall(int $wallId);
 
     /**
      * @throws \Exception
@@ -27,16 +32,14 @@ interface LogManagerInterface
     public function createNew();
 
     /**
-     * @param string $connectorName
+     * @param array $context
      *
      * @return LogEntryInterface
      */
-    public function createNewForConnector(string $connectorName);
+    public function createNewForConnector(array $context);
 
     /**
      * @param LogEntryInterface $logEntry
-     *
-     * @return LogEntryInterface
      */
     public function update(LogEntryInterface $logEntry);
 

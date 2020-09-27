@@ -2,7 +2,8 @@
 
 namespace SocialDataBundle\Repository;
 
-use Pimcore\Model\DataObject\Listing;
+use Pimcore\Db\ZendCompatibility\QueryBuilder;
+use Pimcore\Model\DataObject\Concrete;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Service\EnvironmentService;
 
@@ -67,9 +68,26 @@ class SocialPostRepository implements SocialPostRepositoryInterface
      */
     public function findByWallId(int $wallId, bool $unpublished = false): array
     {
-        // @todo!
+        $listing = $this->getList();
+        $listing->setUnpublished($unpublished);
 
-        return [];
+        $listing->onCreateQuery(function (QueryBuilder $query) {
+            $query->join(
+                ['fp' => 'social_data_feed_post'],
+                'fp.post_id = o_id',
+                ['feedId' => 'fp.feed_id']
+            );
+
+            $query->join(
+                ['f' => 'social_data_feed'],
+                'f.id = fp.feed_id',
+                ['wallId' => 'f.wall']
+            );
+        });
+
+        $listing->addConditionParam('f.wall = ?', (string) $wallId);
+
+        return $listing->getObjects();
     }
 
     /**
@@ -107,18 +125,29 @@ class SocialPostRepository implements SocialPostRepositoryInterface
      */
     public function findBySocialTypeAndWallIdAndFeedId(string $socialPostType, int $wallId, int $feedId, bool $unpublished = false): array
     {
-       // @todo!
+        // @todo!
 
         return [];
     }
 
     /**
-     * @return Listing
+     * {@inheritdoc}
      */
     public function getList()
     {
         $listingClass = sprintf('\Pimcore\Model\DataObject\%s\Listing', ucfirst($this->environmentService->getSocialPostDataClass()));
 
         return new $listingClass();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getClassId()
+    {
+        /** @var Concrete $concreteObject */
+        $concreteObject = sprintf('\Pimcore\Model\DataObject\%s', ucfirst($this->environmentService->getSocialPostDataClass()));
+
+        return $concreteObject::classId();
     }
 }

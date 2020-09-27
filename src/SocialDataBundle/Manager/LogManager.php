@@ -2,8 +2,11 @@
 
 namespace SocialDataBundle\Manager;
 
+use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
+use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\LogEntry;
 use SocialDataBundle\Model\LogEntryInterface;
+use SocialDataBundle\Model\WallInterface;
 use SocialDataBundle\Repository\LogRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -42,9 +45,17 @@ class LogManager implements LogManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getForConnectorEngine(int $connectorEngineId, int $offset, int $limit)
+    public function getForConnectorEngine(int $connectorEngineId)
     {
         return $this->logRepository->findForConnectorEngine($connectorEngineId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getForWall(int $wallId)
+    {
+        return $this->logRepository->findForWall($wallId);
     }
 
     /**
@@ -69,13 +80,22 @@ class LogManager implements LogManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createNewForConnector(string $connectorName)
+    public function createNewForConnector(array $context)
     {
-        $connectorEngine = $this->connectorManager->getEngineByName($connectorName);
-
         $logEntry = new LogEntry();
-        $logEntry->setConnectorEngine($connectorEngine);
         $logEntry->setCreationDate(new \DateTime());
+
+        foreach ($context as $contextRow) {
+            if ($contextRow instanceof FeedInterface) {
+                $logEntry->setFeed($contextRow);
+                $logEntry->setWall($contextRow->getWall());
+                $logEntry->setConnectorEngine($contextRow->getConnectorEngine());
+            } elseif ($contextRow instanceof WallInterface) {
+                $logEntry->setWall($contextRow);
+            } elseif ($contextRow instanceof ConnectorEngineConfigurationInterface) {
+                $logEntry->setConnectorEngine($contextRow);
+            }
+        }
 
         return $logEntry;
     }
@@ -87,8 +107,6 @@ class LogManager implements LogManagerInterface
     {
         $this->entityManager->persist($logEntry);
         $this->entityManager->flush();
-
-        return $logEntry;
     }
 
     /**

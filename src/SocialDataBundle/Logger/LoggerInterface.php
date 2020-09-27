@@ -14,33 +14,33 @@ interface LoggerInterface
      * ALERT (550)
      * EMERGENCY (600)
      *
-     * @param string $level
-     * @param string $message
-     * @param string $connector
+     * @param string     $level
+     * @param string     $message
+     * @param array|null $context
      */
-    public function log(string $level, string $message, string $connector);
+    public function log(string $level, string $message, ?array $context = null);
 
     /**
-     * @param string $message
-     * @param string $connector
+     * @param string     $message
+     * @param array|null $context
      */
-    public function debug($message, string $connector);
+    public function debug($message, ?array $context = null);
 
     /**
-     * @param string $message
-     * @param string $connector
+     * @param string     $message
+     * @param array|null $context
      */
-    public function info($message, string $connector);
+    public function info($message, ?array $context = null);
 
     /**
-     * @param string $message
-     * @param string $connector
+     * @param string     $message
+     * @param array|null $context
      */
-    public function warning($message, string $connector);
+    public function warning($message, ?array $context = null);
 
     /**
-     * @param string $message
-     * @param string $connector
+     * @param string     $message
+     * @param array|null $context
      */
-    public function error($message, string $connector);
+    public function error($message, ?array $context = null);
 }

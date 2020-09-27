@@ -1,0 +1,12 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\EventListener\Maintenance\CleanUpLogsTask:
+        arguments:
+            $logExpirationDays: '%social_data.logs.expiration_days%'
+        tags:
+            - { name: pimcore.maintenance.task, type: social_data_cleanup_logs }

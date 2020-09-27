@@ -80,4 +80,9 @@ interface SocialPostRepositoryInterface
      * @return Listing
      */
     public function getList();
+
+    /**
+     * @return int
+     */
+    public function getClassId();
 }

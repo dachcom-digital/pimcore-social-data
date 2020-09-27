@@ -2,7 +2,6 @@
 
 namespace SocialDataBundle\EventListener;
 
-use FormBuilderBundle\Manager\FormDefinitionManager;
 use Pimcore\Event\DataObjectEvents;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Model\DataObject\Concrete;
@@ -13,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FeedPostListener implements EventSubscriberInterface
 {
     /**
-     * @var FormDefinitionManager
+     * @var FeedPostManager
      */
     protected $feedPostManager;
 

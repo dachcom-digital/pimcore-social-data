@@ -64,6 +64,14 @@ class BuildConfig
     }
 
     /**
+     * @return FeedInterface
+     */
+    public function getFeed()
+    {
+        return $this->feed;
+    }
+
+    /**
      * @return ConnectorFeedConfigurationInterface
      */
     public function getFeedConfiguration()

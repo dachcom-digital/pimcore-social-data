@@ -9,10 +9,6 @@ services:
         autoconfigure: true
         public: false
 
-    SocialDataBundle\Logger\ProviderContextProcessor:
-        tags:
-            - { name: monolog.processor, handler: social_data_db_logging }
-
     SocialDataBundle\Logger\ProviderContextConsoleProcessor:
         tags:
             - { name: monolog.processor, handler: social_data_console_logging }
@@ -27,7 +23,7 @@ services:
         calls:
             - [setLogManager, ['@SocialDataBundle\Manager\LogManagerInterface']]
         arguments:
-            $level: 'warning'
+            $level: 'info'
 
     social_data.log.formatter.console.provider:
         class: Symfony\Bridge\Monolog\Formatter\ConsoleFormatter

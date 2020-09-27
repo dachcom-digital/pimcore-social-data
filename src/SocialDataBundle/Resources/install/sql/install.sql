@@ -31,20 +31,20 @@ CREATE TABLE `social_data_feed_post` (
 
 CREATE TABLE `social_data_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `connector` int(11) DEFAULT NULL,
+  `connector_engine` int(11) DEFAULT NULL,
+  `wall` int(11) DEFAULT NULL,
+  `feed` int(11) DEFAULT NULL,
   `type` varchar(255) NOT NULL,
   `message` longtext NOT NULL,
   `creation_date` datetime NOT NULL,
-  `wall` int(11) DEFAULT NULL,
-  `feed` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `IDX_45821D5C148C456E` (`connector`),
   KEY `IDX_45821D5C13F5EFF6` (`wall`),
   KEY `IDX_45821D5C234044AB` (`feed`),
+  KEY `IDX_45821D5C3EEACC32` (`connector_engine`),
   CONSTRAINT `FK_45821D5C13F5EFF6` FOREIGN KEY (`wall`) REFERENCES `social_data_wall` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_45821D5C148C456E` FOREIGN KEY (`connector`) REFERENCES `social_data_connector_engine` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_45821D5C234044AB` FOREIGN KEY (`feed`) REFERENCES `social_data_feed` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `FK_45821D5C234044AB` FOREIGN KEY (`feed`) REFERENCES `social_data_feed` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_45821D5C3EEACC32` FOREIGN KEY (`connector_engine`) REFERENCES `social_data_connector_engine` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `social_data_wall` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

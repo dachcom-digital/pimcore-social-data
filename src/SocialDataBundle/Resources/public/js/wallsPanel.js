@@ -255,7 +255,10 @@ SocialData.WallsPanel = Class.create({
 
     deleteWall: function (tree, record) {
 
-        Ext.Msg.confirm(t('delete'), t('social_data.wall.delete_warn'), function (btn) {
+        Ext.Msg.confirm(
+            t('social_data.wall.delete_title'),
+            t('social_data.wall.delete_text'),
+            function (btn) {
 
             if (btn !== 'yes') {
                 return;

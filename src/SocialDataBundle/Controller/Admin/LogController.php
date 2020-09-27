@@ -24,20 +24,18 @@ class LogController extends AdminController
 
     /**
      * @param Request $request
-     *
      * @param int     $connectorEngineId
-     * @param int     $objectId
      *
      * @return JsonResponse
      */
-    public function loadLogsForObjectAction(Request $request, int $connectorEngineId, int $objectId)
+    public function loadLogsForConnectorAction(Request $request, int $connectorEngineId)
     {
         $items = [];
         $offset = (int) $request->get('start', 0);
         $limit = (int) $request->get('limit', 25);
 
         try {
-            $logEntriesPaginator = $this->logManager->getForConnectorEngineAndObject($connectorEngineId, $objectId, $offset, $limit);
+            $logEntriesPaginator = $this->logManager->getForConnectorEngine($connectorEngineId);
         } catch (\Exception $e) {
             return $this->adminJson(['success' => false, 'entries' => [], 'limit' => 0, 'total' => 0]);
         }
@@ -64,21 +62,39 @@ class LogController extends AdminController
 
     /**
      * @param Request $request
-     * @param int     $connectorEngineId
-     * @param int     $objectId
+     * @param int     $wallId
      *
      * @return JsonResponse
      */
-    public function removeLogsForObjectAction(Request $request, int $connectorEngineId, int $objectId)
+    public function loadLogsForWallAction(Request $request, int $wallId)
     {
+        $items = [];
+        $offset = (int) $request->get('start', 0);
+        $limit = (int) $request->get('limit', 25);
+
         try {
-            $this->logManager->deleteForConnectorEngineAndObject($connectorEngineId, $objectId);
+            $logEntriesPaginator = $this->logManager->getForWall($wallId);
         } catch (\Exception $e) {
-            return $this->adminJson(['success' => false]);
+            return $this->adminJson(['success' => false, 'entries' => [], 'limit' => 0, 'total' => 0]);
+        }
+
+        $logEntriesPaginator->getQuery()
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        foreach ($logEntriesPaginator as $entry) {
+            $items[] = [
+                'id'      => $entry->getId(),
+                'type'    => $entry->getType(),
+                'message' => $entry->getMessage(),
+                'date'    => $entry->getCreationDate()->format('d.m.Y H:i')
+            ];
         }
 
         return $this->adminJson([
-            'success' => true
+            'entries' => $items,
+            'limit'   => $limit,
+            'total'   => $logEntriesPaginator->count()
         ]);
     }
 

@@ -10,3 +10,6 @@ services:
 
     SocialDataBundle\Service\EnvironmentServiceInterface: '@SocialDataBundle\Service\EnvironmentService'
     SocialDataBundle\Service\EnvironmentService: ~
+
+    SocialDataBundle\Service\StatisticServiceInterface: '@SocialDataBundle\Service\StatisticService'
+    SocialDataBundle\Service\StatisticService: ~

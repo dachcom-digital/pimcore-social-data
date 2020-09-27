@@ -112,7 +112,11 @@ class SocialPostBuilderProcessor
             return;
         }
 
-        $this->logger->debug(sprintf('Process Wall %s (%s)', $wall->getId(), $wall->getName()), 'wall');
+        $this->logger->debug(sprintf('Process Wall %s (%s)', $wall->getId(), $wall->getName()), [$wall]);
+
+        if ($this->checkStoragePaths($wall) === false) {
+            return;
+        }
 
         foreach ($feeds as $feed) {
             $this->processFeed($feed);
@@ -148,7 +152,7 @@ class SocialPostBuilderProcessor
             return;
         }
 
-        $this->logger->debug(sprintf('Process Feed %s', $feed->getId()), $connectorName);
+        $this->logger->debug(sprintf('Process Feed %s', $feed->getId()), [$feed]);
 
         $buildConfig = new BuildConfig($feed, $connectorEngine->getConfiguration(), $connectorDefinition->getDefinitionConfiguration());
         $postBuilder = $connectorDefinition->getSocialPostBuilder();
@@ -173,6 +177,7 @@ class SocialPostBuilderProcessor
     protected function loadFeedPosts(string $connectorName, BuildConfig $buildConfig, SocialPostBuilderInterface $postBuilder)
     {
         $posts = [];
+        $logContext = [$buildConfig->getFeed()];
 
         // 1 fetch
         $fetchData = $this->dispatchSocialPostBuildCycle('fetch', $connectorName, $buildConfig, $postBuilder);
@@ -185,7 +190,7 @@ class SocialPostBuilderProcessor
         $fetchedItems = $fetchData->getFetchedEntities();
 
         if (!is_array($fetchedItems)) {
-            $this->logger->debug(sprintf('No elements found during fetch process'), $connectorName);
+            $this->logger->debug(sprintf('No elements found during fetch process'), $logContext);
             return [];
         }
 
@@ -205,18 +210,18 @@ class SocialPostBuilderProcessor
             $filteredElement = $filterData->getFilteredElement();
 
             if ($filteredElement === null) {
-                $this->logger->debug(sprintf('Element "%s" has been removed during filter process', $filteredId), $connectorName);
+                $this->logger->debug(sprintf('Element "%s" has been removed during filter process', $filteredId), $logContext);
                 continue;
             }
 
             if (empty($filteredId)) {
-                $this->logger->error(sprintf('Could not resolve social post id'), $connectorName);
+                $this->logger->error(sprintf('Could not resolve social post id'), $logContext);
                 continue;
             }
 
-            $preFetchedSocialPostEntity = $this->provideSocialPostEntity($filteredId, $connectorName);
+            $preFetchedSocialPostEntity = $this->provideSocialPostEntity($filteredId, $connectorName, $buildConfig->getFeed());
             if (!$preFetchedSocialPostEntity instanceof SocialPostInterface) {
-                $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $connectorName);
+                $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
                 continue;
             }
 
@@ -232,7 +237,7 @@ class SocialPostBuilderProcessor
 
             $transformedEntry = $transformData->getTransformedElement();
             if (!$transformedEntry instanceof SocialPostInterface) {
-                $this->logger->debug(sprintf('Element "%s" has been removed during transform process', $filteredId), $connectorName);
+                $this->logger->debug(sprintf('Element "%s" has been removed during transform process', $filteredId), $logContext);
                 continue;
             }
 
@@ -260,6 +265,7 @@ class SocialPostBuilderProcessor
     ): ?AbstractData {
 
         $buildDataTransferObject = null;
+        $logContext = [$buildConfig->getFeed()];
 
         $configureEventName = sprintf('%s::SOCIAL_POST_BUILDER_%s_CONFIGURE', SocialDataEvents::class, strtoupper($type));
         $postEventName = sprintf('%s::SOCIAL_POST_BUILDER_%s_POST', SocialDataEvents::class, strtoupper($type));
@@ -296,9 +302,9 @@ class SocialPostBuilderProcessor
             $buildDataTransferObject = $postEvent->getData();
 
         } catch (BuildException $e) {
-            $this->logger->error(sprintf('[Build Error] %s', $e->getMessage()), $connectorName);
+            $this->logger->error(sprintf('[Build Error] %s', $e->getMessage()), $logContext);
         } catch (\Throwable $e) {
-            $this->logger->error(sprintf('[Critical Error] %s', $e->getMessage()), $connectorName);
+            $this->logger->error(sprintf('[Critical Error] %s', $e->getMessage()), $logContext);
         }
 
         return $buildDataTransferObject;
@@ -307,10 +313,11 @@ class SocialPostBuilderProcessor
     /**
      * @param string|int|null $filteredId
      * @param string          $connectorName
+     * @param FeedInterface   $feed
      *
      * @return null
      */
-    protected function provideSocialPostEntity($filteredId, string $connectorName)
+    protected function provideSocialPostEntity($filteredId, string $connectorName, FeedInterface $feed)
     {
         if (empty($filteredId)) {
             return null;
@@ -318,7 +325,10 @@ class SocialPostBuilderProcessor
 
         $postEntity = $this->socialPostRepository->findOneByIdAndSocialType($filteredId, $connectorName, true);
 
-        if ($postEntity instanceof SocialPostInterface) {
+        if ($postEntity instanceof SocialPostInterface && $postEntity instanceof Concrete) {
+            // we need to check if post is still connected to current feed id
+            $this->feedPostManager->connectFeedWithPost($feed, $postEntity);
+
             return $postEntity;
         }
 
@@ -336,22 +346,8 @@ class SocialPostBuilderProcessor
     {
         $wall = $feed->getWall();
 
-        $dataStorageFolder = null;
         $dataStorage = $wall->getDataStorage();
-
-        if (is_array($dataStorage)) {
-            $dataStorageFolder = DataObject\Folder::getById($dataStorage['id']);
-        }
-
-        if (!$dataStorageFolder instanceof DataObject\Folder) {
-            $this->logger->error(
-                sprintf('Data storage for wall %d (%s) is not defined',
-                    $wall->getId(),
-                    $wall->getName()
-                ),
-                $feed->getConnectorEngine()->getName()
-            );
-        }
+        $dataStorageFolder = DataObject\Folder::getById($dataStorage['id']);
 
         /** @var Concrete|SocialPostInterface $post */
         foreach ($posts as $post) {
@@ -380,15 +376,15 @@ class SocialPostBuilderProcessor
                         $post->getSocialId(),
                         is_object($e->getMessage()) ? get_class($e->getMessage()) : $e->getMessage()
                     ),
-                    $feed->getConnectorEngine()->getName()
+                    [$feed]
                 );
 
                 continue;
             }
 
-            $this->logger->debug(
+            $this->logger->info(
                 sprintf('Social post %s (%d) successfully saved', $post->getKey(), $post->getId()),
-                $feed->getConnectorEngine()->getName()
+                [$feed]
             );
         }
     }
@@ -405,24 +401,8 @@ class SocialPostBuilderProcessor
 
         $wall = $feed->getWall();
 
-        $assetStorageFolder = null;
         $assetStorage = $wall->getAssetStorage();
-
-        if (is_array($assetStorage)) {
-            $assetStorageFolder = Asset\Folder::getById($assetStorage['id']);
-        }
-
-        if (!$assetStorageFolder instanceof Asset\Folder) {
-            $this->logger->error(
-                sprintf('Asset storage for wall %d (%s) is not defined',
-                    $wall->getId(),
-                    $wall->getName()
-                ),
-                $feed->getConnectorEngine()->getName()
-            );
-
-            return;
-        }
+        $assetStorageFolder = Asset\Folder::getById($assetStorage['id']);
 
         $posterUrl = $socialPost->getPosterUrl();
 
@@ -443,10 +423,14 @@ class SocialPostBuilderProcessor
         $image = Asset::getByPath(sprintf('%s/%s', $assetStorageFolder->getFullPath(), $fileNameWithExtension));
 
         if ($image instanceof Asset\Image) {
+
             $this->logger->debug(
-                sprintf('Asset "%s" for post "%s already exists', $fileNameWithExtension, $socialPost->getSocialId()),
-                $feed->getConnectorEngine()->getName()
+                sprintf('Asset %s for post %s already exists, just creating relation.', $fileNameWithExtension, $socialPost->getSocialId()),
+                [$feed]
             );
+
+            $socialPost->setPoster($image);
+
             return;
         }
 
@@ -459,20 +443,67 @@ class SocialPostBuilderProcessor
         try {
             $poster->save();
 
-            $this->logger->debug(
-                sprintf('Asset "%s" for social post "%s" successfully stored', $fileNameWithExtension, $socialPost->getSocialId()),
-                $feed->getConnectorEngine()->getName()
+            $this->logger->info(
+                sprintf('Asset %s for social post %s successfully stored', $fileNameWithExtension, $socialPost->getSocialId()),
+                [$feed]
             );
 
         } catch (\Exception $e) {
             $this->logger->error(
-                sprintf('Could not persist media "%s" for post "%s: %s', $fileNameWithExtension, $socialPost->getSocialId(), $e->getMessage()),
-                $feed->getConnectorEngine()->getName()
+                sprintf('Could not persist media %s for post %s: %s', $fileNameWithExtension, $socialPost->getSocialId(), $e->getMessage()),
+                [$feed]
             );
 
             return;
         }
 
         $socialPost->setPoster($poster);
+    }
+
+    /**
+     * @param WallInterface $wall
+     *
+     * @return bool
+     */
+    protected function checkStoragePaths(WallInterface $wall)
+    {
+        $dataStorageFolder = null;
+        $assetStorageFolder = null;
+        $assetStorage = $wall->getAssetStorage();
+        $dataStorage = $wall->getDataStorage();
+
+        if (is_array($assetStorage)) {
+            $assetStorageFolder = Asset\Folder::getById($assetStorage['id']);
+        }
+
+        if (is_array($dataStorage)) {
+            $dataStorageFolder = DataObject\Folder::getById($dataStorage['id']);
+        }
+
+        if (!$assetStorageFolder instanceof Asset\Folder) {
+            $this->logger->error(
+                sprintf('Asset storage for wall %d (%s) is not defined',
+                    $wall->getId(),
+                    $wall->getName()
+                ),
+                [$wall]
+            );
+
+            return false;
+        }
+
+        if (!$dataStorageFolder instanceof DataObject\Folder) {
+            $this->logger->error(
+                sprintf('Data storage for wall %d (%s) is not defined',
+                    $wall->getId(),
+                    $wall->getName()
+                ),
+                [$wall]
+            );
+
+            return false;
+        }
+
+        return true;
     }
 }

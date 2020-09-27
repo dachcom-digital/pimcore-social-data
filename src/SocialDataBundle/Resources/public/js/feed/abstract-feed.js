@@ -1,6 +1,7 @@
 pimcore.registerNS('SocialData.Feed.AbstractFeed');
 SocialData.Feed.AbstractFeed = Class.create({
 
+    uId: null,
     connectorEngineId: null,
     wallId: null,
     feedId: null,
@@ -9,6 +10,7 @@ SocialData.Feed.AbstractFeed = Class.create({
     panel: null,
 
     initialize: function (connectorEngineId, data, wallId) {
+        this.uId = Ext.id();
         this.connectorEngineId = connectorEngineId;
         this.wallId = wallId;
         this.feedId = data && data.hasOwnProperty('id') ? data.id : null;
@@ -16,7 +18,7 @@ SocialData.Feed.AbstractFeed = Class.create({
     },
 
     getInternalId: function () {
-        return 'feed_' + this.getConnectorEngineId() + '_' + Ext.id();
+        return 'feed_' + this.getConnectorEngineId() + '_' + this.uId;
     },
 
     getConnectorEngineId: function () {

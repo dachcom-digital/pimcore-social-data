@@ -2,6 +2,10 @@
 
 namespace SocialDataBundle\Logger;
 
+use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
+use SocialDataBundle\Model\FeedInterface;
+use SocialDataBundle\Model\WallInterface;
+
 class ProviderContextConsoleProcessor
 {
     /**
@@ -11,9 +15,22 @@ class ProviderContextConsoleProcessor
      */
     public function __invoke(array $record)
     {
-        $connector = isset($record['context']['connector']) ? $record['context']['connector'] : '--';
+        $extra = [];
+        $context = is_array($record['context']) ? $record['context'] : [];
 
-        $record['extra'] = [$connector];
+        foreach ($context as $contextRow) {
+            if ($contextRow instanceof FeedInterface) {
+                $extra['feed'] = $contextRow->getId();
+                $extra['wall'] = $contextRow->getWall()->getId();
+                $extra['engine'] = $contextRow->getConnectorEngine()->getName();
+            } elseif ($contextRow instanceof WallInterface) {
+                $extra['wall'] = $contextRow->getId();
+            } elseif ($contextRow instanceof ConnectorEngineConfigurationInterface) {
+                $extra['engine'] = $contextRow->getName();
+            }
+        }
+
+        $record['extra'] = $extra;
 
         return $record;
     }

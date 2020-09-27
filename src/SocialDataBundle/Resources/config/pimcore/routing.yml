@@ -59,3 +59,10 @@ social_data_admin_walls_save_wall:
     path: /admin/social-data/walls/save-wall/{wallId}
     methods: [POST]
     defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::saveWallAction }
+
+# Admin Routes [Logs]
+
+social_data_admin_log_fetch_wall_logs:
+    path: /admin/social-data/logs/fetch-wall-logs/{wallId}
+    methods: [GET]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\LogController::loadLogsForWallAction }

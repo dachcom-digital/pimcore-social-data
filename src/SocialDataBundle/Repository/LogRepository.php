@@ -38,10 +38,26 @@ class LogRepository implements LogRepositoryInterface
         $qb = $this->repository->createQueryBuilder('l');
 
         $query = $qb->where('l.connectorEngine = :connectorEngine')
-            ->setParameter('connectorEngine', $connectorEngineId);
+            ->setParameter('connectorEngine', $connectorEngineId)
+            ->addOrderBy('l.creationDate', 'DESC');
 
         return new Paginator($query);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findForWall(int $wallId)
+    {
+        $qb = $this->repository->createQueryBuilder('l');
+
+        $query = $qb->where('l.wall = :wall')
+            ->setParameter('wall', $wallId)
+            ->addOrderBy('l.creationDate', 'DESC');
+
+        return new Paginator($query);
+    }
+
 
     /**
      * {@inheritdoc}

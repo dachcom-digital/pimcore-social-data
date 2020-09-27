@@ -20,40 +20,40 @@ class Logger implements LoggerInterface
     /**
      * {@inheritdoc}
      */
-    public function log($level, $message, string $connector)
+    public function log($level, $message, ?array $context = null)
     {
-        $this->logger->log($level, $message, ['connector' => $connector]);
+        $this->logger->log($level, $message, is_array($context) ? $context : []);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function debug($message, string $connector)
+    public function debug($message, ?array $context = null)
     {
-        $this->log('DEBUG', $message, $connector);
+        $this->log('DEBUG', $message, is_array($context) ? $context : []);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function info($message, string $connector)
+    public function info($message, ?array $context = null)
     {
-        $this->log('INFO', $message, $connector);
+        $this->log('INFO', $message, is_array($context) ? $context : []);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function warning($message, string $connector)
+    public function warning($message, ?array $context = null)
     {
-        $this->log('WARNING', $message, $connector);
+        $this->log('WARNING', $message, is_array($context) ? $context : []);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function error($message, string $connector)
+    public function error($message, ?array $context = null)
     {
-        $this->log('ERROR', $message, $connector);
+        $this->log('ERROR', $message, is_array($context) ? $context : []);
     }
 }

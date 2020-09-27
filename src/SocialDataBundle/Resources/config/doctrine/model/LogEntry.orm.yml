@@ -25,7 +25,7 @@ SocialDataBundle\Model\LogEntry:
             targetEntity: SocialDataBundle\Model\ConnectorEngine
             orphanRemoval: true
             joinColumn:
-                name: connector
+                name: connector_engine
                 referencedColumnName: id
                 onDelete: CASCADE
         wall:
