@@ -50,7 +50,7 @@ class SocialPostBuilder implements SocialPostBuilderInterface
             return;
         }
 
-        if (empty($buildConfig->getFeedConfiguration()->getPageId())) {
+        if (empty($feedConfiguration->getPageId())) {
             throw new BuildException('Invalid Page ID given');
         }
 

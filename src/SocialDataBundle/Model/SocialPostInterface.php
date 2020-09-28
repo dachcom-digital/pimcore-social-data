@@ -33,7 +33,7 @@ interface SocialPostInterface
     public function getUrl();
 
     /**
-     * @param $url
+     * @param string $url
      */
     public function setUrl($url);
 

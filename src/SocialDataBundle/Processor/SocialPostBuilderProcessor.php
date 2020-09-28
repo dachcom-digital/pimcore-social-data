@@ -29,8 +29,8 @@ use SocialDataBundle\Model\WallInterface;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 use SocialDataBundle\Service\LockServiceInterface;
 use SocialDataBundle\SocialDataEvents;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SocialPostBuilderProcessor
 {
@@ -111,6 +111,7 @@ class SocialPostBuilderProcessor
     public function process(bool $forceImport, $wallId)
     {
         if ($this->lockService->isLocked(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID)) {
+            $this->logger->debug(sprintf('Process %s already has been started', LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID));
             return;
         }
 
@@ -377,8 +378,8 @@ class SocialPostBuilderProcessor
     }
 
     /**
-     * @param FeedInterface             $feed
-     * @param array|SocialPostInterface $posts
+     * @param FeedInterface               $feed
+     * @param array|SocialPostInterface[] $posts
      */
     protected function savePosts(FeedInterface $feed, array $posts)
     {

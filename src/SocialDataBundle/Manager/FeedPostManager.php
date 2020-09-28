@@ -3,6 +3,7 @@
 namespace SocialDataBundle\Manager;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pimcore\Model\DataObject\Concrete;
 use SocialDataBundle\Model\FeedInterface;
@@ -65,6 +66,7 @@ class FeedPostManager implements FeedPostManagerInterface
                 'postId' => $socialPost->getId()
             ]);
 
+        /** @var Statement $stmt */
         $stmt = $qb->execute();
 
         return $stmt->rowCount() > 0;

@@ -2,7 +2,7 @@
 
 namespace SocialDataBundle\Connector\Facebook\QueryBuilder;
 
-class FacebookQueryBuilder
+final class FacebookQueryBuilder
 {
     /**
      * @var GraphNode
