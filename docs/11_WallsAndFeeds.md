@@ -17,9 +17,30 @@ You can add one or more wall and each wall can hold one or more feeds.
 | `Logs` | All related logs will be stored there |
 | `Feeds` | Add at least one feed |
 
+### Dispatch Processor
+There are two ways to execute the import process.
+
+#### Command
+To dispatch all wall builds at once, use this command:
+
+```bash
+php bin/console social-data:fetch:social-posts
+```
+
+To dispatch a specific wall build only, use this command (723 would be the wallId):
+
+```bash
+php bin/console social-data:fetch:social-posts -b 723
+```
+
+#### Manually
+On each wall panel you'll find a button in the top right corner: `"Dispatch Social Post Import for this Wall"`. 
+Click on it to execute the build process for this very specific wall only.
+
+***
+
 ## Feeds
 Every Feed contains some system fields but also a connector related configuration section.
-
 
 ### Configuration
 

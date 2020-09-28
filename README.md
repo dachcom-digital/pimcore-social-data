@@ -54,6 +54,8 @@ This Bundle needs some preparation. Please checkout the [Setup](docs/00_Setup.md
   - Youtube
   - WeChat
 - [Walls And Feeds](docs/11_WallsAndFeeds.md)
+- [Events](docs/12_Events.md)
+- [Frontend Usage](docs/13_FrontendUsage.md)
 - [Logging](docs/20_Logging.md)
 
 ## Copyright and license
