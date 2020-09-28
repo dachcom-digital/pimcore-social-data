@@ -53,8 +53,8 @@ This Bundle needs some preparation. Please checkout the [Setup](docs/00_Setup.md
   - Instagram
   - Youtube
   - WeChat
+- [Walls And Feeds](docs/11_WallsAndFeeds.md)
 - [Logging](docs/20_Logging.md)
-
 
 ## Copyright and license
 Copyright: [DACHCOM.DIGITAL](http://dachcom-digital.ch)  

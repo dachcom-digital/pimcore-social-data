@@ -7,5 +7,3 @@ After every update you should check the pimcore extension manager.
 Just click the "update" button or execute the migration command to finish the bundle update.
 
 ***
-
----
