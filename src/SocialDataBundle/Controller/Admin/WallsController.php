@@ -2,9 +2,13 @@
 
 namespace SocialDataBundle\Controller\Admin;
 
+use Pimcore\Model\User;
+use Pimcore\Tool\Console;
 use SocialDataBundle\Builder\ExtJsDataBuilder;
 use SocialDataBundle\Form\Admin\Type\Wall\WallType;
+use SocialDataBundle\Logger\LoggerInterface;
 use SocialDataBundle\Manager\WallManagerInterface;
+use SocialDataBundle\Service\LockServiceInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Pimcore\Bundle\AdminBundle\HttpFoundation\JsonResponse;
@@ -13,6 +17,16 @@ use SocialDataBundle\Model\WallInterface;
 
 class WallsController extends AdminController
 {
+    /**
+     * @var LockServiceInterface
+     */
+    protected $lockService;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     /**
      * @var FormFactoryInterface
      */
@@ -29,15 +43,21 @@ class WallsController extends AdminController
     protected $extJsDataBuilder;
 
     /**
+     * @param LockServiceInterface $lockService
+     * @param LoggerInterface      $logger
      * @param FormFactoryInterface $formFactory
      * @param WallManagerInterface $wallManager
      * @param ExtJsDataBuilder     $extJsDataBuilder
      */
     public function __construct(
+        LockServiceInterface $lockService,
+        LoggerInterface $logger,
         FormFactoryInterface $formFactory,
         WallManagerInterface $wallManager,
         ExtJsDataBuilder $extJsDataBuilder
     ) {
+        $this->lockService = $lockService;
+        $this->logger = $logger;
         $this->formFactory = $formFactory;
         $this->wallManager = $wallManager;
         $this->extJsDataBuilder = $extJsDataBuilder;
@@ -203,5 +223,46 @@ class WallsController extends AdminController
             'id'      => $wallId,
             'wall'    => $updatedWall
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $wallId
+     *
+     * @return JsonResponse
+     */
+    public function triggerWallBuildProcessAction(Request $request, int $wallId)
+    {
+        if ($this->lockService->isLocked(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID)) {
+            return $this->adminJson(['success' => true, 'status' => 'locked']);
+        }
+
+        $wall = $this->wallManager->getById($wallId);
+        if (!$wall instanceof WallInterface) {
+            return $this->adminJson(['success' => false, 'message' => sprintf('Wall with id %d does not exist', $wallId)]);
+        }
+
+        $execCommand = sprintf('%s/bin/console social-data:fetch:social-posts -w %d', PIMCORE_PROJECT_ROOT, $wall->getId());
+
+        try {
+            Console::runPhpScriptInBackground($execCommand);
+        } catch (\Throwable $e) {
+            return $this->adminJson(['success' => false, 'message' => $e->getMessage()]);
+        }
+
+        $response = ['success' => true, 'status' => 'dispatched'];
+
+        $userId = '';
+        $userName = 'Unkown';
+        $user = $this->getAdminUser();
+
+        if ($user instanceof User) {
+            $userName = $user->getName();
+            $userId = $user->getId();
+        }
+
+        $this->logger->info(sprintf('Import process manually started by user %s (%d)', $userName, $userId), [$wall]);
+
+        return $this->adminJson($response);
     }
 }

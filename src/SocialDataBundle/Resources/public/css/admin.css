@@ -26,6 +26,10 @@
     background: url(/bundles/socialdata/img/social_data_wall_feed_add.svg) left center no-repeat !important;
 }
 
+.pimcore_icon_social_data_connector_tbtext {
+    padding: 2px 0 2px 24px;
+}
+
 .pimcore_icon_social_data_connector_facebook {
     background: url(/bundles/socialdata/img/facebook.svg) left center no-repeat !important;
 }

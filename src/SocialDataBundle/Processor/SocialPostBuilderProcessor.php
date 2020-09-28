@@ -27,6 +27,7 @@ use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Model\WallInterface;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
+use SocialDataBundle\Service\LockServiceInterface;
 use SocialDataBundle\SocialDataEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,6 +38,11 @@ class SocialPostBuilderProcessor
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var LockServiceInterface
+     */
+    protected $lockService;
 
     /**
      * @var EventDispatcherInterface
@@ -70,6 +76,7 @@ class SocialPostBuilderProcessor
 
     /**
      * @param LoggerInterface               $logger
+     * @param LockServiceInterface          $lockService
      * @param EventDispatcherInterface      $eventDispatcher
      * @param WallManagerInterface          $wallManager
      * @param FeedPostManagerInterface      $feedPostManager
@@ -79,6 +86,7 @@ class SocialPostBuilderProcessor
      */
     public function __construct(
         LoggerInterface $logger,
+        LockServiceInterface $lockService,
         EventDispatcherInterface $eventDispatcher,
         WallManagerInterface $wallManager,
         FeedPostManagerInterface $feedPostManager,
@@ -87,6 +95,7 @@ class SocialPostBuilderProcessor
         SocialPostFactoryInterface $socialPostFactory
     ) {
         $this->logger = $logger;
+        $this->lockService = $lockService;
         $this->eventDispatcher = $eventDispatcher;
         $this->wallManager = $wallManager;
         $this->feedPostManager = $feedPostManager;
@@ -95,11 +104,39 @@ class SocialPostBuilderProcessor
         $this->socialPostFactory = $socialPostFactory;
     }
 
-    public function process()
+    /**
+     * @param bool     $forceImport
+     * @param int|null $wallId
+     */
+    public function process(bool $forceImport, $wallId)
     {
-        foreach ($this->wallManager->getAll() as $wall) {
-            $this->processWall($wall);
+        if ($this->lockService->isLocked(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID)) {
+            return;
         }
+
+        if ($wallId !== null) {
+            $walls = $this->wallManager->getById($wallId);
+            if (!$walls instanceof WallInterface) {
+                $this->logger->error(sprintf('Wall with id %d not found', $wallId));
+                return;
+            }
+        } else {
+            $walls = $this->wallManager->getAll();
+        }
+
+        $walls = is_array($walls) ? $walls : [$walls];
+
+        $this->lockService->lock(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID);
+
+        foreach ($walls as $wall) {
+            try {
+                $this->processWall($wall);
+            } catch (\Throwable $e) {
+                $this->logger->error(sprintf('Uncaught exception while processing wall: %s', $e->getMessage()), [$wall]);
+            }
+        }
+
+        $this->lockService->unlock(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID);
     }
 
     /**
@@ -459,7 +496,6 @@ class SocialPostBuilderProcessor
 
         try {
             $poster->save();
-
             $this->logger->info(
                 sprintf('Asset %s (%d) for social post %s successfully stored', $fileNameWithExtension, $poster->getId(), $socialPost->getSocialId()),
                 [$feed]

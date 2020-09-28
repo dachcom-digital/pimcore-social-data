@@ -13,3 +13,6 @@ services:
 
     SocialDataBundle\Service\StatisticServiceInterface: '@SocialDataBundle\Service\StatisticService'
     SocialDataBundle\Service\StatisticService: ~
+
+    SocialDataBundle\Service\LockServiceInterface: '@SocialDataBundle\Service\LockService'
+    SocialDataBundle\Service\LockService: ~

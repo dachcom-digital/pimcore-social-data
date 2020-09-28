@@ -72,17 +72,28 @@ SocialData.Wall.MainPanel = Class.create({
             title: false,
             border: false,
             autoScroll: true,
-            defaults: {
-                labelWidth: 250
-            },
+            tools: [
+                {
+                    xtype: 'tbfill'
+                },
+                {
+                    xtype: 'button',
+                    text: t('social_data.wall.dispatch_build_process'),
+                    iconCls: 'pimcore_icon_import',
+                    handler: this.dispatchWallBuildProcess.bind(this)
+                }
+            ],
             items: [
                 {
                     xtype: 'panel',
                     bodyStyle: 'padding: 10px;',
+                    defaults: {
+                        labelWidth: 180,
+                        width: 400
+                    },
                     items: [
                         {
                             xtype: 'textfield',
-                            width: 600,
                             name: 'name',
                             fieldLabel: t('name'),
                             value: this.wallData.name
@@ -136,6 +147,39 @@ SocialData.Wall.MainPanel = Class.create({
 
         this.parentPanel.getEditPanel().add(this.panel);
         this.parentPanel.getEditPanel().setActiveTab(this.panel);
+    },
+
+    dispatchWallBuildProcess: function (btn) {
+
+        btn.setDisabled(true);
+
+        Ext.Ajax.request({
+            url: '/admin/social-data/walls/trigger-wall-build-process/' + this.wallId,
+            method: 'GET',
+            success: function (response) {
+
+                var res = Ext.decode(response.responseText);
+
+                setTimeout(function () {
+                    btn.setDisabled(false);
+                }, 1000);
+
+                if (res.success === false) {
+                    Ext.Msg.alert(t('error'), res.message);
+                    return;
+                }
+
+                if (res.status === 'locked') {
+                    Ext.Msg.alert(t('error'), t('social_data.wall.build_process_locked'));
+                    return;
+                }
+
+                pimcore.helpers.showNotification(t('success'), t('social_data.wall.build_process_dispatched'), 'success');
+            },
+            failure: function () {
+                btn.setDisabled(false);
+            }
+        });
     },
 
     getStatisticPanel: function () {
@@ -266,7 +310,6 @@ SocialData.Wall.MainPanel = Class.create({
 
         this.feedPanel = new Ext.Panel({
             iconCls: 'pimcore_icon_social_data_wall_feed',
-            bodyStyle: 'padding:10px;',
             title: t('social_data.wall.feed_configuration'),
             autoScroll: true,
             border: false,
@@ -316,24 +359,22 @@ SocialData.Wall.MainPanel = Class.create({
 
     getDeleteControl: function (data, feedConfig) {
 
-        var items = [{
-            xtype: 'tbtext',
-            html: feedConfig.hasOwnProperty('label') ? '<strong>' + feedConfig.label + '</strong>' : ('Feed ' + index),
-            iconCls: feedConfig.hasOwnProperty('iconCls') ? feedConfig.iconCls : 'pimcore_icon_social_data_wall_feed',
-        }];
-
-        items.push('->');
-
-        items.push({
-            cls: 'pimcore_block_button_minus',
-            iconCls: 'pimcore_icon_minus',
-            listeners: {
-                'click': this.removeFeed.bind(this)
-            }
-        });
-
         return new Ext.Toolbar({
-            items: items
+            items: [
+                {
+                    xtype: 'tbtext',
+                    html: feedConfig.hasOwnProperty('label') ? '<strong>' + feedConfig.label + '</strong>' : ('Feed ' + index),
+                    cls: 'pimcore_icon_social_data_connector_tbtext ' + (feedConfig.hasOwnProperty('iconCls') ? feedConfig.iconCls : 'pimcore_icon_social_data_wall_feed'),
+                },
+                '->',
+                {
+                    cls: 'pimcore_block_button_minus',
+                    iconCls: 'pimcore_icon_minus',
+                    listeners: {
+                        'click': this.removeFeed.bind(this)
+                    }
+                }
+            ]
         });
     },
 
@@ -390,11 +431,11 @@ SocialData.Wall.MainPanel = Class.create({
             items = [{
                 xtype: 'tbtext',
                 text: 'No configuration for ' + feedConfig.identifier + ' found.',
-            }]
+            }];
         }
 
         element = new Ext.Panel({
-            style: 'margin-top: 10px;',
+            style: 'margin: 9px;',
             bodyStyle: 'padding:10px;',
             cls: 'feedItem',
             autoHeight: true,

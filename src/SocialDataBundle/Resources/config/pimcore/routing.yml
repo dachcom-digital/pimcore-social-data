@@ -60,6 +60,11 @@ social_data_admin_walls_save_wall:
     methods: [POST]
     defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::saveWallAction }
 
+social_data_admin_walls_trigger_wall_build_porcess:
+    path: /admin/social-data/walls/trigger-wall-build-process/{wallId}
+    methods: [GET]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::triggerWallBuildProcessAction }
+
 # Admin Routes [Logs]
 
 social_data_admin_log_fetch_wall_logs:
