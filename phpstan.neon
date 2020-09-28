@@ -9,5 +9,7 @@ parameters:
     ignoreErrors:
         # There is no global constants definition file we could include, ignore it:
         - '#Constant PIMCORE_[A-Z\\_]+ not found\.#'
+        # Symfony DI (remove this line after symfony 4 support only):
+        - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
         - '#.*NodeDefinition::append.*#'
         - '#.*NodeDefinition::addDefaultsIfNotSet.*#'

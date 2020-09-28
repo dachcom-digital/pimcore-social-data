@@ -13,6 +13,11 @@ class FeedConfiguration implements ConnectorFeedConfigurationInterface
     protected $pageId;
 
     /**
+     * @var int
+     */
+    protected $limit;
+
+    /**
      * {@inheritdoc}
      */
     public static function getFormClass()
@@ -34,5 +39,21 @@ class FeedConfiguration implements ConnectorFeedConfigurationInterface
     public function getPageId()
     {
         return $this->pageId;
+    }
+
+    /**
+     * @param int|null $limit
+     */
+    public function setLimit(?int $limit)
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLimit()
+    {
+        return $this->limit;
     }
 }

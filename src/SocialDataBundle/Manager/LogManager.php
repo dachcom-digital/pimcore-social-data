@@ -2,7 +2,7 @@
 
 namespace SocialDataBundle\Manager;
 
-use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
+use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\LogEntry;
 use SocialDataBundle\Model\LogEntryInterface;
@@ -92,7 +92,7 @@ class LogManager implements LogManagerInterface
                 $logEntry->setConnectorEngine($contextRow->getConnectorEngine());
             } elseif ($contextRow instanceof WallInterface) {
                 $logEntry->setWall($contextRow);
-            } elseif ($contextRow instanceof ConnectorEngineConfigurationInterface) {
+            } elseif ($contextRow instanceof ConnectorEngineInterface) {
                 $logEntry->setConnectorEngine($contextRow);
             }
         }

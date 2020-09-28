@@ -2,7 +2,7 @@
 
 namespace SocialDataBundle\Logger;
 
-use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
+use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\WallInterface;
 
@@ -25,7 +25,7 @@ class ProviderContextConsoleProcessor
                 $extra['engine'] = $contextRow->getConnectorEngine()->getName();
             } elseif ($contextRow instanceof WallInterface) {
                 $extra['wall'] = $contextRow->getId();
-            } elseif ($contextRow instanceof ConnectorEngineConfigurationInterface) {
+            } elseif ($contextRow instanceof ConnectorEngineInterface) {
                 $extra['engine'] = $contextRow->getName();
             }
         }

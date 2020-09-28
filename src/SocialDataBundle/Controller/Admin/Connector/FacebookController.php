@@ -55,22 +55,14 @@ class FacebookController extends AdminController
      */
     public function connectAction(Request $request)
     {
-        $connectorDefinition = $this->connectorService->getConnectorDefinition('facebook', true);
-
-        if (!$connectorDefinition->engineIsLoaded()) {
-            throw $this->createNotFoundException('Not Found');
-        }
-
-        $connectorEngineConfig = $connectorDefinition->getEngineConfiguration();
-        if (!$connectorEngineConfig instanceof EngineConfiguration) {
-            throw new HttpException(400, 'Invalid facebook configuration. Please configure your connector "facebook" in backend first.');
-        }
+        $connectorEngineConfig = $this->getConnectorEngineConfig();
 
         $fb = $this->facebookClient->getClient($connectorEngineConfig);
         $helper = $fb->getRedirectLoginHelper();
 
         $callbackUrl = $this->generateUrl('social_data_connector_connect_check', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        // @todo: make this configurable (e.g. via connector config?)
         $permissions = ['pages_show_list'];
 
         $loginUrl = $helper->getLoginUrl($callbackUrl, $permissions);
@@ -87,16 +79,7 @@ class FacebookController extends AdminController
      */
     public function checkAction(Request $request)
     {
-        $connectorDefinition = $this->connectorService->getConnectorDefinition('facebook', true);
-
-        if (!$connectorDefinition->engineIsLoaded()) {
-            throw $this->createNotFoundException('Not Found');
-        }
-
-        $connectorEngineConfig = $connectorDefinition->getEngineConfiguration();
-        if (!$connectorEngineConfig instanceof EngineConfiguration) {
-            throw new HttpException(400, 'Invalid facebook configuration. Please configure your connector "facebook" in backend first.');
-        }
+        $connectorEngineConfig = $this->getConnectorEngineConfig();
 
         $fb = $this->facebookClient->getClient($connectorEngineConfig);
         $helper = $fb->getRedirectLoginHelper();
@@ -124,5 +107,24 @@ class FacebookController extends AdminController
         $response->setContent('Successfully connected. You can now close this window and return to backend to complete the configuration.');
 
         return $response;
+    }
+
+    /**
+     * @return EngineConfiguration
+     */
+    protected function getConnectorEngineConfig()
+    {
+        $connectorDefinition = $this->connectorService->getConnectorDefinition('facebook', true);
+
+        if (!$connectorDefinition->engineIsLoaded()) {
+            throw $this->createNotFoundException('Not Found');
+        }
+
+        $connectorEngineConfig = $connectorDefinition->getEngineConfiguration();
+        if (!$connectorEngineConfig instanceof EngineConfiguration) {
+            throw new HttpException(400, 'Invalid facebook configuration. Please configure your connector "facebook" in backend first.');
+        }
+
+        return $connectorEngineConfig;
     }
 }

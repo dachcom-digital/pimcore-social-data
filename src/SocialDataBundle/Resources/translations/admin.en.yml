@@ -66,6 +66,7 @@ social_data.wall.feed.delete_text: 'Do you really want to delete this Feed? Ther
 social_data.wall.feed.persist_media: 'Store media as assets'
 social_data.wall.feed.publish_post_immediately: 'Immediately publish social post'
 social_data.wall.feed.facebook.page_id: 'Page ID'
+social_data.wall.feed.facebook.limit: 'Limit'
 social_data.statistic.title: 'Statistics'
 social_data.statistic.available_wall_posts: 'Linked Social Posts to this Wall'
 social_data.statistic.published_wall_posts: 'Published Social Posts of this Wall'

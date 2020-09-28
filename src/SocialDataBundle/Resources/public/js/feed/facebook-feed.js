@@ -20,15 +20,26 @@ SocialData.Feed.Facebook = Class.create(SocialData.Feed.AbstractFeed, {
 
         var fields = [];
 
-        fields.push({
-            xtype: 'textfield',
-            value: this.data !== null ? this.data['pageId'] : null,
-            fieldLabel: t('social_data.wall.feed.facebook.page_id'),
-            name: 'pageId',
-            labelAlign: 'left',
-            anchor: '100%',
-            flex: 1
-        });
+        fields.push(
+            {
+                xtype: 'textfield',
+                value: this.data !== null ? this.data['pageId'] : null,
+                fieldLabel: t('social_data.wall.feed.facebook.page_id'),
+                name: 'pageId',
+                labelAlign: 'left',
+                anchor: '100%',
+                flex: 1
+            },
+            {
+                xtype: 'numberfield',
+                value: this.data !== null ? this.data['limit'] : null,
+                fieldLabel: t('social_data.wall.feed.facebook.limit'),
+                name: 'limit',
+                labelAlign: 'left',
+                anchor: '100%',
+                flex: 1
+            }
+        );
 
         return fields;
     },

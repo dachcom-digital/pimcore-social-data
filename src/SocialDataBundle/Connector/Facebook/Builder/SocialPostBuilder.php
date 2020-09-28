@@ -67,10 +67,12 @@ class SocialPostBuilder implements SocialPostBuilderInterface
             'status_type'
         ];
 
+        $limit = is_numeric($feedConfiguration->getLimit()) ? $feedConfiguration->getLimit() : 50;
+
         $posts = $fqb
             ->edge('posts')
             ->fields($fields)
-            ->limit(50);
+            ->limit($limit);
 
         $queryBuilder = $fqb
             ->node($feedConfiguration->getPageId())
