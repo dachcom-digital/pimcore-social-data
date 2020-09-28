@@ -57,6 +57,7 @@ This Bundle needs some preparation. Please checkout the [Setup](docs/00_Setup.md
 - [Events](docs/12_Events.md)
 - [Frontend Usage](docs/13_FrontendUsage.md)
 - [Logging](docs/20_Logging.md)
+- [Custom Connector](docs/30_CustomConnector.md)
 
 ## Copyright and license
 Copyright: [DACHCOM.DIGITAL](http://dachcom-digital.ch)  

@@ -20,11 +20,6 @@ class ConnectorDefinition implements ConnectorDefinitionInterface
     /**
      * @var SocialPostBuilderInterface
      */
-    protected $socialPostCollector;
-
-    /**
-     * @var SocialPostBuilderInterface
-     */
     protected $socialPostBuilder;
 
     /**

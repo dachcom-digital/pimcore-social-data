@@ -1,6 +1,11 @@
 # Frontend Usage
 Basically, this is the easiest part because you're dealing with pimcore objects and that's something you may already know.
 
+## Simple Queries
+There are some simple queries to fetch social posts by known ids
+which are helpful but are limited in their flexibility. For example, if a feed gets deleted and re-added,
+your id based query won't work anymore.
+
 ## Example A
 There are several fetch methods available:
 
@@ -133,3 +138,10 @@ class SocialController extends FrontendController
     }
 }
 ```
+
+## Complex Queries
+This is a planned feature and is currently not implemented.
+Within complex queries, you're allowed to query for `wallTags` and `feedTags` without any id-based relation 
+with different mix&match patterns. 
+
+TBD
