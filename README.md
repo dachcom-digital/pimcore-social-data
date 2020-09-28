@@ -4,7 +4,9 @@
 [![Travis](https://img.shields.io/travis/com/dachcom-digital/pimcore-social-data/master.svg?style=flat-square)](https://travis-ci.com/dachcom-digital/pimcore-social-data)
 [![PhpStan](https://img.shields.io/badge/PHPStan-level%202-brightgreen.svg?style=flat-square)](#)
 
-TBD
+This Bundles allows you to load social data from different networks like Facebook, Instagram or Youtube.
+
+![image](https://user-images.githubusercontent.com/700119/94448014-bce31980-01aa-11eb-8869-e38bde73d253.png)
 
 #### Requirements
 * Pimcore >= 6.6.0
@@ -42,7 +44,17 @@ Does actually the same as the update command and preferred in CI-Workflow:
 - Execute: `$ bin/console pimcore:migrations:migrate -b SocialDataBundle`
 
 ## Usage
-- TBD
+This Bundle needs some preparation. Please checkout the [Setup](docs/00_Setup.md) guide first.
+
+## Further Information
+- [Setup](docs/00_Setup.md)
+- [Connectors](./docs/10_Connectors.md)
+  - [Facebook](./docs/Connectors/01_Facebook.md)
+  - Instagram
+  - Youtube
+  - WeChat
+- [Logging](docs/20_Logging.md)
+
 
 ## Copyright and license
 Copyright: [DACHCOM.DIGITAL](http://dachcom-digital.ch)  
