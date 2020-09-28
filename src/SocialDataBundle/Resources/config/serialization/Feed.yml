@@ -4,6 +4,8 @@ SocialDataBundle\Model\Feed:
             groups: [Default, ExtJs]
         persistMedia:
             groups: [Default, ExtJs]
+        publishPostImmediately:
+            groups: [Default, ExtJs]
         configuration:
             groups: [Default, ExtJs]
         creationDate:

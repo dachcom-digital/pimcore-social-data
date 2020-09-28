@@ -382,21 +382,7 @@ SocialData.Wall.MainPanel = Class.create({
 
             this.feedPanelConfigClasses.push({id: feedPanelConfigId, dataClass: feedPanelConfig});
 
-            itemLayout.insert(0, {
-                xtype: 'fieldset',
-                title: t('social_data.wall.feed.config'),
-                items: [
-                    {
-                        xtype: 'checkbox',
-                        value: data && data.hasOwnProperty('persistMedia') ? data.persistMedia : null,
-                        fieldLabel: t('social_data.wall.feed.persist_media'),
-                        name: 'persistMedia',
-                        labelAlign: 'left',
-                        anchor: '100%',
-                        flex: 1
-                    }
-                ]
-            })
+            this.addSystemConfigPanelToFeed(itemLayout, data);
 
             items = [itemLayout];
 
@@ -424,6 +410,38 @@ SocialData.Wall.MainPanel = Class.create({
         });
 
         this.feedPanel.add(element);
+    },
+
+    addSystemConfigPanelToFeed: function (itemLayout, data) {
+
+        itemLayout.insert(0, {
+            xtype: 'fieldset',
+            title: t('social_data.wall.feed.config'),
+            items: [
+                {
+                    xtype: 'checkbox',
+                    value: data && data.hasOwnProperty('persistMedia') ? data.persistMedia : null,
+                    fieldLabel: t('social_data.wall.feed.persist_media'),
+                    name: 'system.persistMedia',
+                    labelAlign: 'left',
+                    labelWidth: 250,
+                    inputValue: true,
+                    uncheckedValue: false
+                },
+                {
+                    xtype: 'checkbox',
+                    value: data && data.hasOwnProperty('publishPostImmediately') ? data.publishPostImmediately : true,
+                    fieldLabel: t('social_data.wall.feed.publish_post_immediately'),
+                    name: 'system.publishPostImmediately',
+                    labelAlign: 'left',
+                    labelWidth: 250,
+                    inputValue: true,
+                    uncheckedValue: false
+                }
+            ]
+        });
+
+        return itemLayout;
     },
 
     removeFeed: function (btn) {
@@ -471,7 +489,9 @@ SocialData.Wall.MainPanel = Class.create({
 
         var connectorEngineId = feedConfig.connectorEngineId,
             connectorName = feedConfig.connectorName,
-            feedConfigPanel;
+            feedConfigPanel,
+            feedId,
+            feedConfiguration;
 
         if (typeof SocialData.Feed !== 'object') {
             return null;
@@ -481,7 +501,10 @@ SocialData.Wall.MainPanel = Class.create({
             return null;
         }
 
-        feedConfigPanel = new SocialData.Feed[connectorName](connectorEngineId, data, this.wallId);
+        feedId = data && data.hasOwnProperty('id') ? data.id : null;
+        feedConfiguration = data && data.hasOwnProperty('configuration') ? data.configuration : null;
+
+        feedConfigPanel = new SocialData.Feed[connectorName](connectorEngineId, this.wallId, feedId, feedConfiguration);
 
         return feedConfigPanel;
     },
@@ -532,7 +555,7 @@ SocialData.Wall.MainPanel = Class.create({
 
     generateFeedConfigForPersisting: function (feed) {
 
-        var persistMedia = null,
+        var systemData = null,
             transposedConfig,
             transposedData,
             compiledData = {},
@@ -545,17 +568,20 @@ SocialData.Wall.MainPanel = Class.create({
         transposedConfig = DataObjectParser.transpose(dataClass.getValues());
         transposedData = transposedConfig.data();
 
-        // @todo: improve feed system config fetching here!
-
-        if (transposedData.hasOwnProperty('persistMedia')) {
-            persistMedia = transposedData['persistMedia'];
-            delete transposedData['persistMedia'];
+        if (transposedData.hasOwnProperty('system')) {
+            systemData = transposedData['system'];
+            delete transposedData['system'];
         }
 
-        compiledData['configuration'] = transposedData;
-        compiledData['persistMedia'] = persistMedia;
         compiledData['id'] = dataClass.getFeedId();
         compiledData['connectorEngine'] = dataClass.getConnectorEngineId();
+        compiledData['configuration'] = transposedData;
+
+        if (Ext.isObject(systemData)) {
+            Ext.Object.each(systemData, function (k, v) {
+                compiledData[k] = v;
+            });
+        }
 
         return compiledData;
     },

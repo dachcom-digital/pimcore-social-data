@@ -14,6 +14,11 @@ SocialDataBundle\Model\Feed:
             column: id
             generator:
                 strategy: AUTO
+        publishPostImmediately:
+            column: publish_post_immediately
+            nullable: false
+            type: boolean
+            unique: false
         persistMedia:
             column: persist_media
             nullable: false

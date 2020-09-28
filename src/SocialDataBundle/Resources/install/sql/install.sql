@@ -14,6 +14,7 @@ CREATE TABLE `social_data_feed` (
   `creation_date` datetime NOT NULL,
   `wall` int(11) DEFAULT NULL,
   `persist_media` tinyint(1) NOT NULL,
+  `publish_post_immediately` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_AA59D23E148C456E` (`connector`),
   KEY `IDX_AA59D23E13F5EFF6` (`wall`),

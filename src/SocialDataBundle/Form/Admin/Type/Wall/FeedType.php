@@ -38,6 +38,7 @@ class FeedType extends AbstractType
     {
         $builder->add('connectorEngine', ConnectorEngineChoiceType::class, []);
         $builder->add('persistMedia', CheckboxType::class, []);
+        $builder->add('publishPostImmediately', CheckboxType::class, []);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
 

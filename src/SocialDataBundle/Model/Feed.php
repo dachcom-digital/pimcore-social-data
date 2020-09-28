@@ -17,6 +17,11 @@ class Feed implements FeedInterface
     protected $persistMedia;
 
     /**
+     * @var bool
+     */
+    protected $publishPostImmediately;
+
+    /**
      * @var ConnectorFeedConfigurationInterface|null
      */
     protected $configuration;
@@ -73,6 +78,22 @@ class Feed implements FeedInterface
     public function getPersistMedia()
     {
         return $this->persistMedia;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPublishPostImmediately(bool $publishPostImmediately)
+    {
+        $this->publishPostImmediately = $publishPostImmediately;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishPostImmediately()
+    {
+        return $this->publishPostImmediately;
     }
 
     /**

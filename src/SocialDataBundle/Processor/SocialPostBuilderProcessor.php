@@ -362,7 +362,7 @@ class SocialPostBuilderProcessor
             }
 
             if (empty($post->getId())) {
-                $post->setPublished(false);
+                $post->setPublished($feed->getPublishPostImmediately());
             }
 
             $post->setKey(File::getValidFilename(sprintf('%s-%s', $post->getSocialId(), $feed->getConnectorEngine()->getName())));

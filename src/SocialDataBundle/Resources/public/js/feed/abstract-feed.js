@@ -9,12 +9,12 @@ SocialData.Feed.AbstractFeed = Class.create({
 
     panel: null,
 
-    initialize: function (connectorEngineId, data, wallId) {
+    initialize: function (connectorEngineId, wallId, feedId, data) {
         this.uId = Ext.id();
         this.connectorEngineId = connectorEngineId;
         this.wallId = wallId;
-        this.feedId = data && data.hasOwnProperty('id') ? data.id : null;
-        this.data = data && data.hasOwnProperty('configuration') ? data.configuration : null;
+        this.feedId = feedId;
+        this.data = data;
     },
 
     getInternalId: function () {

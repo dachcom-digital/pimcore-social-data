@@ -22,6 +22,16 @@ interface FeedInterface
     public function getPersistMedia();
 
     /**
+     * @param bool $publishPostImmediately
+     */
+    public function setPublishPostImmediately(bool $publishPostImmediately);
+
+    /**
+     * @return bool
+     */
+    public function getPublishPostImmediately();
+
+    /**
      * @param ConnectorFeedConfigurationInterface|null $configuration
      */
     public function setConfiguration(?ConnectorFeedConfigurationInterface $configuration);
