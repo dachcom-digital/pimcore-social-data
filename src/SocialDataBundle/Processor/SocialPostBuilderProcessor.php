@@ -2,6 +2,7 @@
 
 namespace SocialDataBundle\Processor;
 
+use Pimcore\Db\ZendCompatibility\QueryBuilder;
 use Pimcore\File;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
@@ -352,13 +353,13 @@ class SocialPostBuilderProcessor
         /** @var Concrete|SocialPostInterface $post */
         foreach ($posts as $post) {
 
+            $post->setSocialType($feed->getConnectorEngine()->getName());
+            $post->setParent($dataStorageFolder);
+
             // store media first, if required
             if ($feed->getPersistMedia() === true) {
                 $this->persistMedia($feed, $post);
             }
-
-            $post->setSocialType($feed->getConnectorEngine()->getName());
-            $post->setParent($dataStorageFolder);
 
             if (empty($post->getId())) {
                 $post->setPublished(false);
@@ -415,12 +416,27 @@ class SocialPostBuilderProcessor
             $extension = 'jpg';
         }
 
+        $identifier = sprintf('%s-%s', $socialPost->getSocialId(), $socialPost->getSocialType());
         $cleanExtension = str_replace('jpeg', 'jpg', $extension);
+        $fileNameWithExtension = sprintf('%s%s%s', File::getValidFilename($identifier), strpos($cleanExtension, '.') === false ? '.' : '', $cleanExtension);
 
-        $fileName = sprintf('%s-%s', $socialPost->getSocialId(), $socialPost->getSocialType());
-        $fileNameWithExtension = sprintf('%s.%s', File::getValidFilename($fileName), $cleanExtension);
+        $listing = new Asset\Listing();
+        $listing->addConditionParam('p.data = ?', $identifier);
+        $listing->onCreateQuery(function (QueryBuilder $builder) {
+            $builder->join(['p' => 'properties'], 'p.cid = assets.id AND p.ctype = "asset" AND p.name = "social_data_identifier"', ['sdi' => 'p.data']);
+        });
 
-        $image = Asset::getByPath(sprintf('%s/%s', $assetStorageFolder->getFullPath(), $fileNameWithExtension));
+        $propAssets = $listing->getAssets();
+
+        /**
+         * 1. Check if asset exists with property
+         * 2. If not, check if asset exists in current path definition to avoid duplicate path issues
+         */
+        if (count($propAssets) > 0) {
+            $image = $propAssets[0];
+        } else {
+            $image = Asset::getByPath(sprintf('%s/%s', $assetStorageFolder->getFullPath(), $fileNameWithExtension));
+        }
 
         if ($image instanceof Asset\Image) {
 
@@ -439,12 +455,13 @@ class SocialPostBuilderProcessor
         $poster->setData(file_get_contents($posterUrl));
         $poster->setFilename($fileNameWithExtension);
         $poster->setParent($assetStorageFolder);
+        $poster->setProperty('social_data_identifier', 'text', $identifier, false, false);
 
         try {
             $poster->save();
 
             $this->logger->info(
-                sprintf('Asset %s for social post %s successfully stored', $fileNameWithExtension, $socialPost->getSocialId()),
+                sprintf('Asset %s (%d) for social post %s successfully stored', $fileNameWithExtension, $poster->getId(), $socialPost->getSocialId()),
                 [$feed]
             );
 
