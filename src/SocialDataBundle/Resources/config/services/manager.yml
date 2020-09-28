@@ -16,5 +16,8 @@ services:
     SocialDataBundle\Manager\WallManagerInterface: '@SocialDataBundle\Manager\WallManager'
     SocialDataBundle\Manager\WallManager: ~
 
+    SocialDataBundle\Manager\SocialPostManagerInterface: '@SocialDataBundle\Manager\SocialPostManager'
+    SocialDataBundle\Manager\SocialPostManager: ~
+
     SocialDataBundle\Manager\FeedPostManagerInterface: '@SocialDataBundle\Manager\FeedPostManager'
     SocialDataBundle\Manager\FeedPostManager: ~

@@ -6,7 +6,6 @@ use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\GraphNodes\GraphEdge;
 use Facebook\GraphNodes\GraphNode;
-use Pimcore\Model\DataObject\Concrete;
 use SocialDataBundle\Dto\BuildConfig;
 use SocialDataBundle\Connector\Facebook\Model\EngineConfiguration;
 use SocialDataBundle\Connector\Facebook\Model\FeedConfiguration;
@@ -183,11 +182,6 @@ class SocialPostBuilder implements SocialPostBuilderInterface
         $socialPost = $data->getSocialPostEntity();
 
         if (!is_array($element)) {
-            return;
-        }
-
-        // currently we do not allow updates!
-        if ($socialPost instanceof Concrete && !empty($socialPost->getId())) {
             return;
         }
 
