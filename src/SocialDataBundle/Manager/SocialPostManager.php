@@ -129,10 +129,7 @@ class SocialPostManager implements SocialPostManagerInterface
             $this->persistMedia($feed, $post, $forceProcessing);
         }
 
-        if ($isNewPost === true) {
-            $post->setPublished($feed->getPublishPostImmediately());
-        }
-
+        $post->setPublished($feed->getPublishPostImmediately());
         $post->setKey(File::getValidFilename(sprintf('%s-%s', $post->getSocialId(), $feed->getConnectorEngine()->getName())));
 
         try {
