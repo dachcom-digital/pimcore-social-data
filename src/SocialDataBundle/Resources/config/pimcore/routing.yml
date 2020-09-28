@@ -71,3 +71,8 @@ social_data_admin_log_fetch_wall_logs:
     path: /admin/social-data/logs/fetch-wall-logs/{wallId}
     methods: [GET]
     defaults: { _controller: SocialDataBundle\Controller\Admin\LogController::loadLogsForWallAction }
+
+social_data_admin_log_flush:
+    path: /admin/social-data/logs/flush
+    methods: [DELETE]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\LogController::flushLogsAction }

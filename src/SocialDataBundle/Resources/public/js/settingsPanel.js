@@ -42,11 +42,9 @@ SocialData.SettingsPanel = Class.create({
 
                             Ext.Ajax.request({
                                 method: 'DELETE',
-                                url: '/admin/social-data/settings/log/flush',
+                                url: '/admin/social-data/logs/flush',
                                 success: function (response) {
-
                                     btn.setDisabled(false);
-
                                     var resp = Ext.decode(response.responseText);
                                     if (resp.success === true) {
                                         Ext.Msg.alert(t('success'), t('social_data.logs.flush_success'));
