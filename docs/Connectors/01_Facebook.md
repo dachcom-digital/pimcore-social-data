@@ -30,9 +30,10 @@ Now head back to the backend (`System` => `Social Data` => `Connector Configurat
 ## Connection
 ![image](https://user-images.githubusercontent.com/700119/79236998-f37fde80-7e6d-11ea-8b94-7bc015f50be0.png)
 
-This will guide you through the facebook token generation. After hitting the "Connect" button, a new window will open. 
-After an access token has been successfully generated, you can close the window.
-Click on "Check & Apply Connection" to finalize the connection state.
+This will guide you through the facebook token generation. 
+After hitting the "Connect" button, a popup will open to guide you through facebook authentication process. 
+If everything worked out fine, the connection setup is complete after the popup closes.
+Otherwise, you'll receive an error message. You may then need to repeat the connection step.
 
 ## Done!
 You're done. No head back to the [wall section](./../11_WallsAndFeeds.md) and add your first facebook feed.

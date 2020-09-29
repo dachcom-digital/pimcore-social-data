@@ -20,6 +20,7 @@ SocialData.Connector.Facebook = Class.create(SocialData.Connector.AbstractConnec
 
         var win = new Ext.Window({
             width: 400,
+            modal: true,
             bodyStyle: 'padding:10px',
             title: t('social_data.connector.facebook.connect_service'),
             html: t('social_data.connector.facebook.connect_service_note'),
@@ -28,28 +29,105 @@ SocialData.Connector.Facebook = Class.create(SocialData.Connector.AbstractConnec
                     mainBtn.setDisabled(false);
                 }
             },
-            buttons: [{
-                text: t('social_data.connector.facebook.connect'),
-                iconCls: 'pimcore_icon_open_window',
-                handler: function (btn) {
-                    var buttons = btn.up('window').query('button');
-                    buttons[1].setDisabled(false);
-                    btn.setDisabled(true);
-                    // use http://localhost:2332 or something in dev context
-                    window.open('/admin/social-data/connector/facebook/connect', '_blank');
+            buttons: [
+                {
+                    text: t('social_data.connector.facebook.connect'),
+                    iconCls: 'pimcore_icon_open_window',
+                    handler: this.handleConnectWindow.bind(this, mainBtn)
                 }
-            }, {
-                text: t('social_data.connector.facebook.check_and_apply'),
-                iconCls: 'pimcore_icon_apply',
-                disabled: true,
-                handler: function () {
-                    win.close();
-                    this.stateHandler('connection', mainBtn);
-                }.bind(this)
-            }]
+            ]
         });
 
         win.show();
+    },
+
+    handleConnectWindow: function (mainBtn, btn) {
+
+        var win = btn.up('window'),
+            buttons = btn.up('window').query('button'),
+            loginWindow,
+            loginTimer,
+            stateData = null,
+            windowSize = {
+                width: 800,
+                height: 550,
+            },
+            windowLocation = {
+                left: ((window.screenLeft ? window.screenLeft : window.screenX) + (window.innerWidth / 2)) - (windowSize.width / 2),
+                top: ((window.screenTop ? window.screenTop : window.screenY) + (window.screen.availHeight / 2)) - (window.innerHeight / 2)
+            },
+            features = [
+                'toolbar=1',
+                'location=1',
+                'width=' + windowSize.width,
+                'height=' + windowSize.height,
+                'left=' + windowLocation.left,
+                'top=' + windowLocation.top,
+            ],
+            checkPopupState = function checkLoginWindowClosure() {
+
+                var stateElement,
+                    popupDocument;
+
+                if (!loginWindow) {
+                    return;
+                }
+
+                if (stateData !== null) {
+
+                    loginWindow.close();
+
+                    clearInterval(loginTimer);
+                    win.setLoading(false);
+
+                    if (stateData.error === true) {
+                        btn.setDisabled(false);
+                        Ext.MessageBox.alert(t('error') + ' ' + stateData.identifier, stateData.description + ' (' + stateData.reason + ')');
+                        return;
+                    }
+
+                    win.close();
+                    this.stateHandler('connection', mainBtn);
+
+                    return;
+
+                } else if (loginWindow.closed) {
+
+                    clearInterval(loginTimer);
+                    btn.setDisabled(false);
+                    win.setLoading(false);
+
+                    return;
+                }
+
+                try {
+                    popupDocument = loginWindow.document;
+                } catch (error) {
+                    return;
+                }
+
+                if (popupDocument.domain !== document.domain) {
+                    return;
+                }
+
+                try {
+                    stateElement = popupDocument.getElementById('connect-response');
+                } catch (error) {
+                    return;
+                }
+
+                if (stateElement) {
+                    stateData = Ext.decode(stateElement.value);
+                }
+
+            }.bind(this);
+
+        btn.setDisabled(true);
+        win.setLoading(true);
+
+        // use http://localhost:2332 or something in dev context
+        loginWindow = window.open(window.location.origin + '/admin/social-data/connector/facebook/connect', 'LoginWindow', features.join(','));
+        loginTimer = setInterval(checkPopupState, 500);
     },
 
     getCustomConfigurationFields: function (data) {

@@ -85,28 +85,54 @@ class FacebookController extends AdminController
         $helper = $fb->getRedirectLoginHelper();
 
         if (!$accessToken = $helper->getAccessToken()) {
+
             if ($helper->getError()) {
-                throw new HttpException(400, $helper->getError());
-            } else {
-                throw new HttpException(400, $request->query->get('error_message', 'Unknown Error.'));
+                return $this->render('@SocialData/connect-layout.html.twig', [
+                    'content' => [
+                        'error'       => true,
+                        'code'        => $helper->getErrorCode(),
+                        'identifier'  => $helper->getError(),
+                        'reason'      => $helper->getErrorReason(),
+                        'description' => $helper->getErrorDescription()
+                    ]
+                ]);
             }
+
+            return $this->render('@SocialData/connect-layout.html.twig', [
+                'content' => [
+                    'error'       => true,
+                    'code'        => 500,
+                    'identifier'  => 'general_error',
+                    'reason'      => 'invalid access token',
+                    'description' => $request->query->get('error_message', 'Unknown Error')
+                ]
+            ]);
         }
 
         try {
             $oAuth2Client = $fb->getOAuth2Client();
             $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
         } catch (FacebookSDKException $e) {
-            throw new HttpException(400, $e->getMessage());
+            return $this->render('@SocialData/connect-layout.html.twig', [
+                'content' => [
+                    'error'       => true,
+                    'code'        => 500,
+                    'identifier'  => 'general_error',
+                    'reason'      => 'long lived access token error',
+                    'description' => $e->getMessage()
+                ]
+            ]);
         }
 
         $connectorEngineConfig->setAccessToken($accessToken->getValue());
         $connectorEngineConfig->setAccessTokenExpiresAt($accessToken->getExpiresAt());
         $this->connectorService->updateConnectorEngineConfiguration('facebook', $connectorEngineConfig);
 
-        $response = new Response();
-        $response->setContent('Successfully connected. You can now close this window and return to backend to complete the configuration.');
-
-        return $response;
+        return $this->render('@SocialData/connect-layout.html.twig', [
+            'content' => [
+                'error'   => false
+            ]
+        ]);
     }
 
     /**
