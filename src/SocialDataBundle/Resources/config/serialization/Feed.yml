@@ -10,7 +10,7 @@ SocialDataBundle\Model\Feed:
             groups: [Default, ExtJs]
         creationDate:
             groups: [Default, ExtJs]
-        connector:
-            groups: [Default]
+        connectorEngine:
+            groups: [Default, ExtJs]
         wall:
             groups: [Default]

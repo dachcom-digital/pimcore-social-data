@@ -6,6 +6,7 @@ use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Connector\ConnectorFeedConfigurationInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Manager\WallManagerInterface;
+use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Model\WallInterface;
 use Pimcore\Translation\Translator;
 use SocialDataBundle\Service\StatisticServiceInterface;
@@ -190,10 +191,10 @@ class ExtJsDataBuilder
         $feedStore = [];
         foreach ($this->connectorManager->getAllActiveConnectorDefinitions() as $connectorDefinitionName => $connectorDefinition) {
             $feedStore[] = [
-                'label'             => ucFirst($connectorDefinitionName),
-                'connectorName'     => ucFirst($connectorDefinitionName),
-                'connectorEngineId' => $connectorDefinition->getConnectorEngine()->getId(),
-                'iconCls'           => sprintf('pimcore_icon_social_data_connector_%s', strtolower($connectorDefinitionName))
+                'label'           => ucFirst($connectorDefinitionName),
+                'connectorName'   => ucFirst($connectorDefinitionName),
+                'connectorEngine' => $connectorDefinition->getConnectorEngine()->getId(),
+                'iconCls'         => sprintf('pimcore_icon_social_data_connector_%s', strtolower($connectorDefinitionName))
             ];
         }
 
@@ -222,7 +223,10 @@ class ExtJsDataBuilder
         return [
             'groups'                      => ['ExtJs'],
             AbstractNormalizer::CALLBACKS => [
-                'configuration' => function ($data) {
+                'connectorEngine' => function ($data) {
+                    return $data instanceof ConnectorEngineInterface ? $data->getId() : null;
+                },
+                'configuration'   => function ($data) {
                     if ($data instanceof ConnectorFeedConfigurationInterface) {
                         return $this->serializer->normalize($data);
                     } elseif ($data instanceof ConnectorEngineConfigurationInterface) {

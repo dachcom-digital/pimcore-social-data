@@ -65,7 +65,7 @@ SocialData.Connector.AbstractConnector = Class.create({
             layout: 'form',
             border: false,
             autoScroll: true,
-            width: 600,
+            width: 800,
             disabled: this.data.installed === false,
             items: this.getCustomConfigurationFields(data),
             buttons: [

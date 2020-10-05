@@ -392,7 +392,7 @@ SocialData.Wall.MainPanel = Class.create({
         Ext.Array.each(this.feeds, function (feed) {
 
             var configuration = Ext.Array.filter(this.feedStore, function (item) {
-                return item.identifier === feed.type;
+                return item.connectorEngine === feed.connectorEngine;
             });
 
             if (configuration.length !== 1) {
@@ -525,7 +525,7 @@ SocialData.Wall.MainPanel = Class.create({
 
     getFeedConfigPanel: function (data, feedConfig) {
 
-        var connectorEngineId = feedConfig.connectorEngineId,
+        var connectorEngineId = feedConfig.connectorEngine,
             connectorName = feedConfig.connectorName,
             feedConfigPanel,
             feedId,
