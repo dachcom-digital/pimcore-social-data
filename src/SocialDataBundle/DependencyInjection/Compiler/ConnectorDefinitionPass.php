@@ -28,7 +28,8 @@ final class ConnectorDefinitionPass implements CompilerPassInterface
                     throw new InvalidConfigurationException(sprintf('Social post builder service "%s" for connector "%s" not found', $attributes['collector'], $id));
                 }
 
-                $connectorDefinitionConfiguration = $container->getParameter(sprintf('social_data.connectors.system_config.%s', $attributes['identifier']));
+                $connectorConfigurationName = sprintf('social_data.connectors.system_config.%s', $attributes['identifier']);
+                $connectorDefinitionConfiguration = $container->hasParameter($connectorConfigurationName) ? $container->getParameter($connectorConfigurationName) : [];
 
                 $connectorDefinition->addMethodCall('setDefinitionConfiguration', [$connectorDefinitionConfiguration]);
                 $connectorDefinition->addMethodCall('setSocialPostBuilder', [$container->getDefinition($attributes['socialPostBuilder'])]);

@@ -15,9 +15,11 @@ Enable or disable a connector. There is no data loss if a connector gets disable
 
 ## Connect
 Not every Connector requires the connection feature. 
-The [Facebook Connector](./Connectors/01_Facebook.md) for example, requires a valid access token which will be created, after you hit this button. 
+The [Facebook Connector](https://github.com/dachcom-digital/pimcore-social-data-facebook-connector) for example, 
+requires a valid access token which will be created, after you hit this button. 
 
 ***
 
 ## Available Connector
-- [Facebook](./Connectors/01_Facebook.md)
+- [Facebook](https://github.com/dachcom-digital/pimcore-social-data-facebook-connector)
+- [Instagram](https://github.com/dachcom-digital/pimcore-social-data-instagram-connector)

@@ -33,9 +33,6 @@ class SocialDataExtension extends Extension
         $availableConnectorsNames = [];
         foreach ($config['available_connectors'] as $availableConnector) {
             $availableConnectorsNames[] = $availableConnector['connector_name'];
-        }
-
-        foreach (array_merge($this->getCoreConnectors(), $config['available_connectors']) as $availableConnector) {
             $container->setParameter(sprintf('social_data.connectors.system_config.%s', $availableConnector['connector_name']), $availableConnector['connector_config']);
         }
 
@@ -55,20 +52,5 @@ class SocialDataExtension extends Extension
 
         $environmentServiceDefinition = $container->getDefinition(EnvironmentService::class);
         $environmentServiceDefinition->setArgument('$socialPostDataClass', $dataClass);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getCoreConnectors()
-    {
-        return [
-            [
-                'connector_name'   => 'facebook',
-                'connector_config' => [
-                    'core_disabled' => true
-                ]
-            ]
-        ];
     }
 }

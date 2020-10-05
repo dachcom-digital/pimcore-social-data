@@ -1,11 +1,3 @@
-
-# Import Connector Specific Routes
-
-connector_facebook:
-    resource: '@SocialDataBundle/Resources/config/services/connector/facebook/routing.yml'
-
-######### Core #########
-
 # Admin Routes [Settings]
 
 social_data_admin_settings_connectors:

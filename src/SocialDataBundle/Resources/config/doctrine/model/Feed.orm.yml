@@ -1,12 +1,6 @@
 SocialDataBundle\Model\Feed:
     type: entity
     table: social_data_feed
-    namedNativeQueries:
-        findAll:
-            name: findAll
-            resultClass: Address
-            query: SELECT * FROM addresses
-
     fields:
         id:
             type: integer

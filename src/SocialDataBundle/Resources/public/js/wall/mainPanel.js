@@ -248,9 +248,6 @@ SocialData.Wall.MainPanel = Class.create({
                 reader: {
                     type: 'json',
                     rootProperty: 'entries'
-                },
-                extraParams: {
-                    formId: this.formId
                 }
             },
             autoLoad: false,

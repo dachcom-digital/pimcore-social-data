@@ -3,7 +3,7 @@
     "type": "pimcore-bundle",
     "license": "GPL-3.0-or-later",
     "description": "Pimcore Social Data Bundle",
-    "keywords": ["pimcore", "social", "feed", "social wall", "facebook", "instagram"],
+    "keywords": ["pimcore", "social", "feed", "social wall"],
     "homepage": "https://github.com/dachcom-digital/pimcore-social-data",
     "authors": [
         {
@@ -23,10 +23,12 @@
             "bundles": [
                 "SocialDataBundle\\SocialDataBundle"
             ]
+        },
+         "branch-alias": {
+            "dev-master": "1.0.x-dev"
         }
     },
     "require": {
-        "facebook/graph-sdk": "^5.4",
         "pimcore/pimcore": "^6.6",
         "symfony/symfony": "^4.1",
         "doctrine/orm": "^2.7"

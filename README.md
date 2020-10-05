@@ -49,8 +49,8 @@ This Bundle needs some preparation. Please checkout the [Setup](docs/00_Setup.md
 ## Further Information
 - [Setup](docs/00_Setup.md)
 - [Connectors](./docs/10_Connectors.md)
-  - [Facebook](./docs/Connectors/01_Facebook.md)
-  - Instagram
+  - [Facebook](https://github.com/dachcom-digital/pimcore-social-data-facebook-connector)
+  - [Instagram](https://github.com/dachcom-digital/pimcore-social-data-instagram-connector)
   - Youtube
   - WeChat
 - [Walls And Feeds](docs/11_WallsAndFeeds.md)
