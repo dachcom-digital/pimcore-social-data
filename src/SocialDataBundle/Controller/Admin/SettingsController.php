@@ -91,6 +91,23 @@ class SettingsController extends AdminController
 
     /**
      * @param Request $request
+     * @param string  $connectorName
+     *
+     * @return JsonResponse
+     *
+     */
+    public function getConnectorAction(Request $request, string $connectorName)
+    {
+        $connector = $this->extJsDataBuilder->generateConnectorData($connectorName);
+
+        return $this->adminJson([
+            'success'   => true,
+            'connector' => $connector
+        ]);
+    }
+
+    /**
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -122,9 +139,11 @@ class SettingsController extends AdminController
         $success = true;
         $message = null;
         $installed = false;
+        $connectorEngineId = null;
 
         try {
-            $connector = $this->connectorService->installConnector($connectorName);
+            $connectorEngine = $this->connectorService->installConnector($connectorName);
+            $connectorEngineId = $connectorEngine->getId();
             $installed = true;
         } catch (\Throwable $e) {
             $success = false;
@@ -132,9 +151,10 @@ class SettingsController extends AdminController
         }
 
         return $this->adminJson([
-            'success'   => $success,
-            'message'   => $message,
-            'installed' => $installed
+            'success'           => $success,
+            'message'           => $message,
+            'installed'         => $installed,
+            'connectorEngineId' => $connectorEngineId
         ]);
     }
 
@@ -260,7 +280,8 @@ class SettingsController extends AdminController
 
         return $this->adminJson([
             'success' => true,
-            'message' => null
+            'message' => null,
+            'connector' => $this->extJsDataBuilder->generateConnectorData($connectorName)
         ]);
     }
 }

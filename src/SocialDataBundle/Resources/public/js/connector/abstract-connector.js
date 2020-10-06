@@ -3,7 +3,7 @@ SocialData.Connector.AbstractConnector = Class.create({
 
     type: null,
     data: null,
-
+    customConfiguration: null,
     customConfigurationPanel: null,
 
     states: {
@@ -33,10 +33,9 @@ SocialData.Connector.AbstractConnector = Class.create({
     initialize: function (type, data) {
         this.type = type;
         this.data = data;
-    },
-
-    getType: function () {
-        return this.type;
+        this.customConfiguration = this.data.customConfiguration !== null
+            ? this.data.customConfiguration
+            : {}
     },
 
     /**
@@ -48,9 +47,107 @@ SocialData.Connector.AbstractConnector = Class.create({
 
     /**
      * @abstract
+     *
+     * connectHandler: Just a proxy
+     * to allow connectors overriding connecting process!
      */
-    getCustomConfigurationFields: function (data) {
+    connectHandler: function (stateType, btn) {
+        this.stateHandler(stateType, btn);
+    },
+
+    /**
+     * @abstract
+     */
+    getCustomConfigurationFields: function () {
         return [];
+    },
+
+    /**
+     * @abstract
+     */
+    beforeDisableFieldState: function (stateType, toDisableState) {
+        return toDisableState;
+    },
+
+    /**
+     * @abstract
+     */
+    afterSaveCustomConfiguration: function (resp) {
+        return null;
+    },
+
+    /**
+     * @abstract
+     */
+    afterChangeState: function (stateType, active) {
+        return null;
+    },
+
+    afterInstall: function () {
+
+        if (this.hasCustomConfiguration() === false) {
+            return;
+        }
+
+        this.customConfigurationPanel.setDisabled(false);
+    },
+
+    afterUninstall: function () {
+
+        if (this.hasCustomConfiguration() === false) {
+            return;
+        }
+
+        Ext.each(this.customConfigurationPanel.getForm().getFields().items, function (field) {
+            field.setValue(null);
+        });
+
+        this.customConfiguration = {};
+        this.customConfigurationPanel.setDisabled(true);
+    },
+
+    getType: function () {
+        return this.type;
+    },
+
+    isInstalled: function () {
+        return this.data && this.data.installed === true;
+    },
+
+    refreshCustomConfigurationPanel: function () {
+
+        if (this.hasCustomConfiguration() === false) {
+            return;
+        }
+
+        this.customConfigurationPanel.removeAll();
+        this.customConfigurationPanel.setLoading(true);
+
+        Ext.Ajax.request({
+            url: '/admin/social-data/settings/get-connector/' + this.getType(),
+            success: function (response) {
+                var resp = Ext.decode(response.responseText);
+
+                this.customConfigurationPanel.setLoading(false);
+
+                if (resp.success === false) {
+                    Ext.MessageBox.alert(t('error'), resp.message);
+                    return;
+                }
+
+                if (resp.hasOwnProperty('connector') === false) {
+                    Ext.MessageBox.alert(t('error'), 'No connector data found');
+                    return;
+                }
+
+                if (resp.connector.config.hasOwnProperty('customConfiguration')) {
+                    this.customConfiguration = resp.connector.config.customConfiguration;
+                }
+
+                this.customConfigurationPanel.add(this.getCustomConfigurationFields());
+
+            }.bind(this)
+        });
     },
 
     generateCustomConfigurationPanel: function () {
@@ -58,7 +155,7 @@ SocialData.Connector.AbstractConnector = Class.create({
         var fieldset = new Ext.form.FieldSet({
             collapsible: false,
             title: t('social_data.connector.configuration')
-        }), data = this.data.customConfiguration !== null ? this.data.customConfiguration : {};
+        });
 
         this.customConfigurationPanel = new Ext.form.Panel({
             title: false,
@@ -66,8 +163,9 @@ SocialData.Connector.AbstractConnector = Class.create({
             border: false,
             autoScroll: true,
             width: 800,
+            trackResetOnLoad: true,
             disabled: this.data.installed === false,
-            items: this.getCustomConfigurationFields(data),
+            items: this.getCustomConfigurationFields(),
             buttons: [
                 {
                     text: t('save'),
@@ -121,13 +219,13 @@ SocialData.Connector.AbstractConnector = Class.create({
                                     btn.setStyle('background-color', this.data.installed ? '#af1e32' : '#0e793e')
                                 }.bind(this)
                             },
-                            handler: this.installHandler.bind(this)
+                            handler: this.installationHandler.bind(this)
                         },
                     ]
                 },
                 {
                     xtype: 'fieldcontainer',
-                    disabled: !this.data.installed,
+                    disabled: this.beforeDisableFieldState('availability', !this.data.installed),
                     cls: 'state-field-container state-availability-field-container',
                     layout: 'hbox',
                     items: [
@@ -164,7 +262,7 @@ SocialData.Connector.AbstractConnector = Class.create({
                 },
                 {
                     xtype: 'fieldcontainer',
-                    disabled: (!this.data.installed || this.data.autoConnect === true),
+                    disabled: this.beforeDisableFieldState('connection', (!this.data.installed || this.data.autoConnect === true)),
                     cls: 'state-field-container ' + (this.data.autoConnect === false ? 'state-connection-field-container' : ''),
                     layout: 'hbox',
                     items: [
@@ -206,16 +304,18 @@ SocialData.Connector.AbstractConnector = Class.create({
         }
     },
 
-    installHandler: function (btn) {
+    installationHandler: function (btn) {
 
-        var url = this.data.installed ? '/admin/social-data/settings/uninstall-connector/' : '/admin/social-data/settings/install-connector/',
+        var url = this.data.installed
+            ? '/admin/social-data/settings/uninstall-connector/'
+            : '/admin/social-data/settings/install-connector/',
             fieldset = btn.up('fieldset'),
             doRequest = function (btn) {
 
                 btn.setDisabled(true);
 
                 Ext.Ajax.request({
-                    url: url + this.type,
+                    url: url + this.getType(),
                     success: function (response) {
                         var resp = Ext.decode(response.responseText);
 
@@ -235,8 +335,14 @@ SocialData.Connector.AbstractConnector = Class.create({
                         }
 
                         this.changeState(fieldset, 'installation');
-                        this.changeState(fieldset, 'connection');
                         this.changeState(fieldset, 'availability');
+                        this.changeState(fieldset, 'connection');
+
+                        if (this.data.installed === true) {
+                            this.afterInstall();
+                        } else {
+                            this.afterUninstall();
+                        }
 
                     }.bind(this),
                     failure: function (response) {
@@ -260,18 +366,13 @@ SocialData.Connector.AbstractConnector = Class.create({
         });
     },
 
-    connectHandler: function (stateType, btn) {
-        // connectHandler: Just a proxy to allow connectors overriding connecting process!
-        this.stateHandler(stateType, btn);
-    },
-
     stateHandler: function (stateType, btn) {
 
         var stateData = this.states[stateType],
             fieldset = btn.up('fieldset'), flag, url;
 
         flag = this.data[stateData.identifier] === true ? 'deactivate' : 'activate';
-        url = '/admin/social-data/settings/change-connector-type/' + this.type + '/' + stateType + '/' + flag;
+        url = '/admin/social-data/settings/change-connector-type/' + this.getType() + '/' + stateType + '/' + flag;
 
         btn.setDisabled(true);
 
@@ -317,22 +418,15 @@ SocialData.Connector.AbstractConnector = Class.create({
             btn.setIconCls(active ? 'pimcore_icon_cancel' : 'pimcore_icon_add');
         }
 
-        if (stateType !== 'installation' && fieldContainer) {
-            fieldContainer.setDisabled(!this.data.installed);
+        if (stateType === 'installation') {
+            if (this.hasCustomConfiguration() === true) {
+                this.customConfigurationPanel.setDisabled(!this.data.installed);
+            }
+        } else if (fieldContainer !== undefined) {
+            fieldContainer.setDisabled(this.beforeDisableFieldState(stateType, !this.data.installed));
         }
 
-        if (stateType === 'installation') {
-            if (this.data.installed === false) {
-                if (this.hasCustomConfiguration() === true) {
-                    this.customConfigurationPanel.getForm().reset();
-                    this.customConfigurationPanel.setDisabled(true);
-                }
-            } else {
-                if (this.hasCustomConfiguration() === true) {
-                    this.customConfigurationPanel.setDisabled(false);
-                }
-            }
-        }
+        this.afterChangeState(stateType, active)
     },
 
     saveCustomConfiguration: function (btn) {
@@ -351,7 +445,7 @@ SocialData.Connector.AbstractConnector = Class.create({
         fieldset.setLoading(true);
 
         Ext.Ajax.request({
-            url: '/admin/social-data/settings/save-connector-configuration/' + this.type,
+            url: '/admin/social-data/settings/save-connector-configuration/' + this.getType(),
             method: 'POST',
             params: {
                 configuration: Ext.encode(this.customConfigurationPanel.getForm().getValues())
@@ -365,6 +459,12 @@ SocialData.Connector.AbstractConnector = Class.create({
                     Ext.MessageBox.alert(t('error'), resp.message);
                     return;
                 }
+
+                if (resp.connector.config.hasOwnProperty('customConfiguration')) {
+                    this.customConfiguration = resp.connector.config.customConfiguration;
+                }
+
+                this.afterSaveCustomConfiguration(resp);
 
                 pimcore.helpers.showNotification(t('success'), t('social_data.connector.save_success'), 'success');
 

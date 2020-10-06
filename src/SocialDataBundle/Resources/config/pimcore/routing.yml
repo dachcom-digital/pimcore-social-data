@@ -4,6 +4,10 @@ social_data_admin_settings_connectors:
     path: /admin/social-data/settings/get-connectors
     defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::getConnectorsAction }
 
+social_data_admin_settings_connector:
+    path: /admin/social-data/settings/get-connector/{connectorName}
+    defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::getConnectorAction }
+
 social_data_admin_settings_data_class_health_check:
     path: /admin/social-data/settings/data-class-health-check
     defaults: { _controller: SocialDataBundle\Controller\Admin\SettingsController::dataClassHealthCheckAction }

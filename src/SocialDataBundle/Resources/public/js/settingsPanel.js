@@ -144,9 +144,12 @@ SocialData.SettingsPanel = Class.create({
                 connectorPanel = new Ext.Panel({
                     title: connector.label,
                     autoScroll: true,
+                    iconCls: connector.iconCls,
                     forceLayout: true,
                     border: false,
-                    items: [connectorLayout.getSystemFields()]
+                    items: [
+                        connectorLayout.getSystemFields()
+                    ]
                 });
 
                 if (connectorLayout.hasCustomConfiguration() === true) {

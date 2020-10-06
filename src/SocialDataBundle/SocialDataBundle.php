@@ -73,6 +73,7 @@ class SocialDataBundle extends AbstractPimcoreBundle
         return [
             '/bundles/socialdata/js/component/relation.js',
             '/bundles/socialdata/js/component/relationTextField.js',
+            '/bundles/socialdata/js/component/connectWindow.js',
             '/bundles/socialdata/js/plugin.js',
             '/bundles/socialdata/js/settingsPanel.js',
             '/bundles/socialdata/js/wallsPanel.js',

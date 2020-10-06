@@ -2,6 +2,7 @@
 
 namespace SocialDataBundle\Builder;
 
+use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Connector\ConnectorFeedConfigurationInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
@@ -81,9 +82,10 @@ class ExtJsDataBuilder
             }
 
             $connectors[] = [
-                'name'   => $connectorDefinitionName,
-                'label'  => ucfirst($connectorDefinitionName),
-                'config' => [
+                'name'    => $connectorDefinitionName,
+                'label'   => ucfirst($connectorDefinitionName),
+                'iconCls' => sprintf('pimcore_icon_social_data_connector_%s', strtolower($connectorDefinitionName)),
+                'config'  => [
                     'installed'           => $isInstalled,
                     'enabled'             => $isInstalled && $connectorDefinition->getConnectorEngine()->isEnabled(),
                     'connected'           => $isInstalled && $connectorDefinition->isConnected(),
@@ -94,6 +96,40 @@ class ExtJsDataBuilder
         }
 
         return $connectors;
+    }
+
+    /**
+     * @param string $connectorName
+     *
+     * @return array
+     */
+    public function generateConnectorData(string $connectorName)
+    {
+        $connectorDefinition = $this->connectorManager->getConnectorDefinition($connectorName, true);
+
+        if (!$connectorDefinition instanceof ConnectorDefinitionInterface) {
+            return [];
+        }
+
+        $engineConfiguration = [];
+        $isInstalled = $connectorDefinition->engineIsLoaded();
+
+        if ($isInstalled === true && $connectorDefinition->needsEngineConfiguration()) {
+            $engineConfiguration = $this->serializer->normalize($connectorDefinition->getConnectorEngine(), 'array', $this->getExtJSSerializerContext());
+        }
+
+        return [
+            'name'    => $connectorName,
+            'label'   => ucfirst($connectorName),
+            'iconCls' => sprintf('pimcore_icon_social_data_connector_%s', strtolower($connectorName)),
+            'config'  => [
+                'installed'           => $isInstalled,
+                'enabled'             => $isInstalled && $connectorDefinition->getConnectorEngine()->isEnabled(),
+                'connected'           => $isInstalled && $connectorDefinition->isConnected(),
+                'autoConnect'         => $connectorDefinition->isAutoConnected(),
+                'customConfiguration' => $engineConfiguration['configuration'] ?: []
+            ]
+        ];
     }
 
     /**
