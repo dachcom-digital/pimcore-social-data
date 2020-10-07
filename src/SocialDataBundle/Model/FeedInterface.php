@@ -70,4 +70,31 @@ interface FeedInterface
      * @return WallInterface
      */
     public function getWall();
+
+    /**
+     * @return bool
+     */
+    public function hasFeedTags();
+
+    /**
+     * @param TagInterface $feedTag
+     *
+     * @return bool
+     */
+    public function hasFeedTag(TagInterface $feedTag);
+
+    /**
+     * @param TagInterface $feedTag
+     */
+    public function addFeedTag(TagInterface $feedTag);
+
+    /**
+     * @param TagInterface $feedTag
+     */
+    public function removeFeedTag(TagInterface $feedTag);
+
+    /**
+     * @return TagInterface[]
+     */
+    public function getFeedTags();
 }

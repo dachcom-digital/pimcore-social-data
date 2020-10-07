@@ -2,33 +2,28 @@
 
 namespace SocialDataBundle\EventListener;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\ORMException;
 use Pimcore\Bundle\AdminBundle\Security\User\TokenStorageUserResolver;
-use SocialDataBundle\Logger\LoggerInterface;
 use SocialDataBundle\Model\FeedInterface;
+use SocialDataBundle\Model\LogEntry;
 use SocialDataBundle\Model\WallInterface;
 
 class EntityDeletionListener implements EventSubscriber
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     /**
      * @var TokenStorageUserResolver
      */
     protected $userResolver;
 
     /**
-     * @param LoggerInterface          $logger
      * @param TokenStorageUserResolver $userResolver
      */
-    public function __construct(LoggerInterface $logger, TokenStorageUserResolver $userResolver)
+    public function __construct(TokenStorageUserResolver $userResolver)
     {
-        $this->logger = $logger;
         $this->userResolver = $userResolver;
     }
 
@@ -38,26 +33,56 @@ class EntityDeletionListener implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            Events::postRemove
+            Events::onFlush
         ];
     }
 
     /**
-     * @param LifecycleEventArgs $event
+     * @param OnFlushEventArgs $event
+     *
+     * @throws ORMException
      */
-    public function postRemove(LifecycleEventArgs $event)
+    public function onFlush(OnFlushEventArgs $event)
     {
-        $object = $event->getObject();
+        $em = $event->getEntityManager();
+        $uow = $em->getUnitOfWork();
+
+        foreach ($uow->getScheduledEntityDeletions() as $entity) {
+            if ($entity instanceof FeedInterface || $entity instanceof WallInterface) {
+                $this->logDeletion($entity, $em);
+            }
+        }
+    }
+
+    /**
+     * @param mixed         $object
+     * @param EntityManager $entityManager
+     *
+     * @throws ORMException
+     */
+    protected function logDeletion($object, EntityManager $entityManager)
+    {
+        $logEntry = new LogEntry();
+        $logEntry->setCreationDate(new \DateTime());
+        $logEntry->setType('INFO');
+
         $user = $this->userResolver->getUser();
         $userId = $user ? $user->getId() : 'NULL';
         $userName = $user ? $user->getName() : 'Unknown';
+        $message = null;
 
         if ($object instanceof FeedInterface) {
             $message = sprintf('User %s (%d) removed a feed from wall "%s"', $userName, $userId, $object->getWall()->getName());
-            $this->logger->info($message, [$object->getWall()]);
+            $logEntry->setWall($object->getWall());
+            $logEntry->setConnectorEngine($object->getConnectorEngine());
         } elseif ($object instanceof WallInterface) {
             $message = sprintf('User %s (%d) removed wall "%s"', $userName, $userId, $object->getName());
-            $this->logger->info($message);
         }
+
+        $logEntry->setMessage($message);
+
+        $entityManager->persist($logEntry);
+        $logMetadata = $entityManager->getClassMetadata(LogEntry::class);
+        $entityManager->getUnitOfWork()->computeChangeSet($logMetadata, $logEntry);
     }
 }

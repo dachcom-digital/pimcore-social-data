@@ -88,7 +88,7 @@ class SocialController extends FrontendController
     public function defaultAction(Request $request)
     {
         // get post listing by wall id
-        $postListing = $this->socialPostRepository->findByWallIdListing(9,false);
+        $postListing = $this->socialPostRepository->findByWallIdListing(9, false);
         $postListing->addConditionParam('myField = 42');
         
         $posts = $postListing->getObjects();
@@ -144,4 +144,45 @@ This is a planned feature and is currently not implemented.
 Within complex queries, you're allowed to query for `wallTags` and `feedTags` without any id-based relation 
 with different mix&match patterns. 
 
-TBD
+
+```php
+<?php
+
+namespace AppBundle\Controller;
+
+use Pimcore\Controller\FrontendController;
+use Symfony\Component\HttpFoundation\Request;
+use SocialDataBundle\Repository\SocialPostRepositoryInterface;
+
+class SocialController extends FrontendController
+{
+    /**
+     * @var SocialPostRepositoryInterface
+     */
+    protected $socialPostRepository;
+
+    /**
+     * @param SocialPostRepositoryInterface $socialPostRepository
+     */
+    public function __construct(SocialPostRepositoryInterface $socialPostRepository)
+    {
+        $this->socialPostRepository = $socialPostRepository;
+    }
+
+    public function defaultAction(Request $request)
+    {
+        // get posts with wall tags
+        $wallTagPosts = $this->socialPostRepository->findByTag(['my_wall_tag']);
+        // get posts with feed tags
+        $feedTagPosts = $this->socialPostRepository->findByTag([], ['my_feed_tag']);
+        // get posts with wall and feed tags
+        $wallAndFeedTypes = $this->socialPostRepository->findByTag(['my_wall_tag'], ['my_feed_tag', 'my_other_feed_tag']);
+
+        // get posts with social type and wall tags
+        $socialWallTagTypes = $this->socialPostRepository->findSocialTypeAndByTag('instagram', ['my_wall_tag']);
+        // get posts with social type and wall and feed tags
+        $socialWallAndFeedTagTypes = $this->socialPostRepository->findSocialTypeAndByTag('instagram', ['my_wall_tag'], ['my_feed_tag']);
+
+        return $this->renderTemplate('Social/default.html.twig', []);
+    }
+}

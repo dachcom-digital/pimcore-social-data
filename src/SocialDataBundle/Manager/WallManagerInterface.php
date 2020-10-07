@@ -2,6 +2,7 @@
 
 namespace SocialDataBundle\Manager;
 
+use SocialDataBundle\Model\TagInterface;
 use SocialDataBundle\Model\WallInterface;
 
 interface WallManagerInterface
@@ -32,6 +33,13 @@ interface WallManagerInterface
      * @return WallInterface
      */
     public function createNew(string $wallName, bool $persist = true);
+
+    /**
+     * @param string $type
+     *
+     * @return TagInterface[]
+     */
+    public function getAvailableTags(string $type);
 
     /**
      * @param WallInterface $wall

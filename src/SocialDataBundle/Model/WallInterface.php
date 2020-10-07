@@ -77,4 +77,31 @@ interface WallInterface
      * @return Collection|FeedInterface[]
      */
     public function getFeeds();
+
+    /**
+     * @return bool
+     */
+    public function hasWallTags();
+
+    /**
+     * @param TagInterface $wallTag
+     *
+     * @return bool
+     */
+    public function hasWallTag(TagInterface $wallTag);
+
+    /**
+     * @param TagInterface $wallTag
+     */
+    public function addWallTag(TagInterface $wallTag);
+
+    /**
+     * @param TagInterface $wallTag
+     */
+    public function removeWallTag(TagInterface $wallTag);
+
+    /**
+     * @return TagInterface[]
+     */
+    public function getWallTags();
 }

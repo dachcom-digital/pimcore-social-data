@@ -12,5 +12,7 @@ SocialDataBundle\Model\Feed:
             groups: [Default, ExtJs]
         connectorEngine:
             groups: [Default, ExtJs]
+        feedTags:
+            groups: [Default, ExtJs]
         wall:
             groups: [Default]

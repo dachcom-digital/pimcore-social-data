@@ -1,0 +1,21 @@
+SocialDataBundle\Model\Tag:
+    type: entity
+    table: social_data_tag
+    fields:
+        id:
+            type: integer
+            id: true
+            column: id
+            generator:
+                strategy: AUTO
+        name:
+            column: '`name`'
+            type: string
+            nullable: false
+        type:
+            column:  '`type`'
+            type: string
+            nullable: false
+    uniqueConstraints:
+        name_type:
+            columns: [name, type]

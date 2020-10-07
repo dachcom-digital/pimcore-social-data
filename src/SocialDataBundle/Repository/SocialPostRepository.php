@@ -181,6 +181,65 @@ class SocialPostRepository implements SocialPostRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function findByTag(array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    {
+        return $this->findByTagListing($wallTags, $feedTags, $unpublished)->getObjects();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByTagListing(array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    {
+        $joinWallTagTables = count($wallTags) > 0;
+        $joinFeedTagTables = count($feedTags) > 0;
+
+        $listing = $this->getFeedPostJoinListing($unpublished, $joinWallTagTables, $joinFeedTagTables);
+
+        if ($joinWallTagTables === true) {
+            $listing->addConditionParam(sprintf('wtt.name IN (%s)', sprintf('"%s"', implode('","', $wallTags))));
+        }
+
+        if ($joinFeedTagTables === true) {
+            $listing->addConditionParam(sprintf('ftt.name IN (%s)', sprintf('"%s"', implode('","', $feedTags))));
+        }
+
+        return $listing;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findSocialTypeAndByTag(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    {
+        return $this->findSocialTypeAndByTagListing($socialPostType, $wallTags, $feedTags, $unpublished)->getObjects();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findSocialTypeAndByTagListing(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    {
+        $joinWallTagTables = count($wallTags) > 0;
+        $joinFeedTagTables = count($feedTags) > 0;
+
+        $listing = $this->getFeedPostJoinListing($unpublished, $joinWallTagTables, $joinFeedTagTables);
+        $listing->addConditionParam('socialType = ?', $socialPostType);
+
+        if ($joinWallTagTables === true) {
+            $listing->addConditionParam(sprintf('wtt.name IN (%s)', sprintf('"%s"', implode('","', $wallTags))));
+        }
+
+        if ($joinFeedTagTables === true) {
+            $listing->addConditionParam(sprintf('ftt.name IN (%s)', sprintf('"%s"', implode('","', $feedTags))));
+        }
+
+        return $listing;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getList()
     {
         $listingClass = sprintf('\Pimcore\Model\DataObject\%s\Listing', ucfirst($this->environmentService->getSocialPostDataClass()));
@@ -191,23 +250,28 @@ class SocialPostRepository implements SocialPostRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getFeedPostJoinListing(bool $unpublished = false)
+    public function getFeedPostJoinListing(bool $unpublished = false, bool $joinWallTagTables = false, bool $joinFeedTagTables = false)
     {
         $listing = $this->getList();
         $listing->setUnpublished($unpublished);
 
-        $listing->onCreateQuery(function (QueryBuilder $query) {
-            $query->join(
-                ['fp' => 'social_data_feed_post'],
-                'fp.post_id = o_id',
-                ['feedId' => 'fp.feed_id']
-            );
+        $listing->onCreateQuery(function (QueryBuilder $query) use ($joinWallTagTables, $joinFeedTagTables) {
 
-            $query->join(
-                ['f' => 'social_data_feed'],
-                'f.id = fp.feed_id',
-                ['wallId' => 'f.wall']
-            );
+            $query
+                ->join(['fp' => 'social_data_feed_post'], 'fp.post_id = o_id', ['feedId' => 'fp.feed_id'])
+                ->join(['f' => 'social_data_feed'], 'f.id = fp.feed_id', ['wallId' => 'f.wall']);
+
+            if ($joinWallTagTables === true) {
+                $query
+                    ->join(['wt' => 'social_data_wall_tags'], 'wt.wall_id = f.wall', ['tagId' => 'wt.tag_id'])
+                    ->join(['wtt' => 'social_data_tag'], 'wtt.id = wt.tag_id', ['tagName' => 'wtt.name']);
+            }
+
+            if ($joinFeedTagTables === true) {
+                $query
+                    ->join(['ft' => 'social_data_feed_tags'], 'ft.feed_id = f.id', ['tagId' => 'ft.tag_id'])
+                    ->join(['ftt' => 'social_data_tag'], 'ftt.id = ft.tag_id', ['tagName' => 'ftt.name']);
+            }
         });
 
         return $listing;

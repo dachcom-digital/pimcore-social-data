@@ -58,7 +58,8 @@ SocialData.Wall.MainPanel = Class.create({
                 }
             },
             dataStoragePathValue = this.wallData !== null && this.wallData.hasOwnProperty('dataStorage') ? this.wallData.dataStorage : null,
-            assetStoragePathValue = this.wallData !== null && this.wallData.hasOwnProperty('assetStorage') ? this.wallData.assetStorage : null;
+            assetStoragePathValue = this.wallData !== null && this.wallData.hasOwnProperty('assetStorage') ? this.wallData.assetStorage : null,
+            wallTagStore = this.generateTagStore('wallTag');
 
         dataStoragePathRelationField = new Formbuilder.extjs.types.href(dataStoragePathFieldConfig, dataStoragePathValue, null);
         dataStoragePathRelation = dataStoragePathRelationField.getHref();
@@ -97,6 +98,32 @@ SocialData.Wall.MainPanel = Class.create({
                             name: 'name',
                             fieldLabel: t('name'),
                             value: this.wallData.name
+                        },
+                        {
+                            xtype: 'tagfield',
+                            name: 'wallTags',
+                            labelAlign: 'left',
+                            fieldLabel: t('social_data.tags.wall_tags'),
+                            store: wallTagStore,
+                            displayField: 'name',
+                            valueField: 'id',
+                            queryMode: 'local',
+                            filterPickList: true,
+                            createNewOnEnter: true, // Buggy: https://forum.sencha.com/forum/showthread.php?308236-TagField-creates-two-tags-when-using-createNewOnEnter
+                            forceSelection: false,
+                            value: Ext.isArray(this.wallData.wallTags)
+                                ? Ext.Array.map(this.wallData.wallTags, function (tag) {
+                                    return tag.id;
+                                })
+                                : null,
+                            listeners: {
+                                afterrender: function (cmp) {
+                                    wallTagStore.load();
+                                    cmp.inputEl.set({
+                                        autocomplete: 'wall-tag'
+                                    });
+                                }
+                            },
                         },
                         dataStoragePathRelation,
                         assetStoragePathRelation
@@ -452,10 +479,39 @@ SocialData.Wall.MainPanel = Class.create({
 
     addSystemConfigPanelToFeed: function (itemLayout, data) {
 
+        var feedTagStore = this.generateTagStore('feedTag');
+
         itemLayout.insert(0, {
             xtype: 'fieldset',
             title: t('social_data.wall.feed.config'),
             items: [
+                {
+                    xtype: 'tagfield',
+                    name: 'system.feedTags',
+                    labelAlign: 'left',
+                    labelWidth: 250,
+                    fieldLabel: t('social_data.tags.feed_tags'),
+                    store: feedTagStore,
+                    displayField: 'name',
+                    valueField: 'id',
+                    queryMode: 'local',
+                    filterPickList: true,
+                    createNewOnEnter: true, // Buggy: https://forum.sencha.com/forum/showthread.php?308236-TagField-creates-two-tags-when-using-createNewOnEnter
+                    forceSelection: false,
+                    value: data && Ext.isArray(data.feedTags)
+                        ? Ext.Array.map(data.feedTags, function (tag) {
+                            return tag.id;
+                        })
+                        : null,
+                    listeners: {
+                        afterrender: function (cmp) {
+                            feedTagStore.load();
+                            cmp.inputEl.set({
+                                autocomplete: 'wall-tag'
+                            });
+                        }
+                    },
+                },
                 {
                     xtype: 'checkbox',
                     value: data && data.hasOwnProperty('persistMedia') ? data.persistMedia : null,
@@ -575,6 +631,7 @@ SocialData.Wall.MainPanel = Class.create({
 
         formData = {
             name: this.formPanel.getForm().findField('name').getValue(),
+            wallTags: this.formPanel.getForm().findField('wallTags').getValue(),
             dataStorage: this.formPanel.getForm().findField('dataStorage').getValue(),
             assetStorage: this.formPanel.getForm().findField('assetStorage').getValue(),
             feeds: feedData
@@ -617,16 +674,35 @@ SocialData.Wall.MainPanel = Class.create({
 
         if (Ext.isObject(systemData)) {
             Ext.Object.each(systemData, function (k, v) {
-                compiledData[k] = v;
+                if (v !== '' && v !== null) {
+                    compiledData[k] = v;
+                }
             });
         }
 
         return compiledData;
     },
 
+    generateTagStore: function (type) {
+        return new Ext.data.Store({
+            proxy: {
+                type: 'ajax',
+                url: '/admin/social-data/walls/fetch-tags/' + type,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'tags'
+                }
+            },
+            autoLoad: false,
+            fields: ['id', 'type', 'name']
+        })
+    },
+
     saveOnComplete: function (response) {
 
         var res = Ext.decode(response.responseText);
+
+        this.formPanel.setLoading(false);
 
         if (res.success === false) {
             pimcore.helpers.showNotification(t('error'), res.message, 'error');
@@ -636,8 +712,6 @@ SocialData.Wall.MainPanel = Class.create({
         this.parentPanel.tree.getStore().load();
 
         this.rebuildFeeds(res.wall.feeds);
-
-        this.formPanel.setLoading(false);
 
         pimcore.helpers.showNotification(t('success'), t('social_data.wall.save_successful'), 'success');
     },

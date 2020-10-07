@@ -137,6 +137,42 @@ interface SocialPostRepositoryInterface
     public function findBySocialTypeAndWallIdAndFeedIdListing(string $socialPostType, int $wallId, int $feedId, bool $unpublished = false);
 
     /**
+     * @param array $wallTags
+     * @param array $feedTags
+     *
+     * @return array|SocialPostInterface[]
+     */
+    public function findByTag(array $wallTags = [], array $feedTags = []);
+
+    /**
+     * @param array $wallTags
+     * @param array $feedTags
+     * @param bool  $unpublished
+     *
+     * @return Listing
+     */
+    public function findByTagListing(array $wallTags = [], array $feedTags = [], bool $unpublished = false);
+
+    /**
+     * @param string $socialPostType
+     * @param array  $wallTags
+     * @param array  $feedTags
+     *
+     * @return array|SocialPostInterface[]
+     */
+    public function findSocialTypeAndByTag(string $socialPostType, array $wallTags = [], array $feedTags = []);
+
+    /**
+     * @param string $socialPostType
+     * @param array  $wallTags
+     * @param array  $feedTags
+     * @param bool   $unpublished
+     *
+     * @return Listing
+     */
+    public function findSocialTypeAndByTagListing(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false);
+
+    /**
      * @return Listing
      */
     public function getList();
@@ -144,9 +180,12 @@ interface SocialPostRepositoryInterface
     /**
      * @param bool $unpublished
      *
+     * @param bool $joinWallTagTables
+     * @param bool $joinFeedTagTables
+     *
      * @return Listing
      */
-    public function getFeedPostJoinListing(bool $unpublished = false);
+    public function getFeedPostJoinListing(bool $unpublished = false, bool $joinWallTagTables = false, bool $joinFeedTagTables = false);
 
     /**
      * @return int

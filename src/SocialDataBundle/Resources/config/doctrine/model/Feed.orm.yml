@@ -29,14 +29,31 @@ SocialDataBundle\Model\Feed:
     manyToOne:
         connectorEngine:
             targetEntity: SocialDataBundle\Model\ConnectorEngine
-            orphanRemoval: true
             joinColumn:
                 name: connector
                 referencedColumnName: id
                 onDelete: CASCADE
         wall:
             targetEntity: SocialDataBundle\Model\Wall
-            inversedBy: channels
+            inversedBy: feeds
             joinColumn:
                 name: wall
                 referencedColumnName: id
+                onDelete: CASCADE
+    manyToMany:
+        feedTags:
+            targetEntity: SocialDataBundle\Model\Tag
+            cascade:
+                - persist
+            joinTable:
+                name: social_data_feed_tags
+                joinColumns:
+                    feed_id:
+                        referencedColumnName: id
+                        nullable: false
+                        onDelete: CASCADE
+                inverseJoinColumns:
+                    tag_id:
+                        referencedColumnName: id
+                        nullable: false
+                        onDelete: CASCADE

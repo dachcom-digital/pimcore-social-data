@@ -5,6 +5,14 @@ services:
         autoconfigure: true
         public: false
 
+    SocialDataBundle\Form\Admin\Type\TagType:
+        tags:
+            - { name: form.type }
+
+    SocialDataBundle\Form\Admin\Type\TagCollectionType:
+        tags:
+            - { name: form.type }
+
     SocialDataBundle\Form\Admin\Type\Wall\WallType:
         tags:
             - { name: form.type }

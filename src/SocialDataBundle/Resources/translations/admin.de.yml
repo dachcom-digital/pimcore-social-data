@@ -64,3 +64,5 @@ social_data.statistic.available_wall_posts: 'Verbundene Social Posts dieser Wall
 social_data.statistic.published_wall_posts: 'Veröffentlichte Social Posts dieser Wall'
 social_data.statistic.unpublished_wall_posts: 'Unveröffentlichte Social Posts dieser Wall'
 social_data.statistic.orphaned_wall_posts: 'Verwaiste Social Posts dieser Wall (keine verlinkten Feeds)'
+social_data.tags.wall_tags: 'Wall Tags'
+social_data.tags.feed_tags: 'Feed Tags'

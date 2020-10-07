@@ -2,6 +2,7 @@
 
 namespace SocialDataBundle\Manager;
 
+use SocialDataBundle\Model\Tag;
 use SocialDataBundle\Model\Wall;
 use Doctrine\ORM\EntityManagerInterface;
 use SocialDataBundle\Model\WallInterface;
@@ -72,6 +73,16 @@ class WallManager implements WallManagerInterface
         $this->entityManager->flush();
 
         return $wall;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAvailableTags(string $type)
+    {
+        return $this->entityManager->getRepository(Tag::class)->findBy([
+            'type' => $type,
+        ]);
     }
 
     /**

@@ -37,9 +37,15 @@ class Wall implements WallInterface
      */
     protected $feeds;
 
+    /**
+     * @var Collection|FeedInterface[]
+     */
+    protected $wallTags;
+
     public function __construct()
     {
         $this->feeds = new ArrayCollection();
+        $this->wallTags = new ArrayCollection();
     }
 
     /**
@@ -165,5 +171,49 @@ class Wall implements WallInterface
     public function getFeeds()
     {
         return $this->feeds;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasWallTags()
+    {
+        return !$this->wallTags->isEmpty();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasWallTag(TagInterface $wallTag)
+    {
+        return $this->wallTags->contains($wallTag);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addWallTag(TagInterface $wallTag)
+    {
+        if (!$this->hasWallTag($wallTag)) {
+            $this->wallTags->add($wallTag);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeWallTag(TagInterface $wallTag)
+    {
+        if ($this->hasWallTag($wallTag)) {
+            $this->wallTags->removeElement($wallTag);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWallTags()
+    {
+        return $this->wallTags;
     }
 }

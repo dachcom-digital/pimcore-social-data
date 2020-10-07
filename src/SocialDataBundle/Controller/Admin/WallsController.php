@@ -215,13 +215,30 @@ class WallsController extends AdminController
             $message = join('<br>', $this->extJsDataBuilder->generateFormErrorList($form));
         }
 
-        $updatedWall = $this->extJsDataBuilder->generateWallDetailData($this->wallManager->getById($wallId));
+        $updatedWall = null;
+        if ($success === true) {
+            $updatedWall = $this->extJsDataBuilder->generateWallDetailData($this->wallManager->getById($wallId));
+        }
 
         return $this->adminJson([
             'success' => $success,
             'message' => $message,
             'id'      => $wallId,
             'wall'    => $updatedWall
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $type
+     *
+     * @return JsonResponse
+     */
+    public function fetchTagsAction(Request $request, string $type)
+    {
+        return $this->adminJson([
+            'success' => true,
+            'tags'    => $this->extJsDataBuilder->generateTagList($type)
         ]);
     }
 
@@ -265,4 +282,5 @@ class WallsController extends AdminController
 
         return $this->adminJson($response);
     }
+
 }

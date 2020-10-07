@@ -56,6 +56,11 @@ social_data_admin_walls_save_wall:
     methods: [POST]
     defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::saveWallAction }
 
+social_data_admin_walls_get_tags:
+    path: /admin/social-data/walls/fetch-tags/{type}
+    methods: [GET]
+    defaults: { _controller: SocialDataBundle\Controller\Admin\WallsController::fetchTagsAction }
+
 social_data_admin_walls_trigger_wall_build_porcess:
     path: /admin/social-data/walls/trigger-wall-build-process/{wallId}
     methods: [GET]

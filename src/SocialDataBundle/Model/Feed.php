@@ -2,6 +2,8 @@
 
 namespace SocialDataBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use SocialDataBundle\Connector\ConnectorFeedConfigurationInterface;
 
 class Feed implements FeedInterface
@@ -41,8 +43,15 @@ class Feed implements FeedInterface
      */
     protected $wall;
 
+    /**
+     * @var Collection|FeedInterface[]
+     */
+    protected $feedTags;
+
     public function __construct()
     {
+        $this->feedTags = new ArrayCollection();
+
         if ($this->getCreationDate() === null) {
             $this->setCreationDate(new \DateTime('now'));
         }
@@ -158,5 +167,49 @@ class Feed implements FeedInterface
     public function getWall()
     {
         return $this->wall;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasFeedTags()
+    {
+        return !$this->feedTags->isEmpty();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasFeedTag(TagInterface $feedTag)
+    {
+        return $this->feedTags->contains($feedTag);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addFeedTag(TagInterface $feedTag)
+    {
+        if (!$this->hasFeedTag($feedTag)) {
+            $this->feedTags->add($feedTag);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeFeedTag(TagInterface $feedTag)
+    {
+        if ($this->hasFeedTag($feedTag)) {
+            $this->feedTags->removeElement($feedTag);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFeedTags()
+    {
+        return $this->feedTags;
     }
 }

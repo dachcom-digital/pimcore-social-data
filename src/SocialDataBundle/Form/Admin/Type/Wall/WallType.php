@@ -2,10 +2,11 @@
 
 namespace SocialDataBundle\Form\Admin\Type\Wall;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use SocialDataBundle\Form\Admin\Type\TagCollectionType;
 use SocialDataBundle\Form\Admin\Type\Wall\Component\PimcoreRelationType;
+use SocialDataBundle\Form\Traits\ExtJsTagTransformTrait;
 use SocialDataBundle\Model\Wall;
-use SocialDataBundle\Model\WallInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,55 +16,64 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class WallType extends AbstractType
 {
+    use ExtJsTagTransformTrait;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class);
+        $builder->add('wallTags', TagCollectionType::class, ['tag_type' => 'wallTag']);
         $builder->add('dataStorage', PimcoreRelationType::class);
         $builder->add('assetStorage', PimcoreRelationType::class);
+        $builder->add('feeds', FeedCollectionType::class);
 
-        $entity = $builder->getData();
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'adjustFeedsExtJsSubmissionData']);
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'adjustTagsExtJsSubmissionData']);
+    }
 
-        // we need to ensure that we have a id-based array
-        // @see: https://github.com/symfony/symfony/issues/7828#issuecomment-579608260
+    /**
+     * @param FormEvent $event
+     */
+    public function adjustFeedsExtJsSubmissionData(FormEvent $event)
+    {
+        $data = $event->getData();
 
-        if ($entity instanceof WallInterface) {
-            $indexedCollection = new ArrayCollection();
-            foreach ($entity->getFeeds() as $collectionItem) {
-                $indexedCollection->set($collectionItem->getId(), $collectionItem);
-            }
-
-            $builder->add('feeds', FeedCollectionType::class, ['data' => $indexedCollection]);
+        if (!isset($data['feeds']) || !is_array($data['feeds'])) {
+            return;
         }
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+        $sortedData = [];
+        foreach ($data['feeds'] as $feedRow) {
 
-            $data = $event->getData();
+            $id = empty($feedRow['id']) ? null : (int) $feedRow['id'];
 
-            if (!isset($data['feeds']) || !is_array($data['feeds'])) {
-                return;
+            unset($feedRow['id']);
+
+            if ($id === null) {
+                $id = md5(uniqid(rand(), true));
             }
 
-            $sortedData = [];
-            foreach ($data['feeds'] as $feedRow) {
+            $sortedData[$id] = $feedRow;
+        }
 
-                $id = empty($feedRow['id']) ? null : (int) $feedRow['id'];
+        $data['feeds'] = $sortedData;
 
-                unset($feedRow['id']);
-
-                if ($id === null) {
-                    $id = md5(uniqid(rand(), true));
-                }
-
-                $sortedData[$id] = $feedRow;
-            }
-
-            $data['feeds'] = $sortedData;
-
-            $event->setData($data);
-        });
+        $event->setData($data);
     }
 
     /**

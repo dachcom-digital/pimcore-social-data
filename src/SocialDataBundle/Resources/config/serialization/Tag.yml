@@ -1,0 +1,8 @@
+SocialDataBundle\Model\Tag:
+    attributes:
+        id:
+            groups: [Default, ExtJs]
+        name:
+            groups: [Default, ExtJs]
+        type:
+            groups: [Default, ExtJs]

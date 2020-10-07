@@ -32,3 +32,20 @@ SocialDataBundle\Model\Wall:
             mappedBy: wall
             cascade:
                 - all
+    manyToMany:
+        wallTags:
+            targetEntity: SocialDataBundle\Model\Tag
+            cascade:
+                - persist
+            joinTable:
+                name: social_data_wall_tags
+                joinColumns:
+                    wall_id:
+                        referencedColumnName: id
+                        nullable: false
+                        onDelete: CASCADE
+                inverseJoinColumns:
+                    tag_id:
+                        referencedColumnName: id
+                        nullable: false
+                        onDelete: CASCADE

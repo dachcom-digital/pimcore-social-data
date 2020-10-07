@@ -1,17 +1,17 @@
 <?php
 
-namespace SocialDataBundle\Form\Admin\Type\Wall;
+namespace SocialDataBundle\Form\Admin\Type;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
-use SocialDataBundle\Model\FeedInterface;
+use SocialDataBundle\Model\TagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FeedCollectionType extends AbstractType
+class TagCollectionType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -23,22 +23,22 @@ class FeedCollectionType extends AbstractType
 
         $builder->addModelTransformer(
             new CallbackTransformer(
-                function ($feeds) {
+                function ($tags) {
 
-                    if (!$feeds instanceof PersistentCollection) {
-                        return $feeds;
+                    if (!$tags instanceof PersistentCollection) {
+                        return $tags;
                     }
 
-                    $feedCollection = new ArrayCollection();
-                    /** @var FeedInterface $collectionItem */
-                    foreach ($feeds as $collectionItem) {
-                        $feedCollection->set($collectionItem->getId(), $collectionItem);
+                    $tagCollection = new ArrayCollection();
+                    /** @var TagInterface $collectionItem */
+                    foreach ($tags as $collectionItem) {
+                        $tagCollection->set($collectionItem->getId(), $collectionItem);
                     }
 
-                    return $feedCollection;
+                    return $tagCollection;
                 },
-                function ($feeds) {
-                    return $feeds;
+                function ($tags) {
+                    return $tags;
                 }
             )
         );
@@ -52,10 +52,11 @@ class FeedCollectionType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
+            'by_reference' => false,
             'allow_add'    => true,
             'allow_delete' => true,
-            'by_reference' => false,
-            'entry_type'   => FeedType::class
+            'tag_type'     => 'wallTag',
+            'entry_type'   => TagType::class,
         ]);
     }
 

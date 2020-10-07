@@ -163,6 +163,7 @@ class ExtJsDataBuilder
     public function generateWallDetailData(WallInterface $wall)
     {
         $feeds = $this->serializer->normalize($wall->getFeeds(), 'array', $this->getExtJSSerializerContext());
+        $wallTags = $this->serializer->normalize($wall->getWallTags(), 'array');
 
         $statisticData = [];
         foreach ($this->statisticService->getWallStatistics($wall) as $identifier => $value) {
@@ -177,8 +178,9 @@ class ExtJsDataBuilder
             'name'         => $wall->getName(),
             'dataStorage'  => $wall->getDataStorage(),
             'assetStorage' => $wall->getAssetStorage(),
+            'wallTags'     => array_values($wallTags),
+            'feeds'        => array_values($feeds),
             'statistics'   => $statisticData,
-            'feeds'        => array_values($feeds)
         ];
 
         $data['stores'] = [
@@ -186,6 +188,18 @@ class ExtJsDataBuilder
         ];;
 
         return $data;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
+    public function generateTagList(string $type)
+    {
+        $tags = $this->wallManager->getAvailableTags($type);
+
+        return $this->serializer->normalize($tags, 'array');
     }
 
     /**
