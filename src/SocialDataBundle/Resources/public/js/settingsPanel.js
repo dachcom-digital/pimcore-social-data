@@ -78,7 +78,7 @@ SocialData.SettingsPanel = Class.create({
                 var config = Ext.decode(response.responseText);
 
                 var descriptionText = !config.dataClassReady
-                    ? ' ' + t(' social_data.settings.dataclass.not_ready').format(config.dataClassPath)
+                    ? ' ' + t('social_data.settings.dataclass.not_ready').format(config.dataClassPath)
                     : ' ' + t('social_data.settings.dataclass.active_data_class').format(config.dataClassPath);
 
                 this.panel.add({

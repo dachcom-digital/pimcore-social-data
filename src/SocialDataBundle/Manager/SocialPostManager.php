@@ -133,6 +133,8 @@ class SocialPostManager implements SocialPostManagerInterface
         $post->setKey(File::getValidFilename(sprintf('%s-%s', $post->getSocialId(), $feed->getConnectorEngine()->getName())));
 
         try {
+            // @todo: make mandatory check configurable?
+            //$post->setOmitMandatoryCheck(true);
             $post->save();
             $this->feedPostManager->connectFeedWithPost($feed, $post);
             $this->logger->info(sprintf('Social post %s (%d) successfully %s', $post->getKey(), $post->getId(), $persistenceState), [$feed]);
