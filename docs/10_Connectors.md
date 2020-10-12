@@ -3,7 +3,7 @@
 ![image](https://user-images.githubusercontent.com/700119/79234884-3096a180-7e6b-11ea-8956-bf58969817c7.png)
 
 ## Note!
-This bundle **does not** provide andy connectors by default. You need to install them separately!
+This bundle **does not** provide any connectors by default. You need to install them separately!
 Checkout all available connectors in the [list below](#available-connectors) to learn how to install them.
 
 ***
