@@ -11,7 +11,7 @@ social_data:
     social_post_data_class: SocialPost
 ```
 
-The Data Class needs to provide some predefined fields and needs to implement the `SOcialPostInterface`.
+The Data Class needs to provide some predefined fields and needs to implement the `SocialPostInterface`.
 Just import the preconfigured [SocialPost Definition](https://github.com/dachcom-digital/pimcore-social-data/blob/master/src/SocialDataBundle/Resources/install/class/SocialPost.class.json)
 to kickstart your data class. 
 
