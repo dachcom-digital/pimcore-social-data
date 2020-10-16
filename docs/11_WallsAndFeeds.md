@@ -11,6 +11,7 @@ You can add one or more wall and each wall can hold one or more feeds.
 | Name | Description
 |------|----------------------|
 | `name` | Set a Name for your Wall |
+| `Wall Tags` | Set some tags to use them later in your frontend query. |
 | `Data Storage Path` | Add a DataObject-Folder via Drag'n'Drop to define a storage folder. New social posts will be stored there |
 | `Asset Storage Path` | Add a Asset-Folder via Drag'n'Drop to define a storage folder. New social post assets will be stored there |
 | `Statistics` | Get some statistics about wall-related social posts |
@@ -46,5 +47,6 @@ Every Feed contains some system fields but also a connector related configuratio
 
 | Name | Description
 |------|----------------------|
-| `Store Media as Assets` | If checked, the SocialDataBundle will store a poster assets which needs to be prepopulated by each connector (`posterUrl`) |
+| `Feed Tags` | Set some tags to use them later in your frontend query. |
+| `Store Media as Assets` | If checked, the SocialDataBundle will store a poster assets which needs to be pre-populated by each connector (`posterUrl`) |
 | `Immediately publish Social Post` | If checked, every new imported post will be published instantly |

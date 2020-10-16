@@ -69,4 +69,7 @@ Ready? Read more about it [here](./11_WallsAndFeeds.md)
 ***
 
 ## Available Connector
-- [Facebook](./Connectors/01_Facebook.md)
+- [Facebook](https://github.com/dachcom-digital/pimcore-social-data-facebook-connector)
+- [Instagram](https://github.com/dachcom-digital/pimcore-social-data-instagram-connector)
+- [Twitter](https://github.com/dachcom-digital/pimcore-social-data-twitter-connector)
+- [WeChat](https://github.com/dachcom-digital/pimcore-social-data-wechat-connector)
