@@ -47,7 +47,6 @@ This class needs to implement the `ConnectorDefinitionInterface`.
 | `connect` | TBD |
 | `disconnect` | TBD |
 | `needsEngineConfiguration` | TBD |
-| `hasLogPanel` | TBD |
 | `getEngineConfigurationClass` | TBD |
 | `getFeedConfigurationClass` | TBD |
 | `getEngineConfiguration` | TBD |

@@ -90,11 +90,6 @@ interface ConnectorDefinitionInterface
     public function needsEngineConfiguration();
 
     /**
-     * @return bool
-     */
-    public function hasLogPanel();
-
-    /**
      * @return null|string
      */
     public function getEngineConfigurationClass();
