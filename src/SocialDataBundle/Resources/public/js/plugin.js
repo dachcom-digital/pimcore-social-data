@@ -31,7 +31,7 @@ pimcore.plugin.SocialData = Class.create(pimcore.plugin.admin, {
         var subMenu = [],
             user = pimcore.globalmanager.get('user');
 
-        if (user.isAllowed('social_data_permission_settings')) {
+        if (user.isAllowed('social_data_bundle_menu_settings')) {
             subMenu.push(new Ext.Action({
                 id: 'social_data_bundle_setting_button',
                 text: t('social_data.settings.configuration'),
@@ -40,8 +40,7 @@ pimcore.plugin.SocialData = Class.create(pimcore.plugin.admin, {
             }));
         }
 
-
-        if (user.isAllowed('social_data_permission_walls')) {
+        if (user.isAllowed('social_data_bundle_menu_walls')) {
             subMenu.push(new Ext.Action({
                 id: 'social_data_bundle_walls_button',
                 text: t('social_data.settings.walls'),
