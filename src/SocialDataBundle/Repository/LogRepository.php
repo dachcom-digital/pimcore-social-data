@@ -58,7 +58,6 @@ class LogRepository implements LogRepositoryInterface
         return new Paginator($query);
     }
 
-
     /**
      * {@inheritdoc}
      */

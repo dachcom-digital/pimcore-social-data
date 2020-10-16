@@ -37,9 +37,28 @@ class SocialDataExtension extends Extension
         }
 
         $container->setParameter('social_data.connectors.available', $availableConnectorsNames);
-        $container->setParameter('social_data.logs.expiration_days', $config['log_expiration_days']);
 
+        $this->setupMaintenanceSetting($container, $config);
         $this->setupEnvironment($container, $config);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    protected function setupMaintenanceSetting(ContainerBuilder $container, array $config)
+    {
+        $maintenanceSettings = $config['maintenance'];
+
+        $container->setParameter('social_data.maintenance.clean_up_old_posts.enabled', $maintenanceSettings['clean_up_old_posts']['enabled']);
+        $container->setParameter('social_data.maintenance.clean_up_old_posts.delete_poster', $maintenanceSettings['clean_up_old_posts']['delete_poster']);
+        $container->setParameter('social_data.maintenance.clean_up_old_posts.expiration_days', $maintenanceSettings['clean_up_old_posts']['expiration_days']);
+
+        $container->setParameter('social_data.maintenance.clean_up_logs.enabled', $maintenanceSettings['clean_up_logs']['enabled']);
+        $container->setParameter('social_data.maintenance.clean_up_logs.expiration_days', $maintenanceSettings['clean_up_logs']['expiration_days']);
+
+        $container->setParameter('social_data.maintenance.fetch_social_posts.enabled', $maintenanceSettings['fetch_social_post']['enabled']);
+        $container->setParameter('social_data.maintenance.fetch_social_posts.interval', $maintenanceSettings['fetch_social_post']['interval_in_hours']);
     }
 
     /**

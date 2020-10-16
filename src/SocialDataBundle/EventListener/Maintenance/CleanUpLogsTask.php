@@ -8,9 +8,14 @@ use Pimcore\Maintenance\TaskInterface;
 class CleanUpLogsTask implements TaskInterface
 {
     /**
+     * @var bool
+     */
+    protected $enabled;
+
+    /**
      * @var int
      */
-    protected $logExpirationDays;
+    protected $expirationDays;
 
     /**
      * @var LogRepositoryInterface
@@ -18,12 +23,17 @@ class CleanUpLogsTask implements TaskInterface
     protected $logRepository;
 
     /**
-     * @param int                    $logExpirationDays
+     * @param bool                   $enabled
+     * @param int                    $expirationDays
      * @param LogRepositoryInterface $logRepository
      */
-    public function __construct(int $logExpirationDays, LogRepositoryInterface $logRepository)
-    {
-        $this->logExpirationDays = $logExpirationDays;
+    public function __construct(
+        bool $enabled,
+        int $expirationDays,
+        LogRepositoryInterface $logRepository
+    ) {
+        $this->enabled = $enabled;
+        $this->expirationDays = $expirationDays;
         $this->logRepository = $logRepository;
     }
 
@@ -32,6 +42,10 @@ class CleanUpLogsTask implements TaskInterface
      */
     public function execute()
     {
-        $this->logRepository->deleteExpired($this->logExpirationDays);
+        if ($this->enabled === false) {
+            return;
+        }
+
+        $this->logRepository->deleteExpired($this->expirationDays);
     }
 }

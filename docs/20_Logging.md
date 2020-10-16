@@ -4,12 +4,24 @@
 
 The SocialDataBundle comes with a dedicated log table.
 
-## Clean Up Task
+## Modify Clean Up Task Expiration Days
 Logs will be removed after `30 days`. Change the expiration via configuration:
  
 ```yaml
 social_data:
-    log_expiration_days: 10
+    maintenance:
+        clean_up_logs: 
+            expiration_days: 10 #delete logs older than 10 days, default 30
+```
+
+## Disable Clean Up Task
+To disable the complete clean up task, you need to define it via configuration:
+ 
+```yaml
+social_data:
+    maintenance:
+        clean_up_logs: 
+            enabled: false      # disable task, default true
 ```
 
 ## Custom Clean-Up

@@ -9,9 +9,9 @@ class LockService implements LockServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function isLocked(string $key)
+    public function isLocked(string $key, int $expire = 1800)
     {
-        return Lock::isLocked($key);
+        return Lock::isLocked($key, $expire);
     }
 
     /**

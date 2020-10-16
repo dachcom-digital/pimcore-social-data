@@ -188,6 +188,12 @@ interface SocialPostRepositoryInterface
     public function getFeedPostJoinListing(bool $unpublished = false, bool $joinWallTagTables = false, bool $joinFeedTagTables = false);
 
     /**
+     * @param int  $expireDays
+     * @param bool $deletePoster
+     */
+    public function deleteOutdatedSocialPosts(int $expireDays, bool $deletePoster = false);
+
+    /**
      * @return int
      */
     public function getClassId();

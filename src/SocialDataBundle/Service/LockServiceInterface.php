@@ -8,10 +8,11 @@ interface LockServiceInterface
 
     /**
      * @param string $key
+     * @param int    $expire
      *
      * @return bool
      */
-    public function isLocked(string $key);
+    public function isLocked(string $key, int $expire = 1800);
 
     /**
      * @param string $key

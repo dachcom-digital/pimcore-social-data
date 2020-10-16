@@ -5,8 +5,24 @@ services:
         autoconfigure: true
         public: false
 
+    SocialDataBundle\EventListener\Maintenance\FetchSocialPostsTask:
+        arguments:
+            $enabled: '%social_data.maintenance.fetch_social_posts.enabled%'
+            $interval: '%social_data.maintenance.fetch_social_posts.interval%'
+        tags:
+            - { name: pimcore.maintenance.task, type: social_data_fetch_social_posts }
+
+    SocialDataBundle\EventListener\Maintenance\CleanUpOldSocialPostsTask:
+        arguments:
+            $enabled: '%social_data.maintenance.clean_up_old_posts.enabled%'
+            $deletePoster: '%social_data.maintenance.clean_up_old_posts.delete_poster%'
+            $expirationDays: '%social_data.maintenance.clean_up_old_posts.expiration_days%'
+        tags:
+            - { name: pimcore.maintenance.task, type: social_data_remove_old_social_posts }
+
     SocialDataBundle\EventListener\Maintenance\CleanUpLogsTask:
         arguments:
-            $logExpirationDays: '%social_data.logs.expiration_days%'
+            $enabled: '%social_data.maintenance.clean_up_logs.enabled%'
+            $expirationDays: '%social_data.maintenance.clean_up_logs.expiration_days%'
         tags:
             - { name: pimcore.maintenance.task, type: social_data_cleanup_logs }

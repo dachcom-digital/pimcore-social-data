@@ -2,8 +2,10 @@
 
 namespace SocialDataBundle\Repository;
 
-use Pimcore\Db\ZendCompatibility\QueryBuilder;
+use Carbon\Carbon;
+use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject\Concrete;
+use Pimcore\Db\ZendCompatibility\QueryBuilder;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Service\EnvironmentService;
 
@@ -275,6 +277,35 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         });
 
         return $listing;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteOutdatedSocialPosts(int $expireDays, bool $deletePoster = false)
+    {
+        $expireDate = Carbon::now()->subDays($expireDays);
+
+        $listing = $this->getList();
+        $listing->setUnpublished(true);
+        $listing->addConditionParam('o_creationDate < ?', $expireDate->getTimestamp());
+
+        /** @var Concrete $socialPost */
+        foreach ($listing->getObjects() as $socialPost) {
+
+            try {
+
+                if ($deletePoster === true && $socialPost instanceof SocialPostInterface && $socialPost->getPoster() instanceof Asset) {
+                    $socialPost->getPoster()->delete();
+                }
+
+                $socialPost->delete();
+
+            } catch (\Exception $e) {
+                // fail silently
+            }
+
+        }
     }
 
     /**
