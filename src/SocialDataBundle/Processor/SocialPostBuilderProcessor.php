@@ -233,7 +233,7 @@ class SocialPostBuilderProcessor
             $filteredElement = $filterData->getFilteredElement();
 
             if ($filteredElement === null) {
-                $this->logger->debug(sprintf('Element "%s" has been removed during filter process', $filteredId), $logContext);
+                $this->logger->debug(sprintf('Element%s has been removed during filter process', empty($filteredId) ? '' : sprintf(' "%s"', $filteredId)), $logContext);
                 continue;
             }
 
