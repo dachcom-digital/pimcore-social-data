@@ -151,14 +151,20 @@ class SocialPostManager implements SocialPostManagerInterface
      */
     protected function persistMedia(FeedInterface $feed, SocialPostInterface $socialPost, bool $forceProcessing)
     {
-        if (empty($socialPost->getPosterUrl())) {
+        if (empty($socialPost->getPosterUrl()) || !is_string($socialPost->getPosterUrl())) {
             // @todo: how to handle force processing (e.g. delete current asset?)
             $this->logger->debug(sprintf('No poster url given for social post %s', $socialPost->getSocialId()), [$feed]);
 
             return;
         }
 
-        $asset = $this->provideSocialPostAssetByExternalResource($socialPost, $feed);
+        $imageData = $this->assertImageData($socialPost->getPosterUrl());
+
+        if ($imageData === null) {
+            return;
+        }
+
+        $asset = $this->provideSocialPostAssetByExternalResource($socialPost, $feed, $imageData);
 
         if (!$asset instanceof Asset\Image) {
             // @todo: how to handle force processing (e.g. delete current asset?)
@@ -181,19 +187,9 @@ class SocialPostManager implements SocialPostManagerInterface
             return;
         }
 
-        // 2. forced mode enabled
+        // 2. forced mode enabled or new asset
         // => add new data or try to add new version if data has changed!
-        $posterUrl = $socialPost->getPosterUrl();
-
-        try {
-            $content = $this->getAssetDataFromUrl($posterUrl);
-        } catch (\Throwable $e) {
-            $this->logger->error(sprintf('Could not load content from url "%s". Error: %s', $posterUrl, $e->getMessage()));
-
-            return;
-        }
-
-        if ($isNewAsset === false && $forceProcessing === true && md5($asset->getData()) === md5($content)) {
+        if ($isNewAsset === false && $forceProcessing === true && md5($asset->getData()) === md5($imageData['content'])) {
             $socialPost->setPoster($asset);
             $this->logger->debug(
                 sprintf('Asset %s for post %s forced update skipped since no data has been changed', $asset->getFilename(), $socialPost->getSocialId()),
@@ -203,7 +199,7 @@ class SocialPostManager implements SocialPostManagerInterface
             return;
         }
 
-        $asset->setData($content);
+        $asset->setData($imageData['content']);
 
         try {
             $asset->save();
@@ -223,24 +219,18 @@ class SocialPostManager implements SocialPostManagerInterface
     /**
      * @param SocialPostInterface $socialPost
      * @param FeedInterface       $feed
+     * @param array               $imageData
      *
      * @return Asset\Image|null
      */
-    protected function provideSocialPostAssetByExternalResource(SocialPostInterface $socialPost, FeedInterface $feed)
+    protected function provideSocialPostAssetByExternalResource(SocialPostInterface $socialPost, FeedInterface $feed, array $imageData)
     {
         $wall = $feed->getWall();
         $assetStorage = $wall->getAssetStorage();
         $assetStorageFolder = Asset\Folder::getById($assetStorage['id']);
 
-        $posterUrl = $socialPost->getPosterUrl();
-
-        if (empty($posterUrl)) {
-            return null;
-        }
-
-        $extension = $this->getAssetExtensionFromUrl($posterUrl);
         $identifier = sprintf('%s-%s', $socialPost->getSocialId(), $socialPost->getSocialType());
-        $cleanExtension = str_replace('jpeg', 'jpg', $extension);
+        $cleanExtension = str_replace('jpeg', 'jpg', $imageData['extension']);
         $fileNameWithExtension = sprintf('%s%s%s', File::getValidFilename($identifier), strpos($cleanExtension, '.') === false ? '.' : '', $cleanExtension);
 
         $listing = new Asset\Listing();
@@ -274,22 +264,68 @@ class SocialPostManager implements SocialPostManagerInterface
     }
 
     /**
-     * @param string $url
+     * @param string $posterUrl
      *
-     * @return string
+     * @return array|null
      */
-    protected function getAssetExtensionFromUrl($url)
+    protected function assertImageData(string $posterUrl)
     {
+        $extension = null;
+        $imageData = null;
+
+        try {
+            $content = $this->getAssetDataFromUrl($posterUrl);
+        } catch (\Throwable $e) {
+            $this->logger->error(sprintf('Could not load asset data from url "%s". Error: %s', $posterUrl, $e->getMessage()));
+            return null;
+        }
+
+        try {
+            $imageData = getimagesizefromstring($content);
+        } catch (\Throwable $e) {
+            $this->logger->error(sprintf('Could not determinate asset data as image from url "%s". Error: %s', $posterUrl, $e->getMessage()));
+            return null;
+        }
+
+        if (!is_array($imageData)) {
+            $this->logger->error(sprintf('Could not extract image data from url "%s". Maybe it is not a valid image?', $posterUrl));
+            return null;
+        }
+
+        list($imageType, $imageFormat) = explode('/', $imageData['mime']);
+
+        if ($imageType !== 'image') {
+            $this->logger->error(sprintf('Asset should be type of "image" but is type of "%s".', $imageType));
+            return null;
+        }
+
         try {
             // @todo: this is the only solution to find the real extension
             // since some connectors will return dynamic pages like "/xy.php?image=xy"
-            $size = getimagesize($url);
-            $extension = image_type_to_extension($size[2]);
+            $extension = image_type_to_extension($imageData[2]);
         } catch (\Exception $e) {
-            $extension = 'jpg';
+            $this->logger->error(sprintf('Could not determinate image extension from url "%s".', $posterUrl));
+            return null;
         }
 
-        return $extension;
+        if (!is_string($extension)) {
+            $this->logger->error(sprintf('Could not determinate image extension from url "%s".', $posterUrl));
+        }
+
+        $width = $imageData[0];
+        $height = $imageData[1];
+
+        if ($width <= 1 && $height <= 1) {
+            $this->logger->warning(sprintf('Image width (%dpx) and height (%dpx) are too mall to import from url "%s".', $width, $height, $posterUrl));
+            return null;
+        }
+
+        return [
+            'extension' => $extension,
+            'content'   => $content,
+            'width'     => $width,
+            'height'    => $height
+        ];
     }
 
     /**
