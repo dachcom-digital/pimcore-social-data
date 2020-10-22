@@ -53,9 +53,9 @@ This Bundle needs some preparation. Please checkout the [Setup](docs/00_Setup.md
   - [Instagram](https://github.com/dachcom-digital/pimcore-social-data-instagram-connector)
   - [Twitter](https://github.com/dachcom-digital/pimcore-social-data-twitter-connector)
   - [WeChat](https://github.com/dachcom-digital/pimcore-social-data-wechat-connector)
-  - Youtube
+  - [Youtube](https://github.com/dachcom-digital/pimcore-social-data-youtube-connector)
+  - [LinkedIn](https://github.com/dachcom-digital/pimcore-social-data-linkedin-connector)
   - Pinterest
-  - LinkedIn
 - [Walls And Feeds](docs/11_WallsAndFeeds.md)
 - [Events](docs/12_Events.md)
 - [Frontend Usage](docs/13_FrontendUsage.md)
