@@ -80,6 +80,7 @@ class SocialDataBundle extends AbstractPimcoreBundle
             '/bundles/socialdata/js/wall/mainPanel.js',
             '/bundles/socialdata/js/connector/abstract-connector.js',
             '/bundles/socialdata/js/feed/abstract-feed.js',
+            '/bundles/socialdata/js/vendor/dataObject.js',
         ];
     }
 

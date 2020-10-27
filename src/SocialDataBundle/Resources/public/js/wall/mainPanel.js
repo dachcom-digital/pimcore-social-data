@@ -61,11 +61,11 @@ SocialData.Wall.MainPanel = Class.create({
             assetStoragePathValue = this.wallData !== null && this.wallData.hasOwnProperty('assetStorage') ? this.wallData.assetStorage : null,
             wallTagStore = this.generateTagStore('wallTag');
 
-        dataStoragePathRelationField = new Formbuilder.extjs.types.href(dataStoragePathFieldConfig, dataStoragePathValue, null);
+        dataStoragePathRelationField = new SocialData.Component.Relation(dataStoragePathFieldConfig, dataStoragePathValue, null);
         dataStoragePathRelation = dataStoragePathRelationField.getHref();
         dataStoragePathRelation.allowBlank = false;
 
-        assetStoragePathRelationField = new Formbuilder.extjs.types.href(assetStoragePathFieldConfig, assetStoragePathValue, null);
+        assetStoragePathRelationField = new SocialData.Component.Relation(assetStoragePathFieldConfig, assetStoragePathValue, null);
         assetStoragePathRelation = assetStoragePathRelationField.getHref();
         assetStoragePathRelation.allowBlank = false;
 
@@ -660,7 +660,7 @@ SocialData.Wall.MainPanel = Class.create({
             return false;
         }
 
-        transposedConfig = DataObjectParser.transpose(dataClass.getValues());
+        transposedConfig = SocialDataObjectParser.transpose(dataClass.getValues());
         transposedData = transposedConfig.data();
 
         if (transposedData.hasOwnProperty('system')) {
