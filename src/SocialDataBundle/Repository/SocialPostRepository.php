@@ -76,7 +76,6 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         $listing = $this->getList();
         $listing->setUnpublished($unpublished);
         $listing->addConditionParam('socialType = ?', (string) $socialPostType);
-        $listing->setLimit(1);
 
         return $listing;
     }
