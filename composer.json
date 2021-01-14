@@ -18,6 +18,14 @@
             "SocialDataBundle\\": "src/SocialDataBundle"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "": "src/"
+        },
+        "classmap": [
+            "app/TestKernel.php"
+        ]
+    },
     "extra": {
         "pimcore": {
             "bundles": [
@@ -25,18 +33,18 @@
             ]
         },
          "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "2.0-dev"
         }
     },
     "require": {
         "pimcore/pimcore": "^6.6",
-        "symfony/symfony": "^4.1",
+        "symfony/symfony": "^4.4",
         "doctrine/orm": "^2.7"
     },
     "require-dev": {
         "codeception/codeception": "~2.4.0",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-symfony": "^0.12",
-        "symplify/easy-coding-standard": "^5.4"
+        "symplify/easy-coding-standard": "^8.0"
     }
 }
