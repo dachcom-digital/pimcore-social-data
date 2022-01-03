@@ -4,52 +4,30 @@ namespace SocialDataBundle\Dto;
 
 class FilterData extends AbstractData
 {
-    /**
-     * @var array
-     */
-    protected $filteredElement;
+    protected array $filteredElement;
+    protected int|string $filteredId;
 
-    /**
-     * @var int|string
-     */
-    protected $filteredId;
-
-    /**
-     * @return mixed
-     */
-    public function getTransferredData()
+    public function getTransferredData(): mixed
     {
         return $this->transferredData;
     }
 
-    /**
-     * @param array $filteredElement
-     */
-    public function setFilteredElement(array $filteredElement)
+    public function setFilteredElement(array $filteredElement): void
     {
         $this->filteredElement = $filteredElement;
     }
 
-    /**
-     * @return array
-     */
-    public function getFilteredElement()
+    public function getFilteredElement(): array
     {
         return $this->filteredElement;
     }
 
-    /**
-     * @param string|int $filteredId
-     */
-    public function setFilteredId($filteredId)
+    public function setFilteredId(string|int $filteredId): void
     {
         $this->filteredId = $filteredId;
     }
 
-    /**
-     * @return string|int
-     */
-    public function getFilteredId()
+    public function getFilteredId(): string|int
     {
         return $this->filteredId;
     }

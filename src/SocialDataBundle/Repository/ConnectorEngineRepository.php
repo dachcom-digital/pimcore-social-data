@@ -5,26 +5,18 @@ namespace SocialDataBundle\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use SocialDataBundle\Model\ConnectorEngine;
+use SocialDataBundle\Model\ConnectorEngineInterface;
 
 class ConnectorEngineRepository implements ConnectorEngineRepositoryInterface
 {
-    /**
-     * @var EntityRepository
-     */
-    protected $repository;
+    protected EntityRepository $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->repository = $entityManager->getRepository(ConnectorEngine::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findById($id)
+    public function findById($id): ?ConnectorEngineInterface
     {
         if ($id < 1) {
             return null;
@@ -33,10 +25,7 @@ class ConnectorEngineRepository implements ConnectorEngineRepositoryInterface
         return $this->repository->find($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByName(string $name)
+    public function findByName(string $name): ?ConnectorEngineInterface
     {
         if (empty($name)) {
             return null;
@@ -45,19 +34,13 @@ class ConnectorEngineRepository implements ConnectorEngineRepositoryInterface
         return $this->repository->findOneBy(['name' => $name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findIdByName(string $name)
+    public function findIdByName(string $name): int
     {
         $form = $this->findByName($name);
 
         return $form->getId();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAll(): array
     {
         return $this->repository->findAll();

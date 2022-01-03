@@ -8,61 +8,26 @@ use SocialDataBundle\Model\ConnectorEngineInterface;
 interface ConnectorManagerInterface
 {
     /**
-     * @return array|ConnectorDefinitionInterface[]
+     * @return array<int, ConnectorDefinitionInterface>
      */
-    public function getAllActiveConnectorDefinitions();
+    public function getAllActiveConnectorDefinitions(): array;
 
     /**
-     * @param bool $loadEngine
-     *
-     * @return array|ConnectorDefinitionInterface[]
+     * @return array<int, ConnectorDefinitionInterface>
      */
-    public function getAllConnectorDefinitions(bool $loadEngine = false);
+    public function getAllConnectorDefinitions(bool $loadEngine = false): array;
 
-    /**
-     * @param string $connectorDefinitionName
-     * @param bool   $loadEngine
-     *
-     * @return ConnectorDefinitionInterface|null
-     */
-    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false);
+    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false): ?ConnectorDefinitionInterface;
 
-    /**
-     * @param int $id
-     *
-     * @return ConnectorEngineInterface|null
-     */
-    public function getEngineById(int $id);
+    public function getEngineById(int $id): ?ConnectorEngineInterface;
 
-    /**
-     * @param string $connectorName
-     *
-     * @return ConnectorEngineInterface|null
-     */
-    public function getEngineByName(string $connectorName);
+    public function getEngineByName(string $connectorName): ?ConnectorEngineInterface;
 
-    /**
-     * @param string $connectorName
-     * @param bool   $persist
-     *
-     * @return ConnectorEngineInterface
-     */
-    public function createNewEngine(string $connectorName, bool $persist = true);
+    public function createNewEngine(string $connectorName, bool $persist = true): ConnectorEngineInterface;
 
-    /**
-     * @param ConnectorEngineInterface $connector
-     *
-     * @return ConnectorEngineInterface|null
-     */
-    public function updateEngine(ConnectorEngineInterface $connector);
+    public function updateEngine(ConnectorEngineInterface $connector): ConnectorEngineInterface;
 
-    /**
-     * @param ConnectorEngineInterface $connector
-     */
-    public function deleteEngine(ConnectorEngineInterface $connector);
+    public function deleteEngine(ConnectorEngineInterface $connector): void;
 
-    /**
-     * @param string $connectorName
-     */
-    public function deleteEngineByName(string $connectorName);
+    public function deleteEngineByName(string $connectorName): void;
 }

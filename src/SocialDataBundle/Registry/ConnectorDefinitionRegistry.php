@@ -6,16 +6,9 @@ use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 
 class ConnectorDefinitionRegistry implements ConnectorDefinitionRegistryInterface
 {
-    /**
-     * @var array
-     */
-    protected $connector;
+    protected array $connector = [];
 
-    /**
-     * @param ConnectorDefinitionInterface $service
-     * @param string                       $identifier
-     */
-    public function register($service, $identifier)
+    public function register(mixed $service, string $identifier): void
     {
         if (!in_array(ConnectorDefinitionInterface::class, class_implements($service), true)) {
             throw new \InvalidArgumentException(
@@ -26,18 +19,12 @@ class ConnectorDefinitionRegistry implements ConnectorDefinitionRegistryInterfac
         $this->connector[$identifier] = $service;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function has($identifier)
+    public function has(string $identifier): bool
     {
         return isset($this->connector[$identifier]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function get($identifier)
+    public function get($identifier): ConnectorDefinitionInterface
     {
         if (!$this->has($identifier)) {
             throw new \Exception('"' . $identifier . '" Connector does not exist');
@@ -46,18 +33,12 @@ class ConnectorDefinitionRegistry implements ConnectorDefinitionRegistryInterfac
         return $this->connector[$identifier];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->connector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAllIdentifier()
+    public function getAllIdentifier(): array
     {
         return array_keys($this->connector);
     }

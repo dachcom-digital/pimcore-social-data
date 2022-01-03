@@ -11,12 +11,9 @@ use Symfony\Component\Config\FileLocator;
 class SocialDataExtension extends Extension
 {
     /**
-     * @param array            $configs
-     * @param ContainerBuilder $container
-     *
      * @throws \Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -42,11 +39,7 @@ class SocialDataExtension extends Extension
         $this->setupEnvironment($container, $config);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    protected function setupMaintenanceSetting(ContainerBuilder $container, array $config)
+    protected function setupMaintenanceSetting(ContainerBuilder $container, array $config): void
     {
         $maintenanceSettings = $config['maintenance'];
 
@@ -61,11 +54,7 @@ class SocialDataExtension extends Extension
         $container->setParameter('social_data.maintenance.fetch_social_posts.interval', $maintenanceSettings['fetch_social_post']['interval_in_hours']);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    protected function setupEnvironment(ContainerBuilder $container, array $config)
+    protected function setupEnvironment(ContainerBuilder $container, array $config): void
     {
         $dataClass = is_string($config['social_post_data_class']) ? $config['social_post_data_class'] : '';
 

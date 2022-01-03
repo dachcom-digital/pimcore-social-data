@@ -17,38 +17,12 @@ use SocialDataBundle\Model\WallInterface;
 
 class WallsController extends AdminController
 {
-    /**
-     * @var LockServiceInterface
-     */
-    protected $lockService;
+    protected LockServiceInterface $lockService;
+    protected LoggerInterface $logger;
+    protected FormFactoryInterface $formFactory;
+    protected WallManagerInterface $wallManager;
+    protected ExtJsDataBuilder $extJsDataBuilder;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    protected $formFactory;
-
-    /**
-     * @var WallManagerInterface
-     */
-    protected $wallManager;
-
-    /**
-     * @var ExtJsDataBuilder
-     */
-    protected $extJsDataBuilder;
-
-    /**
-     * @param LockServiceInterface $lockService
-     * @param LoggerInterface      $logger
-     * @param FormFactoryInterface $formFactory
-     * @param WallManagerInterface $wallManager
-     * @param ExtJsDataBuilder     $extJsDataBuilder
-     */
     public function __construct(
         LockServiceInterface $lockService,
         LoggerInterface $logger,
@@ -63,20 +37,12 @@ class WallsController extends AdminController
         $this->extJsDataBuilder = $extJsDataBuilder;
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function fetchAllWallsAction()
+    public function fetchAllWallsAction(): JsonResponse
     {
         return $this->adminJson($this->extJsDataBuilder->generateWallListData());
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function fetchWallAction(Request $request)
+    public function fetchWallAction(Request $request): JsonResponse
     {
         $id = (int) $request->query->get('id');
         $wall = $this->wallManager->getById($id);
@@ -104,16 +70,10 @@ class WallsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function addWallAction(Request $request)
+    public function addWallAction(Request $request): JsonResponse
     {
         $name = $this->extJsDataBuilder->getSaveName($request->request->get('name'));
 
-        $existingWall = null;
         $success = true;
         $message = null;
         $id = null;
@@ -144,13 +104,7 @@ class WallsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param int     $wallId
-     *
-     * @return JsonResponse
-     */
-    public function deleteWallAction(Request $request, int $wallId)
+    public function deleteWallAction(Request $request, int $wallId): JsonResponse
     {
         $success = true;
         $message = null;
@@ -176,14 +130,7 @@ class WallsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param int     $wallId
-     *
-     * @return JsonResponse
-     *
-     */
-    public function saveWallAction(Request $request, int $wallId)
+    public function saveWallAction(Request $request, int $wallId): JsonResponse
     {
         $success = true;
         $message = null;
@@ -212,7 +159,7 @@ class WallsController extends AdminController
             $this->wallManager->update($wall);
         } else {
             $success = false;
-            $message = join('<br>', $this->extJsDataBuilder->generateFormErrorList($form));
+            $message = implode('<br>', $this->extJsDataBuilder->generateFormErrorList($form));
         }
 
         $updatedWall = null;
@@ -228,13 +175,7 @@ class WallsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param string  $type
-     *
-     * @return JsonResponse
-     */
-    public function fetchTagsAction(Request $request, string $type)
+    public function fetchTagsAction(Request $request, string $type): JsonResponse
     {
         return $this->adminJson([
             'success' => true,
@@ -242,13 +183,7 @@ class WallsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param int     $wallId
-     *
-     * @return JsonResponse
-     */
-    public function triggerWallBuildProcessAction(Request $request, int $wallId)
+    public function triggerWallBuildProcessAction(Request $request, int $wallId): JsonResponse
     {
         if ($this->lockService->isLocked(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID)) {
             return $this->adminJson(['success' => true, 'status' => 'locked']);

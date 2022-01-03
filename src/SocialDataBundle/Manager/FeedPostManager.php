@@ -11,23 +11,14 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class FeedPostManager implements FeedPostManagerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function connectFeedWithPost(FeedInterface $feed, Concrete $socialPost)
+    public function connectFeedWithPost(FeedInterface $feed, Concrete $socialPost): void
     {
         if ($this->relationExists($feed, $socialPost) === true) {
             return;
@@ -39,23 +30,14 @@ class FeedPostManager implements FeedPostManagerInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removePostFromFeeds(Concrete $socialPost)
+    public function removePostFromFeeds(Concrete $socialPost): void
     {
         $this->getConnection()->delete('social_data_feed_post', [
             'post_id' => $socialPost->getId()
         ]);
     }
 
-    /**
-     * @param FeedInterface $feed
-     * @param Concrete      $socialPost
-     *
-     * @return bool
-     */
-    protected function relationExists(FeedInterface $feed, Concrete $socialPost)
+    protected function relationExists(FeedInterface $feed, Concrete $socialPost): bool
     {
         $qb = $this->getQueryBuilder()->select(['post_id', 'feed_id'])
             ->from('social_data_feed_post', 'fp')
@@ -72,18 +54,12 @@ class FeedPostManager implements FeedPostManagerInterface
         return $stmt->rowCount() > 0;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    protected function getQueryBuilder()
+    protected function getQueryBuilder(): QueryBuilder
     {
         return $this->getConnection()->createQueryBuilder();
     }
 
-    /**
-     * @return Connection
-     */
-    protected function getConnection()
+    protected function getConnection(): Connection
     {
         return $this->entityManager->getConnection();
     }

@@ -7,4 +7,4 @@ services:
 
     SocialDataBundle\Command\FetchSocialPostsCommand:
         tags:
-            - { name: console.command, command: 'social-data:fetch:social-posts' }
+            - { name: console.command }

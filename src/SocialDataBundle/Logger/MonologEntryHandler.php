@@ -7,23 +7,14 @@ use SocialDataBundle\Manager\LogManagerInterface;
 
 class MonologEntryHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var LogManagerInterface
-     */
-    protected $logManager;
+    protected LogManagerInterface $logManager;
 
-    /**
-     * @param LogManagerInterface $logManager
-     */
-    public function setLogManager(LogManagerInterface $logManager)
+    public function setLogManager(LogManagerInterface $logManager): void
     {
         $this->logManager = $logManager;
     }
 
-    /**
-     * @param array $record
-     */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $context = is_array($record['context']) ? $record['context'] : [];
         $logEntry = $this->logManager->createNewForConnector($context);

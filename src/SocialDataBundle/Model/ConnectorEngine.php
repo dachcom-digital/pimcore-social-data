@@ -6,94 +6,52 @@ use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 
 class ConnectorEngine implements ConnectorEngineInterface
 {
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id = 0;
+    protected string $name;
+    protected bool $enabled;
+    protected ConnectorEngineConfigurationInterface $configuration;
 
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var bool
-     */
-    protected $enabled;
-
-    /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setEnabled(bool $enabled)
+    public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEnabled()
+    public function getEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled === true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setConfiguration(ConnectorEngineConfigurationInterface $configuration)
+    public function setConfiguration(ConnectorEngineConfigurationInterface $configuration): void
     {
         $this->configuration = $configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfiguration()
+    public function getConfiguration(): ConnectorEngineConfigurationInterface
     {
         return $this->configuration;
     }

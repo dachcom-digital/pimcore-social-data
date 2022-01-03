@@ -18,38 +18,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ExtJsDataBuilder
 {
-    /**
-     * @var NormalizerInterface
-     */
-    protected $serializer;
+    protected NormalizerInterface $serializer;
+    protected Translator $translator;
+    protected ConnectorManagerInterface $connectorManager;
+    protected WallManagerInterface $wallManager;
+    protected StatisticServiceInterface $statisticService;
 
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
-
-    /**
-     * @var WallManagerInterface
-     */
-    protected $wallManager;
-
-    /**
-     * @var StatisticServiceInterface
-     */
-    protected $statisticService;
-
-    /**
-     * @param NormalizerInterface       $serializer
-     * @param Translator                $translator
-     * @param ConnectorManagerInterface $connectorManager
-     * @param WallManagerInterface      $wallManager
-     * @param StatisticServiceInterface $statisticService
-     */
     public function __construct(
         NormalizerInterface $serializer,
         Translator $translator,
@@ -64,10 +38,7 @@ class ExtJsDataBuilder
         $this->statisticService = $statisticService;
     }
 
-    /**
-     * @return array
-     */
-    public function generateConnectorListData()
+    public function generateConnectorListData(): array
     {
         $connectors = [];
         $allConnectorDefinitions = $this->connectorManager->getAllConnectorDefinitions(true);
@@ -98,12 +69,7 @@ class ExtJsDataBuilder
         return $connectors;
     }
 
-    /**
-     * @param string $connectorName
-     *
-     * @return array
-     */
-    public function generateConnectorData(string $connectorName)
+    public function generateConnectorData(string $connectorName): array
     {
         $connectorDefinition = $this->connectorManager->getConnectorDefinition($connectorName, true);
 
@@ -132,15 +98,11 @@ class ExtJsDataBuilder
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function generateWallListData()
+    public function generateWallListData(): array
     {
         $walls = $this->wallManager->getAll();
 
         $items = [];
-
         foreach ($walls as $wall) {
             $items[] = [
                 'id'            => (int) $wall->getId(),
@@ -155,12 +117,7 @@ class ExtJsDataBuilder
         return $items;
     }
 
-    /**
-     * @param WallInterface $wall
-     *
-     * @return array
-     */
-    public function generateWallDetailData(WallInterface $wall)
+    public function generateWallDetailData(WallInterface $wall): array
     {
         $feeds = $this->serializer->normalize($wall->getFeeds(), 'array', $this->getExtJSSerializerContext());
         $wallTags = $this->serializer->normalize($wall->getWallTags(), 'array');
@@ -185,39 +142,24 @@ class ExtJsDataBuilder
 
         $data['stores'] = [
             'feedStore' => $this->generateFeedStore()
-        ];;
+        ];
 
         return $data;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return array
-     */
-    public function generateTagList(string $type)
+    public function generateTagList(string $type): array
     {
         $tags = $this->wallManager->getAvailableTags($type);
 
         return $this->serializer->normalize($tags, 'array');
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public function getSaveName(string $name)
+    public function getSaveName(string $name): string
     {
-        return (string) preg_replace('/[^A-Za-z0-9aäüöÜÄÖß \-]/', '', $name);
+        return (string) preg_replace('/[^A-Za-z0-9aäüöÜÄÖß \-]/u', '', $name);
     }
 
-    /**
-     * @param FormInterface $form
-     *
-     * @return array
-     */
-    public function generateFormErrorList(FormInterface $form)
+    public function generateFormErrorList(FormInterface $form): array
     {
         $errors = [];
 
@@ -233,10 +175,7 @@ class ExtJsDataBuilder
         return $errors;
     }
 
-    /**
-     * @return array
-     */
-    protected function generateFeedStore()
+    protected function generateFeedStore(): array
     {
         $feedStore = [];
         foreach ($this->connectorManager->getAllActiveConnectorDefinitions() as $connectorDefinitionName => $connectorDefinition) {
@@ -251,12 +190,7 @@ class ExtJsDataBuilder
         return $feedStore;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function translate($value)
+    protected function translate(?string $value): string
     {
         if (empty($value)) {
             return $value;
@@ -265,10 +199,7 @@ class ExtJsDataBuilder
         return $this->translator->trans($value, [], 'admin');
     }
 
-    /**
-     * @return array
-     */
-    protected function getExtJSSerializerContext()
+    protected function getExtJSSerializerContext(): array
     {
         return [
             'groups'                      => ['ExtJs'],
@@ -277,9 +208,12 @@ class ExtJsDataBuilder
                     return $data instanceof ConnectorEngineInterface ? $data->getId() : null;
                 },
                 'configuration'   => function ($data) {
+
                     if ($data instanceof ConnectorFeedConfigurationInterface) {
                         return $this->serializer->normalize($data);
-                    } elseif ($data instanceof ConnectorEngineConfigurationInterface) {
+                    }
+
+                    if ($data instanceof ConnectorEngineConfigurationInterface) {
                         return $this->serializer->normalize($data);
                     }
 

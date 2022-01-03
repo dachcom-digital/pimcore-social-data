@@ -2,7 +2,7 @@
 
 namespace SocialDataBundle\Form\Admin\Type;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use SocialDataBundle\Model\Tag;
 use SocialDataBundle\Model\TagInterface;
 use Symfony\Component\Form\AbstractType;
@@ -13,23 +13,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TagType extends AbstractType
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $manager;
+    protected EntityManagerInterface $manager;
 
-    /**
-     * @param ObjectManager $manager
-     */
-    public function __construct(ObjectManager $manager)
+    public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class)
@@ -65,10 +56,7 @@ class TagType extends AbstractType
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Tag::class

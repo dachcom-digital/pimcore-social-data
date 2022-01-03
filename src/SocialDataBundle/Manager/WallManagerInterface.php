@@ -8,48 +8,22 @@ use SocialDataBundle\Model\WallInterface;
 interface WallManagerInterface
 {
     /**
-     * @return array|WallInterface[]
+     * @return array<int, WallInterface>
      */
     public function getAll(): array;
 
-    /**
-     * @param string $name
-     *
-     * @return WallInterface|null
-     */
-    public function getByName(string $name);
+    public function getByName(string $name): ?WallInterface;
+
+    public function getById(int $id): ?WallInterface;
+
+    public function createNew(string $wallName, bool $persist = true): WallInterface;
 
     /**
-     * @param int $id
-     *
-     * @return WallInterface|null
+     * @return array<int, TagInterface>
      */
-    public function getById(int $id);
+    public function getAvailableTags(string $type): array;
 
-    /**
-     * @param string $wallName
-     * @param bool   $persist
-     *
-     * @return WallInterface
-     */
-    public function createNew(string $wallName, bool $persist = true);
+    public function update(WallInterface $wall): WallInterface;
 
-    /**
-     * @param string $type
-     *
-     * @return TagInterface[]
-     */
-    public function getAvailableTags(string $type);
-
-    /**
-     * @param WallInterface $wall
-     *
-     * @return WallInterface
-     */
-    public function update(WallInterface $wall);
-
-    /**
-     * @param WallInterface $wall
-     */
-    public function delete(WallInterface $wall);
+    public function delete(WallInterface $wall): void;
 }

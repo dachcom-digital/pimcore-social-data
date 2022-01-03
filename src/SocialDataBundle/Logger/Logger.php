@@ -4,55 +4,34 @@ namespace SocialDataBundle\Logger;
 
 class Logger implements LoggerInterface
 {
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
+    protected \Psr\Log\LoggerInterface $logger;
 
-    /**
-     * @param \Psr\Log\LoggerInterface $logger
-     */
     public function __construct(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function log($level, $message, ?array $context = null)
+    public function log(string $level, $message, ?array $context = null): void
     {
         $this->logger->log($level, $message, is_array($context) ? $context : []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function debug($message, ?array $context = null)
+    public function debug(string $message, ?array $context = null): void
     {
         $this->log('DEBUG', $message, is_array($context) ? $context : []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function info($message, ?array $context = null)
+    public function info(string $message, ?array $context = null): void
     {
         $this->log('INFO', $message, is_array($context) ? $context : []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function warning($message, ?array $context = null)
+    public function warning(string $message, ?array $context = null): void
     {
         $this->log('WARNING', $message, is_array($context) ? $context : []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function error($message, ?array $context = null)
+    public function error(string $message, ?array $context = null): void
     {
         $this->log('ERROR', $message, is_array($context) ? $context : []);
     }

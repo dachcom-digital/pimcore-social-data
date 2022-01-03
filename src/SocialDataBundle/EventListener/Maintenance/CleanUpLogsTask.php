@@ -7,26 +7,10 @@ use Pimcore\Maintenance\TaskInterface;
 
 class CleanUpLogsTask implements TaskInterface
 {
-    /**
-     * @var bool
-     */
-    protected $enabled;
+    protected bool $enabled;
+    protected int $expirationDays;
+    protected LogRepositoryInterface $logRepository;
 
-    /**
-     * @var int
-     */
-    protected $expirationDays;
-
-    /**
-     * @var LogRepositoryInterface
-     */
-    protected $logRepository;
-
-    /**
-     * @param bool                   $enabled
-     * @param int                    $expirationDays
-     * @param LogRepositoryInterface $logRepository
-     */
     public function __construct(
         bool $enabled,
         int $expirationDays,
@@ -37,10 +21,7 @@ class CleanUpLogsTask implements TaskInterface
         $this->logRepository = $logRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute()
+    public function execute(): void
     {
         if ($this->enabled === false) {
             return;

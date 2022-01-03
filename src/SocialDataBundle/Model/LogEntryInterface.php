@@ -4,68 +4,29 @@ namespace SocialDataBundle\Model;
 
 interface LogEntryInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * @param ConnectorEngineInterface $connectorEngine
-     */
-    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine);
+    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine): void;
 
-    /**
-     * @return ConnectorEngineInterface
-     */
-    public function getConnectorEngine();
+    public function getConnectorEngine(): ConnectorEngineInterface;
 
-    /**
-     * @param WallInterface $wall
-     */
-    public function setWall(WallInterface $wall);
+    public function setWall(WallInterface $wall): void;
 
-    /**
-     * @return WallInterface
-     */
-    public function getWall();
+    public function getWall(): WallInterface;
 
-    /**
-     * @param FeedInterface $feed
-     */
-    public function setFeed(FeedInterface $feed);
+    public function setFeed(FeedInterface $feed): void;
 
-    /**
-     * @return FeedInterface
-     */
-    public function getFeed();
+    public function getFeed(): FeedInterface;
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getType(): string;
 
-    /**
-     * @param string $type
-     */
-    public function setType(string $type);
+    public function setType(string $type): void;
 
-    /**
-     * @return string
-     */
-    public function getMessage();
+    public function getMessage(): string;
 
-    /**
-     * @param string $message
-     */
-    public function setMessage(string $message);
+    public function setMessage(string $message): void;
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreationDate();
+    public function getCreationDate(): \DateTime;
 
-    /**
-     * @param \DateTime $date
-     */
-    public function setCreationDate(\DateTime $date);
+    public function setCreationDate(\DateTime $date): void;
 }

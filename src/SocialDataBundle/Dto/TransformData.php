@@ -6,52 +6,30 @@ use SocialDataBundle\Model\SocialPostInterface;
 
 class TransformData extends AbstractData
 {
-    /**
-     * @var SocialPostInterface
-     */
-    protected $socialPostEntity;
+    protected SocialPostInterface $socialPostEntity;
+    protected SocialPostInterface $transformedElement;
 
-    /**
-     * @var SocialPostInterface
-     */
-    protected $transformedElement;
-
-    /**
-     * @return mixed
-     */
-    public function getTransferredData()
+    public function getTransferredData(): mixed
     {
         return $this->transferredData;
     }
 
-    /**
-     * @param SocialPostInterface $socialPostEntity
-     */
-    public function setSocialPostEntity(SocialPostInterface $socialPostEntity)
+    public function setSocialPostEntity(SocialPostInterface $socialPostEntity): void
     {
         $this->socialPostEntity = $socialPostEntity;
     }
 
-    /**
-     * @return SocialPostInterface
-     */
-    public function getSocialPostEntity()
+    public function getSocialPostEntity(): SocialPostInterface
     {
         return $this->socialPostEntity;
     }
 
-    /**
-     * @param SocialPostInterface $transformedElement
-     */
-    public function setTransformedElement(SocialPostInterface $transformedElement)
+    public function setTransformedElement(SocialPostInterface $transformedElement): void
     {
         $this->transformedElement = $transformedElement;
     }
 
-    /**
-     * @return SocialPostInterface
-     */
-    public function getTransformedElement()
+    public function getTransformedElement(): SocialPostInterface
     {
         return $this->transformedElement;
     }

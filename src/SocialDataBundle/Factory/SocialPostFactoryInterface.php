@@ -6,8 +6,5 @@ use SocialDataBundle\Model\SocialPostInterface;
 
 interface SocialPostFactoryInterface
 {
-    /**
-     * @return SocialPostInterface
-     */
-    public function create();
+    public function create(): SocialPostInterface;
 }

@@ -12,26 +12,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LogManager implements LogManagerInterface
 {
-    /**
-     * @var LogRepositoryInterface
-     */
-    protected $logRepository;
+    protected LogRepositoryInterface $logRepository;
+    protected ConnectorManagerInterface $connectorManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @param LogRepositoryInterface    $logRepository
-     * @param ConnectorManagerInterface $connectorManager
-     * @param EntityManagerInterface    $entityManager
-     */
     public function __construct(
         LogRepositoryInterface $logRepository,
         ConnectorManagerInterface $connectorManager,
@@ -42,34 +26,22 @@ class LogManager implements LogManagerInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getForConnectorEngine(int $connectorEngineId)
+    public function getForConnectorEngine(int $connectorEngineId): iterable
     {
         return $this->logRepository->findForConnectorEngine($connectorEngineId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getForWall(int $wallId)
+    public function getForWall(int $wallId): iterable
     {
         return $this->logRepository->findForWall($wallId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function flushLogs()
+    public function flushLogs(): void
     {
-        return $this->logRepository->truncateLogTable();
+        $this->logRepository->truncateLogTable();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createNew()
+    public function createNew(): LogEntryInterface
     {
         $logEntry = new LogEntry();
         $logEntry->setCreationDate(new \DateTime());
@@ -77,10 +49,7 @@ class LogManager implements LogManagerInterface
         return $logEntry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createNewForConnector(array $context)
+    public function createNewForConnector(array $context): LogEntryInterface
     {
         $logEntry = new LogEntry();
         $logEntry->setCreationDate(new \DateTime());
@@ -100,19 +69,13 @@ class LogManager implements LogManagerInterface
         return $logEntry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function update(LogEntryInterface $logEntry)
+    public function update(LogEntryInterface $logEntry): void
     {
         $this->entityManager->persist($logEntry);
         $this->entityManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function delete(LogEntryInterface $logEntry)
+    public function delete(LogEntryInterface $logEntry): void
     {
         $this->entityManager->remove($logEntry);
         $this->entityManager->flush();

@@ -9,26 +9,14 @@ use Pimcore\Bundle\AdminBundle\Controller\AdminController;
 
 class LogController extends AdminController
 {
-    /**
-     * @var LogManagerInterface
-     */
-    protected $logManager;
+    protected LogManagerInterface $logManager;
 
-    /**
-     * @param LogManagerInterface $logManager
-     */
     public function __construct(LogManagerInterface $logManager)
     {
         $this->logManager = $logManager;
     }
 
-    /**
-     * @param Request $request
-     * @param int     $connectorEngineId
-     *
-     * @return JsonResponse
-     */
-    public function loadLogsForConnectorAction(Request $request, int $connectorEngineId)
+    public function loadLogsForConnectorAction(Request $request, int $connectorEngineId): JsonResponse
     {
         $items = [];
         $offset = (int) $request->get('start', 0);
@@ -60,13 +48,7 @@ class LogController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param int     $wallId
-     *
-     * @return JsonResponse
-     */
-    public function loadLogsForWallAction(Request $request, int $wallId)
+    public function loadLogsForWallAction(Request $request, int $wallId): JsonResponse
     {
         $items = [];
         $offset = (int) $request->get('start', 0);
@@ -98,12 +80,7 @@ class LogController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function flushLogsAction(Request $request)
+    public function flushLogsAction(Request $request): JsonResponse
     {
         try {
             $this->logManager->flushLogs();

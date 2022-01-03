@@ -13,19 +13,13 @@ class SocialDataBundle extends AbstractPimcoreBundle
 {
     use PackageVersionTrait;
 
-    const PACKAGE_NAME = 'dachcom-digital/social-data';
+    public const PACKAGE_NAME = 'dachcom-digital/social-data';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getInstaller()
+    public function getInstaller(): Install
     {
         return $this->container->get(Install::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container)
     {
         $this->configureDoctrineExtension($container);
@@ -33,17 +27,11 @@ class SocialDataBundle extends AbstractPimcoreBundle
         $container->addCompilerPass(new ConnectorDefinitionPass());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getComposerPackageName(): string
     {
         return self::PACKAGE_NAME;
     }
 
-    /**
-     * @param ContainerBuilder $container
-     */
     protected function configureDoctrineExtension(ContainerBuilder $container): void
     {
         $container->addCompilerPass(
@@ -55,20 +43,14 @@ class SocialDataBundle extends AbstractPimcoreBundle
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getCssPaths()
+    public function getCssPaths(): array
     {
         return [
             '/bundles/socialdata/css/admin.css'
         ];
     }
 
-    /**
-     * @return string[]
-     */
-    public function getJsPaths()
+    public function getJsPaths(): array
     {
         return [
             '/bundles/socialdata/js/component/relation.js',
@@ -84,18 +66,12 @@ class SocialDataBundle extends AbstractPimcoreBundle
         ];
     }
 
-    /**
-     * @return string|null
-     */
-    protected function getNamespaceName()
+    protected function getNamespaceName(): string
     {
         return 'SocialDataBundle\Model';
     }
 
-    /**
-     * @return string
-     */
-    protected function getNameSpacePath()
+    protected function getNameSpacePath(): string
     {
         return sprintf(
             '%s/Resources/config/doctrine/%s',

@@ -6,43 +6,19 @@ use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 
 interface ConnectorEngineInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name);
+    public function setName(string $name): void;
 
-    /**
-     * @return string
-     */
-    public function getName();
+    public function getName(): string;
 
-    /**
-     * @param bool $enabled
-     */
-    public function setEnabled(bool $enabled);
+    public function setEnabled(bool $enabled): void;
 
-    /**
-     * @return bool
-     */
-    public function getEnabled();
+    public function getEnabled(): bool;
 
-    /**
-     * @return bool
-     */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
-    /**
-     * @param ConnectorEngineConfigurationInterface $configuration
-     */
-    public function setConfiguration(ConnectorEngineConfigurationInterface $configuration);
+    public function setConfiguration(ConnectorEngineConfigurationInterface $configuration): void;
 
-    /**
-     * @return ConnectorEngineConfigurationInterface
-     */
-    public function getConfiguration();
+    public function getConfiguration(): ConnectorEngineConfigurationInterface;
 }

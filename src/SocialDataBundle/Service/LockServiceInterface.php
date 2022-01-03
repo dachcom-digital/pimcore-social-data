@@ -4,23 +4,11 @@ namespace SocialDataBundle\Service;
 
 interface LockServiceInterface
 {
-    const SOCIAL_POST_BUILD_PROCESS_ID = 'social-data-post-build-process.pid';
+    public const SOCIAL_POST_BUILD_PROCESS_ID = 'social-data-post-build-process.pid';
 
-    /**
-     * @param string $key
-     * @param int    $expire
-     *
-     * @return bool
-     */
-    public function isLocked(string $key, int $expire = 1800);
+    public function isLocked(string $token): bool;
 
-    /**
-     * @param string $key
-     */
-    public function lock(string $key);
+    public function lock(string $token, $lifeTime = 1800): void;
 
-    /**
-     * @param string $key
-     */
-    public function unLock(string $key);
+    public function unLock(string $token): void;
 }

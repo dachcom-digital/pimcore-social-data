@@ -1,4 +1,4 @@
-CREATE TABLE `social_data_connector_engine` (
+CREATE TABLE IF NOT EXISTS `social_data_connector_engine` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE `social_data_connector_engine` (
   UNIQUE KEY `UNIQ_EA791E1F999517A` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `social_data_wall` (
+CREATE TABLE IF NOT EXISTS `social_data_wall` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `creation_date` datetime NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE `social_data_wall` (
   UNIQUE KEY `UNIQ_9AEC7963999517A` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `social_data_feed` (
+CREATE TABLE IF NOT EXISTS `social_data_feed` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `connector` int(11) DEFAULT NULL,
   `configuration` longtext COMMENT '(DC2Type:object)',
@@ -32,7 +32,7 @@ CREATE TABLE `social_data_feed` (
   CONSTRAINT `FK_AA59D23E148C456E` FOREIGN KEY (`connector`) REFERENCES `social_data_connector_engine` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `social_data_feed_post` (
+CREATE TABLE IF NOT EXISTS `social_data_feed_post` (
   `feed_id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   PRIMARY KEY (`feed_id`,`post_id`),
@@ -40,7 +40,7 @@ CREATE TABLE `social_data_feed_post` (
   CONSTRAINT `FK_ADCA841C51A5BC03` FOREIGN KEY (`feed_id`) REFERENCES `social_data_feed` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `social_data_tag` (
+CREATE TABLE IF NOT EXISTS `social_data_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `social_data_tag` (
   UNIQUE KEY `name_type` (`name`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `social_data_feed_tags` (
+CREATE TABLE IF NOT EXISTS `social_data_feed_tags` (
   `feed_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   PRIMARY KEY (`feed_id`,`tag_id`),
@@ -58,7 +58,7 @@ CREATE TABLE `social_data_feed_tags` (
   CONSTRAINT `FK_9750D294BAD26311` FOREIGN KEY (`tag_id`) REFERENCES `social_data_tag` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `social_data_wall_tags` (
+CREATE TABLE IF NOT EXISTS `social_data_wall_tags` (
   `wall_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   PRIMARY KEY (`wall_id`,`tag_id`),
@@ -68,7 +68,7 @@ CREATE TABLE `social_data_wall_tags` (
   CONSTRAINT `FK_D16A4DE2C33923F1` FOREIGN KEY (`wall_id`) REFERENCES `social_data_wall` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `social_data_log` (
+CREATE TABLE IF NOT EXISTS `social_data_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) NOT NULL,
   `message` longtext NOT NULL,

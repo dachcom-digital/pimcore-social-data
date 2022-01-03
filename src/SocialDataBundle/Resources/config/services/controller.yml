@@ -5,14 +5,9 @@ services:
         autoconfigure: true
         public: true
 
-    SocialDataBundle\Controller\Admin\SettingsController:
-        calls:
-            - [setContainer, ['@service_container']]
-
-    SocialDataBundle\Controller\Admin\WallsController:
-        calls:
-            - [setContainer, ['@service_container']]
-
-    SocialDataBundle\Controller\Admin\LogController:
-        calls:
-            - [setContainer, ['@service_container']]
+    SocialDataBundle\Controller\:
+        resource: '../../Controller'
+        public: true
+        autowire: true
+        autoconfigure: true
+        tags: ['controller.service_arguments']

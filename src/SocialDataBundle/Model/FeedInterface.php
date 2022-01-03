@@ -6,95 +6,42 @@ use SocialDataBundle\Connector\ConnectorFeedConfigurationInterface;
 
 interface FeedInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
 
-    /**
-     * @param bool $persistMedia
-     */
-    public function setPersistMedia(bool $persistMedia);
+    public function setPersistMedia(bool $persistMedia): void;
 
-    /**
-     * @return string|null
-     */
-    public function getPersistMedia();
+    public function getPersistMedia(): bool;
 
-    /**
-     * @param bool $publishPostImmediately
-     */
-    public function setPublishPostImmediately(bool $publishPostImmediately);
+    public function setPublishPostImmediately(bool $publishPostImmediately): void;
 
-    /**
-     * @return bool
-     */
-    public function getPublishPostImmediately();
+    public function getPublishPostImmediately(): bool;
 
-    /**
-     * @param ConnectorFeedConfigurationInterface|null $configuration
-     */
-    public function setConfiguration(?ConnectorFeedConfigurationInterface $configuration);
+    public function setConfiguration(?ConnectorFeedConfigurationInterface $configuration): void;
 
-    /**
-     * @return ConnectorFeedConfigurationInterface|null
-     */
-    public function getConfiguration();
+    public function getConfiguration(): ?ConnectorFeedConfigurationInterface;
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreationDate();
+    public function getCreationDate(): \DateTime;
 
-    /**
-     * @param \DateTime $date
-     */
-    public function setCreationDate(\DateTime $date);
+    public function setCreationDate(\DateTime $date): void;
 
-    /**
-     * @param ConnectorEngineInterface $connectorEngine
-     */
-    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine);
+    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine): void;
 
-    /**
-     * @return ConnectorEngineInterface
-     */
-    public function getConnectorEngine();
+    public function getConnectorEngine(): ConnectorEngineInterface;
 
-    /**
-     * @param WallInterface $wall
-     */
-    public function setWall(WallInterface $wall);
+    public function setWall(WallInterface $wall): void;
 
-    /**
-     * @return WallInterface
-     */
     public function getWall();
 
-    /**
-     * @return bool
-     */
-    public function hasFeedTags();
+    public function hasFeedTags(): bool;
+
+    public function hasFeedTag(TagInterface $feedTag): bool;
+
+    public function addFeedTag(TagInterface $feedTag): void;
+
+    public function removeFeedTag(TagInterface $feedTag): void;
 
     /**
-     * @param TagInterface $feedTag
-     *
-     * @return bool
+     * @return array<int, TagInterface>
      */
-    public function hasFeedTag(TagInterface $feedTag);
-
-    /**
-     * @param TagInterface $feedTag
-     */
-    public function addFeedTag(TagInterface $feedTag);
-
-    /**
-     * @param TagInterface $feedTag
-     */
-    public function removeFeedTag(TagInterface $feedTag);
-
-    /**
-     * @return TagInterface[]
-     */
-    public function getFeedTags();
+    public function getFeedTags(): iterable;
 }

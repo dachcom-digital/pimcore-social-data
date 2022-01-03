@@ -2,7 +2,6 @@
 
 namespace SocialDataBundle\Manager;
 
-use Pimcore\Db\ZendCompatibility\QueryBuilder;
 use Pimcore\File;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
@@ -13,35 +12,15 @@ use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Model\WallInterface;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class SocialPostManager implements SocialPostManagerInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
+    protected FeedPostManagerInterface $feedPostManager;
+    protected SocialPostRepositoryInterface $socialPostRepository;
+    protected SocialPostFactoryInterface $socialPostFactory;
 
-    /**
-     * @var FeedPostManagerInterface
-     */
-    protected $feedPostManager;
-
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
-
-    /**
-     * @var SocialPostFactoryInterface
-     */
-    protected $socialPostFactory;
-
-    /**
-     * @param LoggerInterface               $logger
-     * @param FeedPostManagerInterface      $feedPostManager
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     * @param SocialPostFactoryInterface    $socialPostFactory
-     */
     public function __construct(
         LoggerInterface $logger,
         FeedPostManagerInterface $feedPostManager,
@@ -54,10 +33,7 @@ class SocialPostManager implements SocialPostManagerInterface
         $this->socialPostFactory = $socialPostFactory;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function checkWallStoragePaths(WallInterface $wall)
+    public function checkWallStoragePaths(WallInterface $wall): void
     {
         $dataStorageFolder = null;
         $assetStorageFolder = null;
@@ -81,10 +57,7 @@ class SocialPostManager implements SocialPostManagerInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function provideSocialPostEntity($filteredId, string $connectorName, FeedInterface $feed)
+    public function provideSocialPostEntity(string|int|null $filteredId, string $connectorName, FeedInterface $feed): ?SocialPostInterface
     {
         if (empty($filteredId)) {
             return null;
@@ -105,10 +78,7 @@ class SocialPostManager implements SocialPostManagerInterface
         return $postEntity;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function persistSocialPostEntity(Concrete $post, FeedInterface $feed, bool $forceProcessing)
+    public function persistSocialPostEntity(Concrete $post, FeedInterface $feed, bool $forceProcessing): void
     {
         if (!$post instanceof SocialPostInterface) {
             return;
@@ -118,7 +88,7 @@ class SocialPostManager implements SocialPostManagerInterface
         $dataStorage = $wall->getDataStorage();
         $dataStorageFolder = DataObject\Folder::getById($dataStorage['id']);
 
-        $isNewPost = empty($post->getId());
+        $isNewPost = $post->getId() === null;
         $persistenceState = $isNewPost === true ? 'created' : ($forceProcessing === false ? 'updated' : 'updated [forced]');
 
         $post->setSocialType($feed->getConnectorEngine()->getName());
@@ -144,12 +114,7 @@ class SocialPostManager implements SocialPostManagerInterface
         }
     }
 
-    /**
-     * @param FeedInterface       $feed
-     * @param SocialPostInterface $socialPost
-     * @param bool                $forceProcessing
-     */
-    protected function persistMedia(FeedInterface $feed, SocialPostInterface $socialPost, bool $forceProcessing)
+    protected function persistMedia(FeedInterface $feed, SocialPostInterface $socialPost, bool $forceProcessing): void
     {
         if (empty($socialPost->getPosterUrl()) || !is_string($socialPost->getPosterUrl())) {
             // @todo: how to handle force processing (e.g. delete current asset?)
@@ -216,14 +181,7 @@ class SocialPostManager implements SocialPostManagerInterface
         }
     }
 
-    /**
-     * @param SocialPostInterface $socialPost
-     * @param FeedInterface       $feed
-     * @param array               $imageData
-     *
-     * @return Asset\Image|null
-     */
-    protected function provideSocialPostAssetByExternalResource(SocialPostInterface $socialPost, FeedInterface $feed, array $imageData)
+    protected function provideSocialPostAssetByExternalResource(SocialPostInterface $socialPost, FeedInterface $feed, array $imageData): ?Asset\Image
     {
         $wall = $feed->getWall();
         $assetStorage = $wall->getAssetStorage();
@@ -231,12 +189,13 @@ class SocialPostManager implements SocialPostManagerInterface
 
         $identifier = sprintf('%s-%s', $socialPost->getSocialId(), $socialPost->getSocialType());
         $cleanExtension = str_replace('jpeg', 'jpg', $imageData['extension']);
-        $fileNameWithExtension = sprintf('%s%s%s', File::getValidFilename($identifier), strpos($cleanExtension, '.') === false ? '.' : '', $cleanExtension);
+        $fileNameWithExtension = sprintf('%s%s%s', File::getValidFilename($identifier), !str_contains($cleanExtension, '.') ? '.' : '', $cleanExtension);
 
         $listing = new Asset\Listing();
         $listing->addConditionParam('p.data = ?', $identifier);
-        $listing->onCreateQuery(function (QueryBuilder $builder) {
-            $builder->join(['p' => 'properties'], 'p.cid = assets.id AND p.ctype = "asset" AND p.name = "social_data_identifier"', ['sdi' => 'p.data']);
+
+        $listing->onCreateQueryBuilder(function (QueryBuilder $builder) {
+            $builder->join('assets', 'properties', 'p', 'p.cid = assets.id AND p.ctype = "asset" AND p.name = "social_data_identifier"');
         });
 
         $propAssets = $listing->getAssets();
@@ -263,16 +222,8 @@ class SocialPostManager implements SocialPostManagerInterface
         return $assetEntity;
     }
 
-    /**
-     * @param string $posterUrl
-     *
-     * @return array|null
-     */
-    protected function assertImageData(string $posterUrl)
+    protected function assertImageData(string $posterUrl): ?array
     {
-        $extension = null;
-        $imageData = null;
-
         try {
             $content = $this->getAssetDataFromUrl($posterUrl);
         } catch (\Throwable $e) {
@@ -292,7 +243,7 @@ class SocialPostManager implements SocialPostManagerInterface
             return null;
         }
 
-        list($imageType, $imageFormat) = explode('/', $imageData['mime']);
+        [$imageType, $imageFormat] = explode('/', $imageData['mime']);
 
         if ($imageType !== 'image') {
             $this->logger->error(sprintf('Asset should be type of "image" but is type of "%s".', $imageType));
@@ -329,12 +280,9 @@ class SocialPostManager implements SocialPostManagerInterface
     }
 
     /**
-     * @param string $url
-     *
-     * @return string
      * @throws \Exception
      */
-    protected function getAssetDataFromUrl($url)
+    protected function getAssetDataFromUrl(string $url): string
     {
         $data = file_get_contents($url);
 

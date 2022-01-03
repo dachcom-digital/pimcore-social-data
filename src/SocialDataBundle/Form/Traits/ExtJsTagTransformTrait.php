@@ -8,10 +8,7 @@ use Symfony\Component\Form\FormEvent;
 
 trait ExtJsTagTransformTrait
 {
-    /**
-     * @param FormEvent $event
-     */
-    public function adjustTagsExtJsSubmissionData(FormEvent $event)
+    public function adjustTagsExtJsSubmissionData(FormEvent $event): void
     {
         $tagType = null;
         $tagTypeSingular = null;

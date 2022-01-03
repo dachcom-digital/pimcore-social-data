@@ -8,50 +8,19 @@ use SocialDataBundle\Model\ConnectorEngineInterface;
 
 interface ConnectorServiceInterface
 {
-    /**
-     * @param string $connectorName
-     *
-     * @return ConnectorEngineInterface
-     */
-    public function installConnector(string $connectorName);
+    public function installConnector(string $connectorName): ConnectorEngineInterface;
 
-    /**
-     * @param string $connectorName
-     */
-    public function uninstallConnector(string $connectorName);
+    public function uninstallConnector(string $connectorName): void;
 
-    /**
-     * @param string $connectorName
-     */
-    public function enableConnector(string $connectorName);
+    public function enableConnector(string $connectorName): void;
 
-    /**
-     * @param string $connectorName
-     */
-    public function disableConnector(string $connectorName);
+    public function disableConnector(string $connectorName): void;
 
-    /**
-     * @param string $connectorName
-     */
-    public function connectConnector(string $connectorName);
+    public function connectConnector(string $connectorName): void;
 
-    /**
-     * @param string $connectorName
-     */
-    public function disconnectConnector(string $connectorName);
+    public function disconnectConnector(string $connectorName): void;
 
+    public function updateConnectorEngineConfiguration(string $connectorName, ConnectorEngineConfigurationInterface $connectorConfiguration): void;
 
-    /**
-     * @param string                                $connectorName
-     * @param ConnectorEngineConfigurationInterface $connectorConfiguration
-     */
-    public function updateConnectorEngineConfiguration(string $connectorName, ConnectorEngineConfigurationInterface $connectorConfiguration);
-
-    /**
-     * @param string $connectorDefinitionName
-     * @param bool   $loadEngine
-     *
-     * @return ConnectorDefinitionInterface
-     */
-    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false);
+    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false): ConnectorDefinitionInterface;
 }

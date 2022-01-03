@@ -8,40 +8,14 @@ use SocialDataBundle\Service\LockServiceInterface;
 
 class CleanUpOldSocialPostsTask implements TaskInterface
 {
-    const LOCK_ID = 'social_data_maintenance_task_cleanup_old_social_posts';
+    public const LOCK_ID = 'social_data_maintenance_task_cleanup_old_social_posts';
 
-    /**
-     * @var bool
-     */
-    protected $enabled;
+    protected bool $enabled;
+    protected bool $deletePoster;
+    protected int $expirationDays;
+    protected LockServiceInterface $lockService;
+    protected SocialPostRepositoryInterface $socialPostRepository;
 
-    /**
-     * @var bool
-     */
-    protected $deletePoster;
-
-    /**
-     * @var int
-     */
-    protected $expirationDays;
-
-    /**
-     * @var LockServiceInterface
-     */
-    protected $lockService;
-
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
-
-    /**
-     * @param bool                          $enabled
-     * @param bool                          $deletePoster
-     * @param int                           $expirationDays
-     * @param LockServiceInterface          $lockService
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     */
     public function __construct(
         bool $enabled,
         bool $deletePoster,
@@ -56,10 +30,7 @@ class CleanUpOldSocialPostsTask implements TaskInterface
         $this->socialPostRepository = $socialPostRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute()
+    public function execute(): void
     {
         if ($this->enabled === false) {
              $this->lockService->unLock(self::LOCK_ID);
@@ -67,13 +38,13 @@ class CleanUpOldSocialPostsTask implements TaskInterface
         }
 
         // only run every 6 hours
-        $seconds = intval(6 * 3600);
+        $seconds = (int) (6 * 3600);
 
-        if ($this->lockService->isLocked(self::LOCK_ID, $seconds)) {
+        if ($this->lockService->isLocked(self::LOCK_ID)) {
             return;
         }
 
-        $this->lockService->lock(self::LOCK_ID);
+        $this->lockService->lock(self::LOCK_ID, $seconds);
         $this->socialPostRepository->deleteOutdatedSocialPosts($this->expirationDays, $this->deletePoster);
     }
 }

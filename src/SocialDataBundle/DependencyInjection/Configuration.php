@@ -2,18 +2,16 @@
 
 namespace SocialDataBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @return TreeBuilder
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('social_data');
+        $treeBuilder = new TreeBuilder('social_data');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->addDefaultsIfNotSet()
@@ -62,10 +60,10 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function createPersistenceNode()
+    private function createPersistenceNode(): NodeDefinition
     {
         $treeBuilder = new TreeBuilder('persistence');
-        $node = $treeBuilder->root('persistence');
+        $node = $treeBuilder->getRootNode();
 
         $node
             ->addDefaultsIfNotSet()

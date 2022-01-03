@@ -7,25 +7,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SocialPostBuildConfigureEvent extends Event
 {
-    /**
-     * @var string
-     */
-    protected $connectorName;
+    protected array $options;
+    protected string $connectorName;
+    protected BuildConfig $buildConfig;
 
-    /**
-     * @var BuildConfig
-     */
-    protected $buildConfig;
-
-    /**
-     * @var array
-     */
-    protected $options;
-
-    /**
-     * @param string      $connectorName
-     * @param BuildConfig $buildConfig
-     */
     public function __construct(string $connectorName, BuildConfig $buildConfig)
     {
         $this->options = [];
@@ -33,37 +18,25 @@ class SocialPostBuildConfigureEvent extends Event
         $this->buildConfig = $buildConfig;
     }
 
-    /**
-     * @return string
-     */
-    public function getConnectorName()
+    public function getConnectorName(): string
     {
         return $this->connectorName;
     }
 
-    /**
-     * @return BuildConfig
-     */
-    public function getBuildConfig()
+    public function getBuildConfig(): BuildConfig
     {
         return $this->buildConfig;
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $value
-     *
      * @throws \Exception
      */
-    public function setOption($key, $value)
+    public function setOption(mixed $key, mixed $value): void
     {
         $this->options[$key] = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }

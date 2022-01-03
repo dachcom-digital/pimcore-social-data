@@ -9,26 +9,10 @@ use SocialDataBundle\Model\WallInterface;
 
 class BuildConfig
 {
-    /**
-     * @var FeedInterface
-     */
-    protected $feed;
+    protected FeedInterface $feed;
+    protected ConnectorEngineConfigurationInterface $engineConfiguration;
+    protected array $definitionConfiguration;
 
-    /**
-     * @var ConnectorEngineConfigurationInterface
-     */
-    protected $engineConfiguration;
-
-    /**
-     * @var array
-     */
-    protected $definitionConfiguration;
-
-    /**
-     * @param FeedInterface                         $feed
-     * @param ConnectorEngineConfigurationInterface $engineConfiguration
-     * @param array                                 $definitionConfiguration
-     */
     public function __construct(
         FeedInterface $feed,
         ConnectorEngineConfigurationInterface $engineConfiguration,
@@ -39,42 +23,27 @@ class BuildConfig
         $this->definitionConfiguration = $definitionConfiguration;
     }
 
-    /**
-     * @return ConnectorEngineConfigurationInterface
-     */
-    public function getEngineConfiguration()
+    public function getEngineConfiguration(): ConnectorEngineConfigurationInterface
     {
         return $this->engineConfiguration;
     }
 
-    /**
-     * @return array
-     */
-    public function getDefinitionConfiguration()
+    public function getDefinitionConfiguration(): array
     {
         return $this->definitionConfiguration;
     }
 
-    /**
-     * @return WallInterface
-     */
-    public function getWall()
+    public function getWall(): WallInterface
     {
         return $this->feed->getWall();
     }
 
-    /**
-     * @return FeedInterface
-     */
-    public function getFeed()
+    public function getFeed(): FeedInterface
     {
         return $this->feed;
     }
 
-    /**
-     * @return ConnectorFeedConfigurationInterface
-     */
-    public function getFeedConfiguration()
+    public function getFeedConfiguration(): ConnectorFeedConfigurationInterface
     {
         return $this->feed->getConfiguration();
     }

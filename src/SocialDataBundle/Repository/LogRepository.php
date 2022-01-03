@@ -11,29 +11,16 @@ use SocialDataBundle\Model\LogEntry;
 
 class LogRepository implements LogRepositoryInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
+    protected EntityRepository $repository;
 
-    /**
-     * @var EntityRepository
-     */
-    protected $repository;
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->repository = $entityManager->getRepository(LogEntry::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findForConnectorEngine(int $connectorEngineId)
+    public function findForConnectorEngine(int $connectorEngineId): iterable
     {
         $qb = $this->repository->createQueryBuilder('l');
 
@@ -44,10 +31,7 @@ class LogRepository implements LogRepositoryInterface
         return new Paginator($query);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findForWall(int $wallId)
+    public function findForWall(int $wallId): iterable
     {
         $qb = $this->repository->createQueryBuilder('l');
 
@@ -58,10 +42,7 @@ class LogRepository implements LogRepositoryInterface
         return new Paginator($query);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteExpired(int $expireDays)
+    public function deleteExpired(int $expireDays): void
     {
         $qb = $this->repository->createQueryBuilder('l');
         $expireDate = Carbon::now()->subDays($expireDays);
@@ -74,13 +55,10 @@ class LogRepository implements LogRepositoryInterface
         $query->execute();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function truncateLogTable()
+    public function truncateLogTable(): void
     {
         $connection = $this->entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('social_data_log', true));
+        $connection->executeStatement($platform->getTruncateTableSQL('social_data_log', true));
     }
 }

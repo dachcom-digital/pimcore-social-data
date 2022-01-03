@@ -13,10 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FeedCollectionType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // we need to ensure that we have a id-based array
         // @see: https://github.com/symfony/symfony/issues/7828#issuecomment-579608260
@@ -44,10 +41,7 @@ class FeedCollectionType extends AbstractType
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -59,10 +53,7 @@ class FeedCollectionType extends AbstractType
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return CollectionType::class;
     }

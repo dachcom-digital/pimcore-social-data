@@ -2,51 +2,20 @@
 
 namespace SocialDataBundle\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use SocialDataBundle\Connector\ConnectorFeedConfigurationInterface;
 
 class Feed implements FeedInterface
 {
-    /**
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @var bool
-     */
-    protected $persistMedia;
-
-    /**
-     * @var bool
-     */
-    protected $publishPostImmediately;
-
-    /**
-     * @var ConnectorFeedConfigurationInterface|null
-     */
-    protected $configuration;
-
-    /**
-     * @var \DateTime
-     */
-    protected $creationDate;
-
-    /**
-     * @var ConnectorEngineInterface
-     */
-    protected $connectorEngine;
-
-    /**
-     * @var WallInterface
-     */
-    protected $wall;
-
-    /**
-     * @var Collection|FeedInterface[]
-     */
-    protected $feedTags;
+    protected int $id;
+    protected bool $persistMedia;
+    protected bool $publishPostImmediately;
+    protected ?ConnectorFeedConfigurationInterface $configuration;
+    protected \DateTime $creationDate;
+    protected ConnectorEngineInterface $connectorEngine;
+    protected WallInterface $wall;
+    protected Collection $feedTags;
 
     public function __construct()
     {
@@ -57,158 +26,101 @@ class Feed implements FeedInterface
         }
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setPersistMedia(bool $persistMedia)
+    public function setPersistMedia(bool $persistMedia): void
     {
         $this->persistMedia = $persistMedia;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPersistMedia()
+    public function getPersistMedia(): bool
     {
         return $this->persistMedia;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setPublishPostImmediately(bool $publishPostImmediately)
+    public function setPublishPostImmediately(bool $publishPostImmediately): void
     {
         $this->publishPostImmediately = $publishPostImmediately;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublishPostImmediately()
+    public function getPublishPostImmediately(): bool
     {
         return $this->publishPostImmediately;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setConfiguration(?ConnectorFeedConfigurationInterface $configuration)
+    public function setConfiguration(?ConnectorFeedConfigurationInterface $configuration): void
     {
         $this->configuration = $configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfiguration()
+    public function getConfiguration(): ?ConnectorFeedConfigurationInterface
     {
         return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreationDate(\DateTime $date)
+    public function setCreationDate(\DateTime $date): void
     {
         $this->creationDate = $date;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreationDate()
+    public function getCreationDate(): \DateTime
     {
         return $this->creationDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine)
+    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine): void
     {
         $this->connectorEngine = $connectorEngine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnectorEngine()
+    public function getConnectorEngine(): ConnectorEngineInterface
     {
         return $this->connectorEngine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setWall(WallInterface $wall)
+    public function setWall(WallInterface $wall): void
     {
         $this->wall = $wall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getWall()
+    public function getWall(): WallInterface
     {
         return $this->wall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasFeedTags()
+    public function hasFeedTags(): bool
     {
         return !$this->feedTags->isEmpty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasFeedTag(TagInterface $feedTag)
+    public function hasFeedTag(TagInterface $feedTag): bool
     {
         return $this->feedTags->contains($feedTag);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addFeedTag(TagInterface $feedTag)
+    public function addFeedTag(TagInterface $feedTag): void
     {
         if (!$this->hasFeedTag($feedTag)) {
             $this->feedTags->add($feedTag);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removeFeedTag(TagInterface $feedTag)
+    public function removeFeedTag(TagInterface $feedTag): void
     {
         if ($this->hasFeedTag($feedTag)) {
             $this->feedTags->removeElement($feedTag);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFeedTags()
+    public function getFeedTags(): iterable
     {
         return $this->feedTags;
     }

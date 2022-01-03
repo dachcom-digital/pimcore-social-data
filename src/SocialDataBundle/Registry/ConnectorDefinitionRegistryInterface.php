@@ -6,29 +6,17 @@ use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 
 interface ConnectorDefinitionRegistryInterface
 {
-    /**
-     * @param string $identifier
-     *
-     * @return bool
-     */
-    public function has($identifier);
+    public function has(string $identifier): bool;
 
     /**
-     * @param string $identifier
-     *
-     * @return ConnectorDefinitionInterface
-     *
      * @throws \Exception
      */
-    public function get($identifier);
+    public function get(string $identifier): ConnectorDefinitionInterface;
 
     /**
-     * @return ConnectorDefinitionInterface[]
+     * @return array<int, ConnectorDefinitionInterface>
      */
-    public function getAll();
+    public function getAll(): array;
 
-    /**
-     * @return array
-     */
-    public function getAllIdentifier();
+    public function getAllIdentifier(): array;
 }
