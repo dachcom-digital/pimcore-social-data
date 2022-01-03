@@ -6,7 +6,7 @@ use SocialDataBundle\Model\ConnectorEngineInterface;
 
 interface ConnectorDefinitionInterface
 {
-    public function setConnectorEngine(?ConnectorEngineInterface $connectorEngine);
+    public function setConnectorEngine(?ConnectorEngineInterface $connectorEngine): void;
 
     public function getConnectorEngine(): ?ConnectorEngineInterface;
 
@@ -17,7 +17,7 @@ interface ConnectorDefinitionInterface
     /**
      * @throws \Exception
      */
-    public function setDefinitionConfiguration(array $configuration): void;
+    public function setDefinitionConfiguration(array $definitionConfiguration): void;
 
     public function engineIsLoaded(): bool;
 

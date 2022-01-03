@@ -4,7 +4,7 @@ namespace SocialDataBundle\Model;
 
 interface TagInterface
 {
-    public function getId(): int;
+    public function getId(): ?int;
 
     public function setName(string $name): void;
 

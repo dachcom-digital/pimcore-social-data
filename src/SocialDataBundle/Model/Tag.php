@@ -4,7 +4,7 @@ namespace SocialDataBundle\Model;
 
 class Tag implements TagInterface
 {
-    protected int $id;
+    protected ?int $id = null;
     protected string $name;
     protected string $type;
 
@@ -13,7 +13,7 @@ class Tag implements TagInterface
         $this->id = $id;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

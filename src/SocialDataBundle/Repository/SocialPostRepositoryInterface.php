@@ -78,5 +78,5 @@ interface SocialPostRepositoryInterface
 
     public function deleteOutdatedSocialPosts(int $expireDays, bool $deletePoster = false): void;
 
-    public function getClassId(): int;
+    public function getClassId(): string;
 }

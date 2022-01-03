@@ -16,7 +16,7 @@ class MonologEntryHandler extends AbstractProcessingHandler
 
     protected function write(array $record): void
     {
-        $context = is_array($record['context']) ? $record['context'] : [];
+        $context = $record['context'];
         $logEntry = $this->logManager->createNewForConnector($context);
 
         $logEntry->setMessage($record['message']);

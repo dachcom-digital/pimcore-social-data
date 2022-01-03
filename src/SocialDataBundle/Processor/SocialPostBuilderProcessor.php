@@ -192,12 +192,18 @@ class SocialPostBuilderProcessor
             }
 
             $preFetchedSocialPostEntity = $this->socialPostManager->provideSocialPostEntity($filteredId, $connectorName, $buildConfig->getFeed());
-            if (!$preFetchedSocialPostEntity instanceof Concrete && !$preFetchedSocialPostEntity instanceof SocialPostInterface) {
+
+            if (!$preFetchedSocialPostEntity instanceof Concrete) {
                 $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
                 continue;
             }
 
-            if (!empty($preFetchedSocialPostEntity->getId()) && $forceProcessing === false) {
+            if (!$preFetchedSocialPostEntity instanceof SocialPostInterface) {
+                $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
+                continue;
+            }
+
+            if ($forceProcessing === false && $preFetchedSocialPostEntity->getId() !== null) {
                 $this->logger->debug(
                     sprintf('Social post %s (%d) already has been processed', $preFetchedSocialPostEntity->getSocialId(), $preFetchedSocialPostEntity->getId()),
                     $logContext

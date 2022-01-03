@@ -237,7 +237,7 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         }
     }
 
-    public function getClassId(): int
+    public function getClassId(): string
     {
         /** @var Concrete $concreteObject */
         $concreteObject = sprintf('\Pimcore\Model\DataObject\%s', ucfirst($this->environmentService->getSocialPostDataClass()));

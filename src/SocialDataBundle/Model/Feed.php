@@ -12,7 +12,7 @@ class Feed implements FeedInterface
     protected bool $persistMedia;
     protected bool $publishPostImmediately;
     protected ?ConnectorFeedConfigurationInterface $configuration;
-    protected \DateTime $creationDate;
+    protected ?\DateTime $creationDate = null;
     protected ConnectorEngineInterface $connectorEngine;
     protected WallInterface $wall;
     protected Collection $feedTags;
@@ -71,7 +71,7 @@ class Feed implements FeedInterface
         $this->creationDate = $date;
     }
 
-    public function getCreationDate(): \DateTime
+    public function getCreationDate(): ?\DateTime
     {
         return $this->creationDate;
     }

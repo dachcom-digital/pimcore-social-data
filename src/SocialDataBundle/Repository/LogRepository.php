@@ -20,7 +20,7 @@ class LogRepository implements LogRepositoryInterface
         $this->repository = $entityManager->getRepository(LogEntry::class);
     }
 
-    public function findForConnectorEngine(int $connectorEngineId): iterable
+    public function findForConnectorEngine(int $connectorEngineId): Paginator
     {
         $qb = $this->repository->createQueryBuilder('l');
 
@@ -31,7 +31,7 @@ class LogRepository implements LogRepositoryInterface
         return new Paginator($query);
     }
 
-    public function findForWall(int $wallId): iterable
+    public function findForWall(int $wallId): Paginator
     {
         $qb = $this->repository->createQueryBuilder('l');
 

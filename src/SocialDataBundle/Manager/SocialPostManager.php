@@ -109,8 +109,7 @@ class SocialPostManager implements SocialPostManagerInterface
             $this->feedPostManager->connectFeedWithPost($feed, $post);
             $this->logger->info(sprintf('Social post %s (%d) successfully %s', $post->getKey(), $post->getId(), $persistenceState), [$feed]);
         } catch (\Throwable $e) {
-            $message = is_object($e->getMessage()) ? 'unkown error' : $e->getMessage();
-            $this->logger->error(sprintf('Error while persisting social post %s: %s', $post->getSocialId(), $message), [$feed]);
+            $this->logger->error(sprintf('Error while persisting social post %s: %s', $post->getSocialId(), $e->getMessage()), [$feed]);
         }
     }
 

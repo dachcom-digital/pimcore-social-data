@@ -20,7 +20,7 @@ interface FeedInterface
 
     public function getConfiguration(): ?ConnectorFeedConfigurationInterface;
 
-    public function getCreationDate(): \DateTime;
+    public function getCreationDate(): ?\DateTime;
 
     public function setCreationDate(\DateTime $date): void;
 

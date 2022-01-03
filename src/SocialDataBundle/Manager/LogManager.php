@@ -2,6 +2,7 @@
 
 namespace SocialDataBundle\Manager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\LogEntry;
@@ -26,12 +27,12 @@ class LogManager implements LogManagerInterface
         $this->entityManager = $entityManager;
     }
 
-    public function getForConnectorEngine(int $connectorEngineId): iterable
+    public function getForConnectorEngine(int $connectorEngineId): Paginator
     {
         return $this->logRepository->findForConnectorEngine($connectorEngineId);
     }
 
-    public function getForWall(int $wallId): iterable
+    public function getForWall(int $wallId): Paginator
     {
         return $this->logRepository->findForWall($wallId);
     }

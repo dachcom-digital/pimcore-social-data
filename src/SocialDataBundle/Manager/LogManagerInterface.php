@@ -2,19 +2,14 @@
 
 namespace SocialDataBundle\Manager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use SocialDataBundle\Model\LogEntryInterface;
 
 interface LogManagerInterface
 {
-    /**
-     * @return array<int, LogEntryInterface>
-     */
-    public function getForConnectorEngine(int $connectorEngineId): iterable;
+    public function getForConnectorEngine(int $connectorEngineId): Paginator;
 
-    /**
-     * @return array<int, LogEntryInterface>
-     */
-    public function getForWall(int $wallId): iterable;
+    public function getForWall(int $wallId): Paginator;
 
     /**
      * @throws \Exception

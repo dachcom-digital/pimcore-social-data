@@ -61,7 +61,7 @@ class ExtJsDataBuilder
                     'enabled'             => $isInstalled && $connectorDefinition->getConnectorEngine()->isEnabled(),
                     'connected'           => $isInstalled && $connectorDefinition->isConnected(),
                     'autoConnect'         => $connectorDefinition->isAutoConnected(),
-                    'customConfiguration' => $engineConfiguration['configuration'] ?: []
+                    'customConfiguration' => $engineConfiguration['configuration'] ?? []
                 ]
             ];
         }
