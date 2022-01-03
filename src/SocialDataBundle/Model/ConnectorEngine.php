@@ -9,7 +9,7 @@ class ConnectorEngine implements ConnectorEngineInterface
     protected int $id = 0;
     protected string $name;
     protected bool $enabled;
-    protected ConnectorEngineConfigurationInterface $configuration;
+    protected ?ConnectorEngineConfigurationInterface $configuration = null;
 
     public function setId(int $id): void
     {
@@ -51,7 +51,7 @@ class ConnectorEngine implements ConnectorEngineInterface
         $this->configuration = $configuration;
     }
 
-    public function getConfiguration(): ConnectorEngineConfigurationInterface
+    public function getConfiguration(): ?ConnectorEngineConfigurationInterface
     {
         return $this->configuration;
     }

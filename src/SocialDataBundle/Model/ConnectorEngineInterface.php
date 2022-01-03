@@ -20,5 +20,5 @@ interface ConnectorEngineInterface
 
     public function setConfiguration(ConnectorEngineConfigurationInterface $configuration): void;
 
-    public function getConfiguration(): ConnectorEngineConfigurationInterface;
+    public function getConfiguration(): ?ConnectorEngineConfigurationInterface;
 }
