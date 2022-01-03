@@ -194,10 +194,10 @@ class WallsController extends AdminController
             return $this->adminJson(['success' => false, 'message' => sprintf('Wall with id %d does not exist', $wallId)]);
         }
 
-        $execCommand = sprintf('%s/bin/console social-data:fetch:social-posts -w %d', PIMCORE_PROJECT_ROOT, $wall->getId());
+        $execCommand = sprintf('%s %s/bin/console social-data:fetch:social-posts -w %d', Console::getExecutable('php'), PIMCORE_PROJECT_ROOT, $wall->getId());
 
         try {
-            Console::runPhpScriptInBackground($execCommand);
+            shell_exec($execCommand);
         } catch (\Throwable $e) {
             return $this->adminJson(['success' => false, 'message' => $e->getMessage()]);
         }
@@ -205,7 +205,8 @@ class WallsController extends AdminController
         $response = ['success' => true, 'status' => 'dispatched'];
 
         $userId = '';
-        $userName = 'Unkown';
+        $userName = 'Unknown';
+
         $user = $this->getAdminUser();
 
         if ($user instanceof User) {
