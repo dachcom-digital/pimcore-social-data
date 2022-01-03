@@ -88,7 +88,7 @@ class SocialPostManager implements SocialPostManagerInterface
         $dataStorage = $wall->getDataStorage();
         $dataStorageFolder = DataObject\Folder::getById($dataStorage['id']);
 
-        $isNewPost = $post->getId() === null;
+        $isNewPost = empty($post->getId());
         $persistenceState = $isNewPost === true ? 'created' : ($forceProcessing === false ? 'updated' : 'updated [forced]');
 
         $post->setSocialType($feed->getConnectorEngine()->getName());
