@@ -4,7 +4,7 @@ namespace SocialDataBundle\Dto;
 
 class FetchData extends AbstractData
 {
-    protected array $entities;
+    protected array $entities = [];
 
     public function setFetchedEntities(array $entities): void
     {
