@@ -1,4 +1,5 @@
 # Pimcore Social Data Bundle
+
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Latest Release](https://img.shields.io/packagist/v/dachcom-digital/social-data.svg?style=flat-square)](https://packagist.org/packages/dachcom-digital/social-data)
 [![Tests](https://img.shields.io/github/workflow/status/dachcom-digital/pimcore-social-data/Codeception/master?style=flat-square&logo=github&label=codeception)](https://github.com/dachcom-digital/pimcore-social-data/actions?query=workflow%3ACodeception+branch%3Amaster)
@@ -11,9 +12,8 @@ This Bundles allows you to load social data from different networks like Faceboo
 ### Release Plan
 | Release | Supported Pimcore Versions        | Supported Symfony Versions | Release Date | Maintained     | Branch     |
 |---------|-----------------------------------|----------------------------|--------------|----------------|------------|
-| **2.x** | `10.1` - `10.2`                   | `5.4`                      | --           | Feature Branch | master     |
-| **1.x** | `6.0` - `6.9`                     | `3.4`, `^4.4`              | 27.04.2020   | Unsupported    | 1.x        |
-
+| **2.x** | `10.1` - `10.2`                   | `5.4`                      | 05.01.2022   | Feature Branch | master     |
+| **1.x** | `6.0` - `6.9`                     | `3.4`, `^4.4`              | 27.04.2020   | Unsupported    | [1.x](https://github.com/dachcom-digital/pimcore-social-data/tree/1.x) |
 
 ## Installation
 
