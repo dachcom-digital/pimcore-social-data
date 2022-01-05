@@ -7,7 +7,7 @@ use SocialDataBundle\Model\SocialPostInterface;
 class TransformData extends AbstractData
 {
     protected SocialPostInterface $socialPostEntity;
-    protected SocialPostInterface $transformedElement;
+    protected ?SocialPostInterface $transformedElement = null;
 
     public function getTransferredData(): mixed
     {
@@ -29,7 +29,7 @@ class TransformData extends AbstractData
         $this->transformedElement = $transformedElement;
     }
 
-    public function getTransformedElement(): SocialPostInterface
+    public function getTransformedElement(): ?SocialPostInterface
     {
         return $this->transformedElement;
     }

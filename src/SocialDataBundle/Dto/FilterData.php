@@ -5,7 +5,7 @@ namespace SocialDataBundle\Dto;
 class FilterData extends AbstractData
 {
     protected ?array $filteredElement = null;
-    protected int|string $filteredId;
+    protected string|int|null $filteredId = null;
 
     public function getTransferredData(): mixed
     {
@@ -27,7 +27,7 @@ class FilterData extends AbstractData
         $this->filteredId = $filteredId;
     }
 
-    public function getFilteredId(): string|int
+    public function getFilteredId(): string|int|null
     {
         return $this->filteredId;
     }
