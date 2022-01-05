@@ -165,10 +165,10 @@ SocialData.Wall.MainPanel = Class.create({
                     delete this.parentPanel.panels['social_data_wall_' + this.wallId];
                 }
 
-                if (this.parentPanel.tree.initialConfig !== null &&
-                    Object.keys(this.parentPanel.panels).length === 0) {
+                if (this.parentPanel.tree.getSelectionModel().selected !== null) {
                     this.parentPanel.tree.getSelectionModel().deselectAll();
                 }
+
             }.bind(this)
         });
 
