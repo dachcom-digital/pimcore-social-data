@@ -4,25 +4,10 @@ namespace SocialDataBundle\Dto;
 
 abstract class AbstractData
 {
-    /**
-     * @var BuildConfig
-     */
-    protected $buildConfig;
+    protected BuildConfig $buildConfig;
+    protected array $options;
+    protected mixed $transferredData = null;
 
-    /**
-     * @var array
-     */
-    protected $options;
-
-    /**
-     * @var mixed
-     */
-    protected $transferredData;
-
-    /**
-     * @param BuildConfig $buildConfig
-     * @param array       $options
-     */
     public function __construct(BuildConfig $buildConfig, array $options)
     {
         $this->buildConfig = $buildConfig;
@@ -30,11 +15,9 @@ abstract class AbstractData
     }
 
     /**
-     * @param mixed $transferredData
-     *
      * @throws \Exception
      */
-    public function setTransferredData($transferredData)
+    public function setTransferredData(mixed $transferredData): void
     {
         if ($this->transferredData !== null) {
             throw new \Exception('Transferred Object already has been set.');
@@ -43,18 +26,12 @@ abstract class AbstractData
         $this->transferredData = $transferredData;
     }
 
-    /**
-     * @return BuildConfig
-     */
-    public function getBuildConfig()
+    public function getBuildConfig(): BuildConfig
     {
         return $this->buildConfig;
     }
 
-    /**
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }

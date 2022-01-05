@@ -11,5 +11,5 @@ interface StatisticServiceInterface
      *
      * @return array
      */
-    public function getWallStatistics(WallInterface $wall);
+    public function getWallStatistics(WallInterface $wall): array;
 }

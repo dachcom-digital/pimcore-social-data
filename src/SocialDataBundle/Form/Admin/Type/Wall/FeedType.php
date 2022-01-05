@@ -23,20 +23,9 @@ class FeedType extends AbstractType
 {
     use ExtJsTagTransformTrait;
 
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
+    protected ConnectorManagerInterface $connectorManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @param ConnectorManagerInterface $connectorManager
-     * @param EntityManagerInterface    $entityManager
-     */
     public function __construct(
         ConnectorManagerInterface $connectorManager,
         EntityManagerInterface $entityManager
@@ -45,10 +34,7 @@ class FeedType extends AbstractType
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('feedTags', TagCollectionType::class, ['tag_type' => 'feedTag']);
         $builder->add('connectorEngine', ConnectorEngineChoiceType::class, []);
@@ -59,10 +45,7 @@ class FeedType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'addConfigurationField']);
     }
 
-    /**
-     * @param FormEvent $event
-     */
-    public function addConfigurationField(FormEvent $event)
+    public function addConfigurationField(FormEvent $event): void
     {
         $data = $event->getData();
         $form = $event->getForm();
@@ -94,10 +77,7 @@ class FeedType extends AbstractType
         $form->add('configuration', $class::getFormClass());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Feed::class

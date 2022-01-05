@@ -4,149 +4,80 @@ namespace SocialDataBundle\Model;
 
 class LogEntry implements LogEntryInterface
 {
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
+    protected ConnectorEngineInterface $connectorEngine;
+    protected FeedInterface $feed;
+    protected WallInterface $wall;
+    protected string $type;
+    protected string $message;
+    protected \DateTime $creationDate;
 
-    /**
-     * @var ConnectorEngineInterface
-     */
-    protected $connectorEngine;
-
-    /**
-     * @var FeedInterface
-     */
-    protected $feed;
-
-    /**
-     * @var WallInterface
-     */
-    protected $wall;
-
-    /**
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * @var string
-     */
-    protected $message;
-
-    /**
-     * @var \DateTime
-     */
-    protected $creationDate;
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine)
+    public function setConnectorEngine(ConnectorEngineInterface $connectorEngine): void
     {
         $this->connectorEngine = $connectorEngine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnectorEngine()
+    public function getConnectorEngine(): ConnectorEngineInterface
     {
         return $this->connectorEngine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setWall(WallInterface $wall)
+    public function setWall(WallInterface $wall): void
     {
         $this->wall = $wall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getWall()
+    public function getWall(): WallInterface
     {
         return $this->wall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setFeed(FeedInterface $feed)
+    public function setFeed(FeedInterface $feed): void
     {
         $this->feed = $feed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFeed()
+    public function getFeed(): FeedInterface
     {
         return $this->feed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setType(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setMessage(string $message)
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreationDate(\DateTime $date)
+    public function setCreationDate(\DateTime $date): void
     {
         $this->creationDate = $date;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreationDate()
+    public function getCreationDate(): \DateTime
     {
         return $this->creationDate;
     }

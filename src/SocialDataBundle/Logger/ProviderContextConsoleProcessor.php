@@ -8,12 +8,7 @@ use SocialDataBundle\Model\WallInterface;
 
 class ProviderContextConsoleProcessor
 {
-    /**
-     * @param array $record
-     *
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $extra = [];
         $context = is_array($record['context']) ? $record['context'] : [];

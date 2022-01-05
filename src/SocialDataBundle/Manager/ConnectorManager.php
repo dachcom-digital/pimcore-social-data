@@ -11,32 +11,11 @@ use SocialDataBundle\Repository\ConnectorEngineRepositoryInterface;
 
 class ConnectorManager implements ConnectorManagerInterface
 {
-    /**
-     * @var array
-     */
-    protected $availableConnectors;
+    protected array $availableConnectors;
+    protected ConnectorDefinitionRegistryInterface $connectorDefinitionRegistry;
+    protected ConnectorEngineRepositoryInterface $connectorEngineRepository;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @var ConnectorDefinitionRegistryInterface
-     */
-    protected $connectorDefinitionRegistry;
-
-    /**
-     * @var ConnectorEngineRepositoryInterface
-     */
-    protected $connectorEngineRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @param array                                $availableConnectors
-     * @param ConnectorDefinitionRegistryInterface $connectorDefinitionRegistry
-     * @param ConnectorEngineRepositoryInterface   $connectorEngineRepository
-     * @param EntityManagerInterface               $entityManager
-     */
     public function __construct(
         array $availableConnectors,
         ConnectorDefinitionRegistryInterface $connectorDefinitionRegistry,
@@ -49,29 +28,23 @@ class ConnectorManager implements ConnectorManagerInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAllActiveConnectorDefinitions()
+    public function getAllActiveConnectorDefinitions(): array
     {
         return array_filter(
             $this->getAllConnectorDefinitions(true),
-            function (ConnectorDefinitionInterface $connectorDefinition) {
+            static function (ConnectorDefinitionInterface $connectorDefinition) {
                 return $connectorDefinition->engineIsLoaded() && $connectorDefinition->isConnected();
             });
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAllConnectorDefinitions(bool $loadEngine = false)
+    public function getAllConnectorDefinitions(bool $loadEngine = false): array
     {
         $definitions = [];
         $allConnectorDefinitions = $this->connectorDefinitionRegistry->getAll();
 
         foreach ($allConnectorDefinitions as $connectorDefinitionName => $connectorDefinition) {
 
-            if (!in_array($connectorDefinitionName, $this->availableConnectors)) {
+            if (!in_array($connectorDefinitionName, $this->availableConnectors, true)) {
                 continue;
             }
 
@@ -86,12 +59,9 @@ class ConnectorManager implements ConnectorManagerInterface
         return $definitions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false)
+    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false): ?ConnectorDefinitionInterface
     {
-        if (!in_array($connectorDefinitionName, $this->availableConnectors)) {
+        if (!in_array($connectorDefinitionName, $this->availableConnectors, true)) {
             return null;
         }
 
@@ -113,26 +83,17 @@ class ConnectorManager implements ConnectorManagerInterface
         return $connectorDefinition;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEngineById(int $id)
+    public function getEngineById(int $id): ?ConnectorEngineInterface
     {
         return $this->connectorEngineRepository->findById($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEngineByName(string $connectorName)
+    public function getEngineByName(string $connectorName): ?ConnectorEngineInterface
     {
         return $this->connectorEngineRepository->findByName($connectorName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createNewEngine(string $connectorName, bool $persist = true)
+    public function createNewEngine(string $connectorName, bool $persist = true): ConnectorEngineInterface
     {
         $connector = new ConnectorEngine();
         $connector->setName($connectorName);
@@ -148,10 +109,7 @@ class ConnectorManager implements ConnectorManagerInterface
         return $connector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function updateEngine(ConnectorEngineInterface $connector)
+    public function updateEngine(ConnectorEngineInterface $connector): ConnectorEngineInterface
     {
         $this->entityManager->persist($connector);
         $this->entityManager->flush();
@@ -159,19 +117,13 @@ class ConnectorManager implements ConnectorManagerInterface
         return $connector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteEngine(ConnectorEngineInterface $connector)
+    public function deleteEngine(ConnectorEngineInterface $connector): void
     {
         $this->entityManager->remove($connector);
         $this->entityManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteEngineByName(string $connectorName)
+    public function deleteEngineByName(string $connectorName): void
     {
         $connector = $this->getEngineByName($connectorName);
         if (!$connector instanceof ConnectorEngineInterface) {

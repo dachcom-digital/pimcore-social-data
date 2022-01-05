@@ -4,23 +4,14 @@ namespace SocialDataBundle\Dto;
 
 class FetchData extends AbstractData
 {
-    /**
-     * @var array
-     */
-    protected $entities;
+    protected array $entities = [];
 
-    /**
-     * @param array $entities
-     */
-    public function setFetchedEntities(array $entities)
+    public function setFetchedEntities(array $entities): void
     {
         $this->entities = $entities;
     }
 
-    /**
-     * @return array
-     */
-    public function getFetchedEntities()
+    public function getFetchedEntities(): array
     {
         return $this->entities;
     }

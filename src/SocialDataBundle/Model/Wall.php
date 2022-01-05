@@ -7,40 +7,13 @@ use Doctrine\Common\Collections\Collection;
 
 class Wall implements WallInterface
 {
-    /**
-     * @var int
-     */
-    protected $id;
-
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var array
-     */
-    protected $dataStorage;
-
-    /**
-     * @var array
-     */
-    protected $assetStorage;
-
-    /**
-     * @var \DateTime
-     */
-    protected $creationDate;
-
-    /**
-     * @var Collection|FeedInterface[]
-     */
-    protected $feeds;
-
-    /**
-     * @var Collection|FeedInterface[]
-     */
-    protected $wallTags;
+    protected int $id;
+    protected string $name;
+    protected ?array $dataStorage = null;
+    protected ?array $assetStorage = null;
+    protected \DateTime $creationDate;
+    protected Collection $feeds;
+    protected Collection $wallTags;
 
     public function __construct()
     {
@@ -48,106 +21,67 @@ class Wall implements WallInterface
         $this->wallTags = new ArrayCollection();
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDataStorage(array $dataStorage)
+    public function setDataStorage(?array $dataStorage): void
     {
         $this->dataStorage = $dataStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDataStorage()
+    public function getDataStorage(): ?array
     {
         return $this->dataStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setAssetStorage(array $assetStorage)
+    public function setAssetStorage(array $assetStorage): void
     {
         $this->assetStorage = $assetStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAssetStorage()
+    public function getAssetStorage(): ?array
     {
         return $this->assetStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreationDate(\DateTime $date)
+    public function setCreationDate(\DateTime $date): void
     {
         $this->creationDate = $date;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreationDate()
+    public function getCreationDate(): \DateTime
     {
         return $this->creationDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasFeeds()
+    public function hasFeeds(): bool
     {
         return !$this->feeds->isEmpty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasFeed(FeedInterface $feed)
+    public function hasFeed(FeedInterface $feed): bool
     {
         return $this->feeds->contains($feed);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addFeed(FeedInterface $feed)
+    public function addFeed(FeedInterface $feed): void
     {
         if (!$this->hasFeed($feed)) {
             $this->feeds->add($feed);
@@ -155,64 +89,43 @@ class Wall implements WallInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removeFeed(FeedInterface $feed)
+    public function removeFeed(FeedInterface $feed): void
     {
         if ($this->hasFeed($feed)) {
             $this->feeds->removeElement($feed);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFeeds()
+    public function getFeeds(): iterable
     {
         return $this->feeds;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasWallTags()
+    public function hasWallTags(): bool
     {
         return !$this->wallTags->isEmpty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasWallTag(TagInterface $wallTag)
+    public function hasWallTag(TagInterface $wallTag): bool
     {
         return $this->wallTags->contains($wallTag);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addWallTag(TagInterface $wallTag)
+    public function addWallTag(TagInterface $wallTag): void
     {
         if (!$this->hasWallTag($wallTag)) {
             $this->wallTags->add($wallTag);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removeWallTag(TagInterface $wallTag)
+    public function removeWallTag(TagInterface $wallTag): void
     {
         if ($this->hasWallTag($wallTag)) {
             $this->wallTags->removeElement($wallTag);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getWallTags()
+    public function getWallTags(): iterable
     {
         return $this->wallTags;
     }

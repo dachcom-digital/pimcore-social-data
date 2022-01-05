@@ -4,7 +4,6 @@ namespace SocialDataBundle\Controller\Admin;
 
 use SocialDataBundle\Builder\ExtJsDataBuilder;
 use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
-use SocialDataBundle\Form\Admin\Type\Wall\WallType;
 use SocialDataBundle\Service\ConnectorServiceInterface;
 use SocialDataBundle\Service\EnvironmentServiceInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
@@ -17,44 +16,13 @@ use Pimcore\Bundle\AdminBundle\Controller\AdminController;
 
 class SettingsController extends AdminController
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    protected $formFactory;
+    protected FormFactoryInterface $formFactory;
+    protected EnvironmentServiceInterface $environmentService;
+    protected ConnectorManagerInterface $connectorManager;
+    protected ConnectorDefinitionRegistryInterface $connectorRegistry;
+    protected ConnectorServiceInterface $connectorService;
+    protected ExtJsDataBuilder $extJsDataBuilder;
 
-    /**
-     * @var EnvironmentServiceInterface
-     */
-    protected $environmentService;
-
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
-
-    /**
-     * @var ConnectorDefinitionRegistryInterface
-     */
-    protected $connectorRegistry;
-
-    /**
-     * @var ConnectorServiceInterface
-     */
-    protected $connectorService;
-
-    /**
-     * @var ExtJsDataBuilder
-     */
-    protected $extJsDataBuilder;
-
-    /**
-     * @param FormFactoryInterface                 $formFactory
-     * @param EnvironmentServiceInterface          $environmentService
-     * @param ConnectorManagerInterface            $connectorManager
-     * @param ConnectorDefinitionRegistryInterface $connectorRegistry
-     * @param ConnectorServiceInterface            $connectorService
-     * @param ExtJsDataBuilder                     $extJsDataBuilder
-     */
     public function __construct(
 
         FormFactoryInterface $formFactory,
@@ -73,13 +41,9 @@ class SettingsController extends AdminController
     }
 
     /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     *
      * @throws \Exception
      */
-    public function getConnectorsAction(Request $request)
+    public function getConnectorsAction(Request $request): JsonResponse
     {
         $connectors = $this->extJsDataBuilder->generateConnectorListData();
 
@@ -89,14 +53,7 @@ class SettingsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param string  $connectorName
-     *
-     * @return JsonResponse
-     *
-     */
-    public function getConnectorAction(Request $request, string $connectorName)
+    public function getConnectorAction(Request $request, string $connectorName): JsonResponse
     {
         $connector = $this->extJsDataBuilder->generateConnectorData($connectorName);
 
@@ -106,12 +63,7 @@ class SettingsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function dataClassHealthCheckAction(Request $request)
+    public function dataClassHealthCheckAction(Request $request): JsonResponse
     {
         $dataClassReady = false;
         $dataClass = $this->environmentService->getSocialPostDataClass();
@@ -128,13 +80,7 @@ class SettingsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param string  $connectorName
-     *
-     * @return JsonResponse
-     */
-    public function installConnectorAction(Request $request, string $connectorName)
+    public function installConnectorAction(Request $request, string $connectorName): JsonResponse
     {
         $success = true;
         $message = null;
@@ -158,13 +104,7 @@ class SettingsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param string  $connectorName
-     *
-     * @return JsonResponse
-     */
-    public function uninstallConnectorAction(Request $request, string $connectorName)
+    public function uninstallConnectorAction(Request $request, string $connectorName): JsonResponse
     {
         $success = true;
         $message = null;
@@ -185,21 +125,10 @@ class SettingsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param string  $connectorName
-     * @param string  $stateType
-     * @param string  $flag
-     *
-     * @return JsonResponse
-     *
-     * @throws \Exception
-     */
-    public function changeConnectorStateAction(Request $request, string $connectorName, string $stateType, string $flag = 'activate')
+    public function changeConnectorStateAction(Request $request, string $connectorName, string $stateType, string $flag = 'activate'): JsonResponse
     {
         $success = true;
         $message = null;
-        $stateMode = null;
 
         switch ($stateType) {
             case 'availability':
@@ -234,8 +163,6 @@ class SettingsController extends AdminController
                 break;
             default:
                 throw new \Exception(sprintf('Invalid state type "%s"', $stateType));
-
-                break;
         }
 
         return $this->adminJson([
@@ -245,13 +172,7 @@ class SettingsController extends AdminController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @param string  $connectorName
-     *
-     * @return JsonResponse
-     */
-    public function saveConnectorConfigurationAction(Request $request, string $connectorName)
+    public function saveConnectorConfigurationAction(Request $request, string $connectorName): JsonResponse
     {
         $configuration = json_decode($request->request->get('configuration'), true);
 
@@ -279,8 +200,8 @@ class SettingsController extends AdminController
         $this->connectorService->updateConnectorEngineConfiguration($connectorName, $connectorConfiguration);
 
         return $this->adminJson([
-            'success' => true,
-            'message' => null,
+            'success'   => true,
+            'message'   => null,
             'connector' => $this->extJsDataBuilder->generateConnectorData($connectorName)
         ]);
     }

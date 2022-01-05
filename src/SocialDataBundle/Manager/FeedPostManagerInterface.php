@@ -7,14 +7,7 @@ use SocialDataBundle\Model\FeedInterface;
 
 interface FeedPostManagerInterface
 {
-    /**
-     * @param FeedInterface $feed
-     * @param Concrete      $socialPost
-     */
-    public function connectFeedWithPost(FeedInterface $feed, Concrete $socialPost);
+    public function connectFeedWithPost(FeedInterface $feed, Concrete $socialPost): void;
 
-    /**
-     * @param Concrete $socialPost
-     */
-    public function removePostFromFeeds(Concrete $socialPost);
+    public function removePostFromFeeds(Concrete $socialPost): void;
 }

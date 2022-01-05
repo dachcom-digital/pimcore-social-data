@@ -239,7 +239,7 @@ SocialData.WallsPanel = Class.create({
         this.tree.enable();
 
         if (responseData.success === false) {
-            Ext.MessageBox.alert(t('error'), t('social_data.wall.loading_error') + responseData.message);
+            Ext.MessageBox.alert(t('error'), t('social_data.wall.loading_error') + ': ' + responseData.message);
             return;
         }
 

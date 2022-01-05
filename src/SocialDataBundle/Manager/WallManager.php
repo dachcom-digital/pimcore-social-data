@@ -10,20 +10,9 @@ use SocialDataBundle\Repository\WallRepositoryInterface;
 
 class WallManager implements WallManagerInterface
 {
-    /**
-     * @var WallRepositoryInterface
-     */
-    protected $wallRepository;
+    protected WallRepositoryInterface $wallRepository;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @param WallRepositoryInterface $wallRepository
-     * @param EntityManagerInterface  $entityManager
-     */
     public function __construct(
         WallRepositoryInterface $wallRepository,
         EntityManagerInterface $entityManager
@@ -32,34 +21,22 @@ class WallManager implements WallManagerInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAll(): array
     {
         return $this->wallRepository->findAll();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name)
+    public function getByName(string $name): ?WallInterface
     {
         return $this->wallRepository->findByName($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getById(int $id)
+    public function getById(int $id): ?WallInterface
     {
         return $this->wallRepository->findById($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createNew(string $wallName, bool $persist = true)
+    public function createNew(string $wallName, bool $persist = true): WallInterface
     {
         $wall = new Wall();
         $wall->setName($wallName);
@@ -75,20 +52,14 @@ class WallManager implements WallManagerInterface
         return $wall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAvailableTags(string $type)
+    public function getAvailableTags(string $type): array
     {
         return $this->entityManager->getRepository(Tag::class)->findBy([
             'type' => $type,
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function update(WallInterface $wall)
+    public function update(WallInterface $wall): WallInterface
     {
         $this->entityManager->persist($wall);
         $this->entityManager->flush();
@@ -96,10 +67,7 @@ class WallManager implements WallManagerInterface
         return $wall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function delete(WallInterface $wall)
+    public function delete(WallInterface $wall): void
     {
         $this->entityManager->remove($wall);
         $this->entityManager->flush();

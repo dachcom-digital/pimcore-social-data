@@ -7,15 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait ConnectResponseTrait
 {
-    /**
-     * @param int    $code
-     * @param string $identifier
-     * @param string $reason
-     * @param string $description
-     *
-     * @return Response
-     */
-    public function buildConnectErrorResponse(int $code, string $identifier, string $reason, string $description)
+    public function buildConnectErrorResponse(int $code, string $identifier, string $reason, string $description): Response
     {
         return $this->render('@SocialData/connect-response.html.twig', [
             'content' => [
@@ -28,12 +20,7 @@ trait ConnectResponseTrait
         ]);
     }
 
-    /**
-     * @param ConnectException $exception
-     *
-     * @return Response
-     */
-    public function buildConnectErrorByExceptionResponse(ConnectException $exception)
+    public function buildConnectErrorByExceptionResponse(ConnectException $exception): Response
     {
         return $this->render('@SocialData/connect-response.html.twig', [
             'content' => [
@@ -46,10 +33,7 @@ trait ConnectResponseTrait
         ]);
     }
 
-    /**
-     * @return Response
-     */
-    public function buildConnectSuccessResponse()
+    public function buildConnectSuccessResponse(): Response
     {
         return $this->render('@SocialData/connect-response.html.twig', [
             'content' => [

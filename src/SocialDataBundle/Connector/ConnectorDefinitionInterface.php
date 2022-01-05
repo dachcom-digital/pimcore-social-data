@@ -6,101 +6,57 @@ use SocialDataBundle\Model\ConnectorEngineInterface;
 
 interface ConnectorDefinitionInterface
 {
-    /**
-     * @param ConnectorEngineInterface|null $connectorEngine
-     */
-    public function setConnectorEngine(?ConnectorEngineInterface $connectorEngine);
+    public function setConnectorEngine(?ConnectorEngineInterface $connectorEngine): void;
+
+    public function getConnectorEngine(): ?ConnectorEngineInterface;
+
+    public function setSocialPostBuilder(SocialPostBuilderInterface $builder): void;
+
+    public function getSocialPostBuilder(): SocialPostBuilderInterface;
 
     /**
-     * @return ConnectorEngineInterface|null
-     */
-    public function getConnectorEngine();
-
-    /**
-     * @param SocialPostBuilderInterface $builder
-     */
-    public function setSocialPostBuilder(SocialPostBuilderInterface $builder);
-
-    /**
-     * @return SocialPostBuilderInterface
-     */
-    public function getSocialPostBuilder();
-
-    /**
-     * @param array $configuration
-     *
      * @throws \Exception
      */
-    public function setDefinitionConfiguration(array $configuration);
+    public function setDefinitionConfiguration(array $definitionConfiguration): void;
 
-    /**
-     * @return bool
-     */
-    public function engineIsLoaded();
+    public function engineIsLoaded(): bool;
 
     /**
      * Returns true if connector is fully configured and ready to provide data.
-     *
-     * @return bool
      */
-    public function isOnline();
+    public function isOnline(): bool;
 
     /**
-     * @return void
      * @throws \Exception
      */
-    public function beforeEnable();
+    public function beforeEnable(): void;
 
     /**
-     * @return void
      * @throws \Exception
      */
-    public function beforeDisable();
+    public function beforeDisable(): void;
+
+    public function isAutoConnected(): bool;
+
+    public function isConnected(): bool;
 
     /**
-     * @return bool
-     */
-    public function isAutoConnected();
-
-    /**
-     * @return bool
-     */
-    public function isConnected();
-
-    /**
-     * @return void
      * @throws \Exception
      */
-    public function connect();
+    public function connect(): void;
 
     /**
-     * @return void
      * @throws \Exception
      */
-    public function disconnect();
+    public function disconnect(): void;
 
-    /**
-     * @return array
-     */
-    public function getDefinitionConfiguration();
+    public function getDefinitionConfiguration(): array;
 
-    /**
-     * @return bool
-     */
-    public function needsEngineConfiguration();
+    public function needsEngineConfiguration(): bool;
 
-    /**
-     * @return null|string
-     */
-    public function getEngineConfigurationClass();
+    public function getEngineConfigurationClass(): ?string;
 
-    /**
-     * @return string
-     */
-    public function getFeedConfigurationClass();
+    public function getFeedConfigurationClass(): string;
 
-    /**
-     * @return ConnectorEngineConfigurationInterface|null
-     */
-    public function getEngineConfiguration();
+    public function getEngineConfiguration(): ?ConnectorEngineConfigurationInterface;
 }

@@ -4,8 +4,5 @@ namespace SocialDataBundle\Connector;
 
 interface ConnectorEngineConfigurationInterface
 {
-    /**
-     * @return string
-     */
-    public static function getFormClass();
+    public static function getFormClass(): string;
 }

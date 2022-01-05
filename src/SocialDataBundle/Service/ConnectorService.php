@@ -2,6 +2,7 @@
 
 namespace SocialDataBundle\Service;
 
+use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Model\ConnectorEngineInterface;
@@ -9,25 +10,10 @@ use SocialDataBundle\Registry\ConnectorDefinitionRegistryInterface;
 
 class ConnectorService implements ConnectorServiceInterface
 {
-    /**
-     * @var array|ConnectorEngineInterface[]
-     */
-    protected $connectorCache = [];
+    protected array $connectorCache = [];
+    protected ConnectorDefinitionRegistryInterface $connectorDefinitionRegistry;
+    protected ConnectorManagerInterface $connectorManager;
 
-    /**
-     * @var ConnectorDefinitionRegistryInterface
-     */
-    protected $connectorDefinitionRegistry;
-
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
-
-    /**
-     * @param ConnectorDefinitionRegistryInterface $connectorDefinitionRegistry
-     * @param ConnectorManagerInterface            $connectorManager
-     */
     public function __construct(
         ConnectorDefinitionRegistryInterface $connectorDefinitionRegistry,
         ConnectorManagerInterface $connectorManager
@@ -37,10 +23,7 @@ class ConnectorService implements ConnectorServiceInterface
         $this->connectorManager = $connectorManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function installConnector(string $connectorName)
+    public function installConnector(string $connectorName): ConnectorEngineInterface
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
         if ($connectorDefinition->engineIsLoaded()) {
@@ -50,10 +33,7 @@ class ConnectorService implements ConnectorServiceInterface
         return $this->connectorManager->createNewEngine($connectorName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function uninstallConnector(string $connectorName)
+    public function uninstallConnector(string $connectorName): void
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
         if (!$connectorDefinition->engineIsLoaded()) {
@@ -67,10 +47,7 @@ class ConnectorService implements ConnectorServiceInterface
         $this->connectorManager->deleteEngineByName($connectorName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function enableConnector(string $connectorName)
+    public function enableConnector(string $connectorName): void
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
 
@@ -94,10 +71,7 @@ class ConnectorService implements ConnectorServiceInterface
         $this->connectorManager->updateEngine($connectorEngine);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function disableConnector(string $connectorName)
+    public function disableConnector(string $connectorName): void
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
 
@@ -121,10 +95,7 @@ class ConnectorService implements ConnectorServiceInterface
         $this->connectorManager->updateEngine($connectorEngine);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function connectConnector(string $connectorName)
+    public function connectConnector(string $connectorName): void
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
 
@@ -143,10 +114,7 @@ class ConnectorService implements ConnectorServiceInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function disconnectConnector(string $connectorName)
+    public function disconnectConnector(string $connectorName): void
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
 
@@ -165,10 +133,7 @@ class ConnectorService implements ConnectorServiceInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function updateConnectorEngineConfiguration(string $connectorName, ConnectorEngineConfigurationInterface $connectorConfiguration)
+    public function updateConnectorEngineConfiguration(string $connectorName, ConnectorEngineConfigurationInterface $connectorConfiguration): void
     {
         $connectorDefinition = $this->getConnectorDefinition($connectorName, true);
 
@@ -181,11 +146,8 @@ class ConnectorService implements ConnectorServiceInterface
         $this->connectorManager->updateEngine($connectorEngine);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConnectorDefinition(string $connectorName, bool $loadEngine = false)
+    public function getConnectorDefinition(string $connectorDefinitionName, bool $loadEngine = false): ConnectorDefinitionInterface
     {
-        return $this->connectorManager->getConnectorDefinition($connectorName, $loadEngine);
+        return $this->connectorManager->getConnectorDefinition($connectorDefinitionName, $loadEngine);
     }
 }

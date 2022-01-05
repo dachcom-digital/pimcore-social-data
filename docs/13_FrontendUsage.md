@@ -12,28 +12,23 @@ There are several fetch methods available:
 ```php
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 
 class SocialController extends FrontendController
 {
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
+    protected SocialPostRepositoryInterface $socialPostRepository;
 
-    /**
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     */
     public function __construct(SocialPostRepositoryInterface $socialPostRepository)
     {
         $this->socialPostRepository = $socialPostRepository;
     }
 
-    public function defaultAction(Request $request)
+    public function defaultAction(Request $request): Response
     {
         // get posts by feed id
         $posts = $this->socialPostRepository->findBySocialType('facebook', false);
@@ -64,28 +59,23 @@ If you want to modify the listing according your needs, you could fetch the list
 ```php
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 
 class SocialController extends FrontendController
 {
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
+    protected SocialPostRepositoryInterface $socialPostRepository;
 
-    /**
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     */
     public function __construct(SocialPostRepositoryInterface $socialPostRepository)
     {
         $this->socialPostRepository = $socialPostRepository;
     }
 
-    public function defaultAction(Request $request)
+    public function defaultAction(Request $request): Response
     {
         // get post listing by wall id
         $postListing = $this->socialPostRepository->findByWallIdListing(9, false);
@@ -106,28 +96,23 @@ Only use the `getFeedPostJoingListing()` method to create your custom query:
 ```php
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 
 class SocialController extends FrontendController
 {
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
+    protected SocialPostRepositoryInterface $socialPostRepository;
 
-    /**
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     */
     public function __construct(SocialPostRepositoryInterface $socialPostRepository)
     {
         $this->socialPostRepository = $socialPostRepository;
     }
 
-    public function defaultAction(Request $request)
+    public function defaultAction(Request $request): Response
     {
         $postListing = $this->socialPostRepository->getFeedPostJoinListing();
         $postListing->addConditionParam('myField = 42');
@@ -143,32 +128,26 @@ class SocialController extends FrontendController
 Within complex queries, you're allowed to query for `wallTags` and `feedTags` without any id-based relation 
 with different mix&match patterns. 
 
-
 ```php
 <?php
 
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 
 class SocialController extends FrontendController
 {
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
+    protected SocialPostRepositoryInterface $socialPostRepository;
 
-    /**
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     */
     public function __construct(SocialPostRepositoryInterface $socialPostRepository)
     {
         $this->socialPostRepository = $socialPostRepository;
     }
 
-    public function defaultAction(Request $request)
+    public function defaultAction(Request $request): Response
     {
         // get posts with wall tags
         $wallTagPosts = $this->socialPostRepository->findByTag(['my_wall_tag']);

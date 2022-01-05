@@ -18,23 +18,14 @@ class WallType extends AbstractType
 {
     use ExtJsTagTransformTrait;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('name', TextType::class);
         $builder->add('wallTags', TagCollectionType::class, ['tag_type' => 'wallTag']);
@@ -46,10 +37,7 @@ class WallType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'adjustTagsExtJsSubmissionData']);
     }
 
-    /**
-     * @param FormEvent $event
-     */
-    public function adjustFeedsExtJsSubmissionData(FormEvent $event)
+    public function adjustFeedsExtJsSubmissionData(FormEvent $event): void
     {
         $data = $event->getData();
 
@@ -76,10 +64,7 @@ class WallType extends AbstractType
         $event->setData($data);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'csrf_protection' => false,

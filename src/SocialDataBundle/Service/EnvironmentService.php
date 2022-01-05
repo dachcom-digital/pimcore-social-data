@@ -4,23 +4,14 @@ namespace SocialDataBundle\Service;
 
 class EnvironmentService implements EnvironmentServiceInterface
 {
-    /**
-     * @var string
-     */
-    protected $socialPostDataClass;
+    protected string $socialPostDataClass;
 
-    /**
-     * @param string $socialPostDataClass
-     */
     public function __construct(string $socialPostDataClass)
     {
         $this->socialPostDataClass = $socialPostDataClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSocialPostDataClass()
+    public function getSocialPostDataClass(): string
     {
         return $this->socialPostDataClass;
     }

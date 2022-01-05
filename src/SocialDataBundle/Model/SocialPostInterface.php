@@ -3,97 +3,43 @@
 namespace SocialDataBundle\Model;
 
 use Carbon\Carbon;
-use Pimcore\Model\Asset\Image;
+use Pimcore\Model\Element\AbstractElement;
 
 interface SocialPostInterface
 {
-    /**
-     * @return string
-     */
-    public function getTitle();
+    public function getTitle(): ?string;
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title);
+    public function setTitle(?string $title);
 
-    /**
-     * @return string
-     */
-    public function getContent();
+    public function getContent(): ?string;
 
-    /**
-     * @param string $content
-     */
-    public function setContent($content);
+    public function setContent(?string $content);
 
-    /**
-     * @return string
-     */
-    public function getUrl();
+    public function getUrl(): ?string;
 
-    /**
-     * @param string $url
-     */
-    public function setUrl($url);
+    public function setUrl(?string $url);
 
-    /**
-     * @return string
-     */
-    public function getMediaUrl();
+    public function getMediaUrl(): ?string;
 
-    /**
-     * @param string $url
-     */
-    public function setMediaUrl($url);
+    public function setMediaUrl(?string $mediaUrl);
 
-    /***
-     * @return string
-     */
-    public function getPosterUrl();
+    public function getPosterUrl(): ?string;
 
-    /**
-     * @param string $url
-     */
-    public function setPosterUrl($url);
+    public function setPosterUrl(?string $posterUrl);
 
-    /**
-     * @return Image
-     */
-    public function getPoster();
+    public function getPoster(): ?AbstractElement;
 
-    /**
-     * @param Image $poster
-     */
-    public function setPoster($poster);
+    public function setPoster(?AbstractElement $poster);
 
-    /**
-     * @return string
-     */
-    public function getSocialType();
+    public function getSocialType(): ?string;
 
-    /**
-     * @param string $socialType
-     */
-    public function setSocialType($socialType);
+    public function setSocialType(?string $socialType);
 
-    /**
-     * @return string
-     */
-    public function getSocialId();
+    public function getSocialId(): ?string;
 
-    /**
-     * @param string $socialId
-     */
-    public function setSocialId($socialId);
+    public function setSocialId(?string $socialId);
 
-    /**
-     * @return Carbon
-     */
-    public function getSocialCreationDate();
+    public function getSocialCreationDate(): ?Carbon;
 
-    /**
-     * @param Carbon $socialCreationDate
-     */
-    public function setSocialCreationDate($socialCreationDate);
+    public function setSocialCreationDate(?Carbon $socialCreationDate);
 }

@@ -5,28 +5,20 @@ namespace SocialDataBundle\Repository;
 use Carbon\Carbon;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject\Concrete;
-use Pimcore\Db\ZendCompatibility\QueryBuilder;
+use Pimcore\Model\DataObject\Listing;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Service\EnvironmentService;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 class SocialPostRepository implements SocialPostRepositoryInterface
 {
-    /**
-     * @var EnvironmentService
-     */
-    protected $environmentService;
+    protected EnvironmentService $environmentService;
 
-    /**
-     * @param EnvironmentService $environmentService
-     */
     public function __construct(EnvironmentService $environmentService)
     {
         $this->environmentService = $environmentService;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findOneByIdAndSocialType(string $socialPostId, string $socialPostType, bool $unpublished = false): ?SocialPostInterface
     {
         $listing = $this->getList();
@@ -40,18 +32,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return count($objects) === 0 ? null : $objects[0];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findAll(string $socialPostType, bool $unpublished = false)
+    public function findAll(string $socialPostType, bool $unpublished = false): array
     {
         return $this->findAllListing($socialPostType, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findAllListing(string $socialPostType, bool $unpublished = false)
+    public function findAllListing(string $socialPostType, bool $unpublished = false): Listing
     {
         $listing = $this->getList();
         $listing->setUnpublished($unpublished);
@@ -60,18 +46,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialType(string $socialPostType, bool $unpublished = false)
+    public function findBySocialType(string $socialPostType, bool $unpublished = false): array
     {
         return $this->findBySocialTypeListing($socialPostType, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeListing(string $socialPostType, bool $unpublished = false)
+    public function findBySocialTypeListing(string $socialPostType, bool $unpublished = false): Listing
     {
         $listing = $this->getList();
         $listing->setUnpublished($unpublished);
@@ -80,18 +60,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByWallId(int $wallId, bool $unpublished = false)
+    public function findByWallId(int $wallId, bool $unpublished = false): array
     {
         return $this->findByWallIdListing($wallId, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByWallIdListing(int $wallId, bool $unpublished = false)
+    public function findByWallIdListing(int $wallId, bool $unpublished = false): Listing
     {
         $listing = $this->getFeedPostJoinListing($unpublished);
         $listing->addConditionParam('f.wall = ?', (string) $wallId);
@@ -99,18 +73,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByFeedId(int $feedId, bool $unpublished = false): array
     {
         return $this->findByFeedIdListing($feedId, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByFeedIdListing(int $feedId, bool $unpublished = false)
+    public function findByFeedIdListing(int $feedId, bool $unpublished = false): Listing
     {
         $listing = $this->getFeedPostJoinListing($unpublished);
         $listing->addConditionParam('f.id = ?', (string) $feedId);
@@ -118,18 +86,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeAndWallId(string $socialPostType, int $wallId, bool $unpublished = false)
+    public function findBySocialTypeAndWallId(string $socialPostType, int $wallId, bool $unpublished = false): array
     {
         return $this->findBySocialTypeAndWallIdListing($socialPostType, $wallId, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeAndWallIdListing(string $socialPostType, int $wallId, bool $unpublished = false)
+    public function findBySocialTypeAndWallIdListing(string $socialPostType, int $wallId, bool $unpublished = false): Listing
     {
         $listing = $this->getFeedPostJoinListing($unpublished);
         $listing->addConditionParam('f.wall = ?', (string) $wallId);
@@ -138,18 +100,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeAndFeedId(string $socialPostType, int $feedId, bool $unpublished = false)
+    public function findBySocialTypeAndFeedId(string $socialPostType, int $feedId, bool $unpublished = false): array
     {
         return $this->findBySocialTypeAndFeedIdListing($socialPostType, $feedId, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeAndFeedIdListing(string $socialPostType, int $feedId, bool $unpublished = false)
+    public function findBySocialTypeAndFeedIdListing(string $socialPostType, int $feedId, bool $unpublished = false): Listing
     {
         $listing = $this->getFeedPostJoinListing($unpublished);
         $listing->addConditionParam('f.id = ?', (string) $feedId);
@@ -158,18 +114,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeAndWallIdAndFeedId(string $socialPostType, int $wallId, int $feedId, bool $unpublished = false)
+    public function findBySocialTypeAndWallIdAndFeedId(string $socialPostType, int $wallId, int $feedId, bool $unpublished = false): array
     {
         return $this->findBySocialTypeAndWallIdAndFeedIdListing($socialPostType, $wallId, $feedId, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findBySocialTypeAndWallIdAndFeedIdListing(string $socialPostType, int $wallId, int $feedId, bool $unpublished = false)
+    public function findBySocialTypeAndWallIdAndFeedIdListing(string $socialPostType, int $wallId, int $feedId, bool $unpublished = false): Listing
     {
         $listing = $this->getFeedPostJoinListing($unpublished);
         $listing->addConditionParam('f.wall = ?', (string) $wallId);
@@ -179,18 +129,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByTag(array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    public function findByTag(array $wallTags = [], array $feedTags = [], bool $unpublished = false): array
     {
         return $this->findByTagListing($wallTags, $feedTags, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findByTagListing(array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    public function findByTagListing(array $wallTags = [], array $feedTags = [], bool $unpublished = false): Listing
     {
         $joinWallTagTables = count($wallTags) > 0;
         $joinFeedTagTables = count($feedTags) > 0;
@@ -208,18 +152,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findSocialTypeAndByTag(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    public function findSocialTypeAndByTag(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false): array
     {
         return $this->findSocialTypeAndByTagListing($socialPostType, $wallTags, $feedTags, $unpublished)->getObjects();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findSocialTypeAndByTagListing(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false)
+    public function findSocialTypeAndByTagListing(string $socialPostType, array $wallTags = [], array $feedTags = [], bool $unpublished = false): Listing
     {
         $joinWallTagTables = count($wallTags) > 0;
         $joinFeedTagTables = count($feedTags) > 0;
@@ -238,50 +176,42 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getList()
+    public function getList(): Listing
     {
         $listingClass = sprintf('\Pimcore\Model\DataObject\%s\Listing', ucfirst($this->environmentService->getSocialPostDataClass()));
 
         return new $listingClass();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFeedPostJoinListing(bool $unpublished = false, bool $joinWallTagTables = false, bool $joinFeedTagTables = false)
+    public function getFeedPostJoinListing(bool $unpublished = false, bool $joinWallTagTables = false, bool $joinFeedTagTables = false): Listing
     {
         $listing = $this->getList();
         $listing->setUnpublished($unpublished);
 
-        $listing->onCreateQuery(function (QueryBuilder $query) use ($joinWallTagTables, $joinFeedTagTables) {
+        $aliasFrom = $listing->getDao()->getTableName();
+        $listing->onCreateQueryBuilder(function (QueryBuilder $query) use ($joinWallTagTables, $joinFeedTagTables, $aliasFrom) {
 
             $query
-                ->join(['fp' => 'social_data_feed_post'], 'fp.post_id = o_id', ['feedId' => 'fp.feed_id'])
-                ->join(['f' => 'social_data_feed'], 'f.id = fp.feed_id', ['wallId' => 'f.wall']);
+                ->join($aliasFrom, 'social_data_feed_post', 'fp', 'fp.post_id = o_id')
+                ->join($aliasFrom, 'social_data_feed', 'f', 'f.id = fp.feed_id');
 
             if ($joinWallTagTables === true) {
                 $query
-                    ->join(['wt' => 'social_data_wall_tags'], 'wt.wall_id = f.wall', ['tagId' => 'wt.tag_id'])
-                    ->join(['wtt' => 'social_data_tag'], 'wtt.id = wt.tag_id', ['tagName' => 'wtt.name']);
+                    ->join($aliasFrom, 'social_data_wall_tags', 'wt', 'wt.wall_id = f.wall')
+                    ->join($aliasFrom, 'social_data_tag', 'wtt', 'wtt.id = wt.tag_id');
             }
 
             if ($joinFeedTagTables === true) {
                 $query
-                    ->join(['ft' => 'social_data_feed_tags'], 'ft.feed_id = f.id', ['tagId' => 'ft.tag_id'])
-                    ->join(['ftt' => 'social_data_tag'], 'ftt.id = ft.tag_id', ['tagName' => 'ftt.name']);
+                    ->join($aliasFrom, 'social_data_feed_tags', 'ft', 'ft.feed_id = f.id')
+                    ->join($aliasFrom, 'social_data_tag', 'ftt', 'ftt.id = ft.tag_id');
             }
         });
 
         return $listing;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteOutdatedSocialPosts(int $expireDays, bool $deletePoster = false)
+    public function deleteOutdatedSocialPosts(int $expireDays, bool $deletePoster = false): void
     {
         $expireDate = Carbon::now()->subDays($expireDays);
 
@@ -307,10 +237,7 @@ class SocialPostRepository implements SocialPostRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getClassId()
+    public function getClassId(): string
     {
         /** @var Concrete $concreteObject */
         $concreteObject = sprintf('\Pimcore\Model\DataObject\%s', ucfirst($this->environmentService->getSocialPostDataClass()));

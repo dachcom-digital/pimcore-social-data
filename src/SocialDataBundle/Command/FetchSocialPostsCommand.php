@@ -10,14 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class FetchSocialPostsCommand extends Command
 {
-    /**
-     * @var SocialPostBuilderProcessor
-     */
-    protected $socialPostBuilderProcessor;
+    protected static $defaultName = 'social-data:fetch:social-posts';
+    protected static $defaultDescription = 'Fetch Social Posts';
 
-    /**
-     * @param SocialPostBuilderProcessor $socialPostBuilderProcessor
-     */
+    protected SocialPostBuilderProcessor $socialPostBuilderProcessor;
+
     public function __construct(SocialPostBuilderProcessor $socialPostBuilderProcessor)
     {
         $this->socialPostBuilderProcessor = $socialPostBuilderProcessor;
@@ -25,22 +22,14 @@ class FetchSocialPostsCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('social-data:fetch:social-posts')
-            ->setDescription('Fetch Social Posts')
             ->addOption('wallId', 'w', InputOption::VALUE_REQUIRED, 'Only perform on specific wall')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Update posts even if they\'re imported already');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->socialPostBuilderProcessor->process($input->getOption('force'), $input->getOption('wallId'));
 

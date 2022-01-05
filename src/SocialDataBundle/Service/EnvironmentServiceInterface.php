@@ -4,8 +4,5 @@ namespace SocialDataBundle\Service;
 
 interface EnvironmentServiceInterface
 {
-    /**
-     * @return string
-     */
-    public function getSocialPostDataClass();
+    public function getSocialPostDataClass(): string;
 }

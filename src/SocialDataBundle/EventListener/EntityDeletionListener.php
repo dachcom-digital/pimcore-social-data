@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\ORMException;
 use Pimcore\Bundle\AdminBundle\Security\User\TokenStorageUserResolver;
 use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\LogEntry;
@@ -14,35 +13,21 @@ use SocialDataBundle\Model\WallInterface;
 
 class EntityDeletionListener implements EventSubscriber
 {
-    /**
-     * @var TokenStorageUserResolver
-     */
-    protected $userResolver;
+    protected TokenStorageUserResolver $userResolver;
 
-    /**
-     * @param TokenStorageUserResolver $userResolver
-     */
     public function __construct(TokenStorageUserResolver $userResolver)
     {
         $this->userResolver = $userResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::onFlush
         ];
     }
 
-    /**
-     * @param OnFlushEventArgs $event
-     *
-     * @throws ORMException
-     */
-    public function onFlush(OnFlushEventArgs $event)
+    public function onFlush(OnFlushEventArgs $event): void
     {
         $em = $event->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -54,13 +39,7 @@ class EntityDeletionListener implements EventSubscriber
         }
     }
 
-    /**
-     * @param mixed         $object
-     * @param EntityManager $entityManager
-     *
-     * @throws ORMException
-     */
-    protected function logDeletion($object, EntityManager $entityManager)
+    protected function logDeletion($object, EntityManager $entityManager): void
     {
         $logEntry = new LogEntry();
         $logEntry->setCreationDate(new \DateTime());

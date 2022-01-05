@@ -2,106 +2,49 @@
 
 namespace SocialDataBundle\Model;
 
-use Doctrine\Common\Collections\Collection;
-
 interface WallInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
+
+    public function setName(string $name): void;
+
+    public function getName(): string;
+
+    public function setDataStorage(array $dataStorage): void;
+
+    public function getDataStorage(): ?array;
+
+    public function setAssetStorage(array $assetStorage): void;
+
+    public function getAssetStorage(): ?array;
+
+    public function getCreationDate(): \DateTime;
+
+    public function setCreationDate(\DateTime $date): void;
+
+    public function hasFeeds(): bool;
+
+    public function hasFeed(FeedInterface $feed): bool;
+
+    public function addFeed(FeedInterface $feed): void;
+
+    public function removeFeed(FeedInterface $feed): void;
 
     /**
-     * @param string $name
+     * @return array<int, FeedInterface>
      */
-    public function setName(string $name);
+    public function getFeeds(): iterable;
+
+    public function hasWallTags(): bool;
+
+    public function hasWallTag(TagInterface $wallTag): bool;
+
+    public function addWallTag(TagInterface $wallTag): void;
+
+    public function removeWallTag(TagInterface $wallTag): void;
 
     /**
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * @param array $dataStorage
-     */
-    public function setDataStorage(array $dataStorage);
-
-    /**
-     * @return array
-     */
-    public function getDataStorage();
-
-    /**
-     * @param array $assetStorage
-     */
-    public function setAssetStorage(array $assetStorage);
-
-    /**
-     * @return array
-     */
-    public function getAssetStorage();
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreationDate();
-
-    /**
-     * @param \DateTime $date
-     */
-    public function setCreationDate(\DateTime $date);
-
-    /**
-     * @return bool
-     */
-    public function hasFeeds();
-
-    /**
-     * @param FeedInterface $feed
-     *
-     * @return bool
-     */
-    public function hasFeed(FeedInterface $feed);
-
-    /**
-     * @param FeedInterface $feed
-     */
-    public function addFeed(FeedInterface $feed);
-
-    /**
-     * @param FeedInterface $feed
-     */
-    public function removeFeed(FeedInterface $feed);
-
-    /**
-     * @return Collection|FeedInterface[]
-     */
-    public function getFeeds();
-
-    /**
-     * @return bool
-     */
-    public function hasWallTags();
-
-    /**
-     * @param TagInterface $wallTag
-     *
-     * @return bool
-     */
-    public function hasWallTag(TagInterface $wallTag);
-
-    /**
-     * @param TagInterface $wallTag
-     */
-    public function addWallTag(TagInterface $wallTag);
-
-    /**
-     * @param TagInterface $wallTag
-     */
-    public function removeWallTag(TagInterface $wallTag);
-
-    /**
-     * @return TagInterface[]
+     * @return array<int, TagInterface>
      */
     public function getWallTags();
 }

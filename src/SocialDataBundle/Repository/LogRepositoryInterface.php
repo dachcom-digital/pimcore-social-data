@@ -7,27 +7,14 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 interface LogRepositoryInterface
 {
-    /**
-     * @param int $connectorEngineId
-     *
-     * @return Paginator|LogEntryInterface[]
-     */
-    public function findForConnectorEngine(int $connectorEngineId);
+    public function findForConnectorEngine(int $connectorEngineId): Paginator;
 
-    /**
-     * @param int $wallId
-     *
-     * @return Paginator|LogEntryInterface[]
-     */
-    public function findForWall(int $wallId);
+    public function findForWall(int $wallId): Paginator;
 
-    /**
-     * @param int $expireDays
-     */
-    public function deleteExpired(int $expireDays);
+    public function deleteExpired(int $expireDays): void;
 
     /**
      * @throws \Exception
      */
-    public function truncateLogTable();
+    public function truncateLogTable(): void;
 }

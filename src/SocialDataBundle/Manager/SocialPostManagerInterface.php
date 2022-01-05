@@ -10,25 +10,11 @@ use SocialDataBundle\Model\WallInterface;
 interface SocialPostManagerInterface
 {
     /**
-     * @param WallInterface $wall
-     *
      * @throws \Exception
      */
-    public function checkWallStoragePaths(WallInterface $wall);
+    public function checkWallStoragePaths(WallInterface $wall): void;
 
-    /**
-     * @param string|int|null $filteredId
-     * @param string          $connectorName
-     * @param FeedInterface   $feed
-     *
-     * @return null|Concrete|SocialPostInterface
-     */
-    public function provideSocialPostEntity($filteredId, string $connectorName, FeedInterface $feed);
+    public function provideSocialPostEntity(string|int|null $filteredId, string $connectorName, FeedInterface $feed): ?SocialPostInterface;
 
-    /**
-     * @param FeedInterface $feed
-     * @param Concrete      $post
-     * @param bool          $forceProcessing
-     */
-    public function persistSocialPostEntity(Concrete $post, FeedInterface $feed, bool $forceProcessing);
+    public function persistSocialPostEntity(Concrete $post, FeedInterface $feed, bool $forceProcessing): void;
 }

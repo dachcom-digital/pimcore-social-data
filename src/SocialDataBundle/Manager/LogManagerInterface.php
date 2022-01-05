@@ -7,44 +7,20 @@ use SocialDataBundle\Model\LogEntryInterface;
 
 interface LogManagerInterface
 {
-    /**
-     * @param int $connectorEngineId
-     *
-     * @return Paginator|LogEntryInterface[]
-     */
-    public function getForConnectorEngine(int $connectorEngineId);
+    public function getForConnectorEngine(int $connectorEngineId): Paginator;
 
-    /**
-     * @param int $wallId
-     *
-     * @return Paginator|LogEntryInterface[]
-     */
-    public function getForWall(int $wallId);
+    public function getForWall(int $wallId): Paginator;
 
     /**
      * @throws \Exception
      */
-    public function flushLogs();
+    public function flushLogs(): void;
 
-    /**
-     * @return LogEntryInterface
-     */
-    public function createNew();
+    public function createNew(): LogEntryInterface;
 
-    /**
-     * @param array $context
-     *
-     * @return LogEntryInterface
-     */
-    public function createNewForConnector(array $context);
+    public function createNewForConnector(array $context): LogEntryInterface;
 
-    /**
-     * @param LogEntryInterface $logEntry
-     */
-    public function update(LogEntryInterface $logEntry);
+    public function update(LogEntryInterface $logEntry): void;
 
-    /**
-     * @param LogEntryInterface $logEntry
-     */
-    public function delete(LogEntryInterface $logEntry);
+    public function delete(LogEntryInterface $logEntry): void;
 }

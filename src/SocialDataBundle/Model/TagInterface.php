@@ -4,28 +4,13 @@ namespace SocialDataBundle\Model;
 
 interface TagInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): ?int;
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name);
+    public function setName(string $name): void;
 
-    /**
-     * @return string
-     */
-    public function getName();
+    public function getName(): string;
 
-    /**
-     * @param string $type
-     */
-    public function setType(string $type);
+    public function setType(string $type): void;
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getType(): string;
 }

@@ -11,20 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConnectorEngineChoiceType extends AbstractType
 {
-    /**
-     * @var ConnectorDefinitionRegistry
-     */
-    protected $connectorDefinitionRegistry;
+    protected ConnectorDefinitionRegistry $connectorDefinitionRegistry;
+    protected ConnectorManagerInterface $connectorManager;
 
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
-
-    /**
-     * @param ConnectorDefinitionRegistry $connectorDefinitionRegistry
-     * @param ConnectorManagerInterface   $connectorManager
-     */
     public function __construct(
         ConnectorDefinitionRegistry $connectorDefinitionRegistry,
         ConnectorManagerInterface $connectorManager
@@ -33,10 +22,7 @@ class ConnectorEngineChoiceType extends AbstractType
         $this->connectorManager = $connectorManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -56,10 +42,7 @@ class ConnectorEngineChoiceType extends AbstractType
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

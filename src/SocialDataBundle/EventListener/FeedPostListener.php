@@ -11,33 +11,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FeedPostListener implements EventSubscriberInterface
 {
-    /**
-     * @var FeedPostManager
-     */
-    protected $feedPostManager;
+    protected FeedPostManager $feedPostManager;
 
-    /**
-     * @param FeedPostManager $feedPostManager
-     */
     public function __construct(FeedPostManager $feedPostManager)
     {
         $this->feedPostManager = $feedPostManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             DataObjectEvents::POST_DELETE => ['onPostDelete'],
         ];
     }
 
-    /**
-     * @param DataObjectEvent $event
-     */
-    public function onPostDelete(DataObjectEvent $event)
+    public function onPostDelete(DataObjectEvent $event): void
     {
         $object = $event->getObject();
 

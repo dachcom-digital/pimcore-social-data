@@ -28,44 +28,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SocialPostBuilderProcessor
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
+    protected LockServiceInterface $lockService;
+    protected EventDispatcherInterface $eventDispatcher;
+    protected WallManagerInterface $wallManager;
+    protected SocialPostManagerInterface $socialPostManager;
+    protected ConnectorManagerInterface $connectorManager;
 
-    /**
-     * @var LockServiceInterface
-     */
-    protected $lockService;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
-
-    /**
-     * @var WallManagerInterface
-     */
-    protected $wallManager;
-
-    /**
-     * @var SocialPostManagerInterface
-     */
-    protected $socialPostManager;
-
-    /**
-     * @var ConnectorManagerInterface
-     */
-    protected $connectorManager;
-
-    /**
-     * @param LoggerInterface            $logger
-     * @param LockServiceInterface       $lockService
-     * @param EventDispatcherInterface   $eventDispatcher
-     * @param WallManagerInterface       $wallManager
-     * @param SocialPostManagerInterface $socialPostManager
-     * @param ConnectorManagerInterface  $connectorManager
-     */
     public function __construct(
         LoggerInterface $logger,
         LockServiceInterface $lockService,
@@ -82,11 +51,7 @@ class SocialPostBuilderProcessor
         $this->connectorManager = $connectorManager;
     }
 
-    /**
-     * @param bool     $forceProcessing
-     * @param int|null $wallId
-     */
-    public function process(bool $forceProcessing, $wallId)
+    public function process(bool $forceProcessing, ?int $wallId): void
     {
         if ($this->lockService->isLocked(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID)) {
             $this->logger->debug(sprintf('Process %s already has been started', LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID));
@@ -118,11 +83,7 @@ class SocialPostBuilderProcessor
         $this->lockService->unlock(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID);
     }
 
-    /**
-     * @param WallInterface $wall
-     * @param bool          $forceProcessing
-     */
-    protected function processWall(WallInterface $wall, bool $forceProcessing)
+    protected function processWall(WallInterface $wall, bool $forceProcessing): void
     {
         $feeds = $wall->getFeeds();
 
@@ -144,11 +105,7 @@ class SocialPostBuilderProcessor
         }
     }
 
-    /**
-     * @param FeedInterface $feed
-     * @param bool          $forceProcessing
-     */
-    protected function processFeed(FeedInterface $feed, bool $forceProcessing)
+    protected function processFeed(FeedInterface $feed, bool $forceProcessing): void
     {
         $connectorEngine = $feed->getConnectorEngine();
         if (!$connectorEngine instanceof ConnectorEngineInterface) {
@@ -189,15 +146,7 @@ class SocialPostBuilderProcessor
         $this->savePosts($feed, $posts, $forceProcessing);
     }
 
-    /**
-     * @param string                     $connectorName
-     * @param BuildConfig                $buildConfig
-     * @param SocialPostBuilderInterface $postBuilder
-     * @param bool                       $forceProcessing
-     *
-     * @return array
-     */
-    protected function loadFeedPosts(string $connectorName, BuildConfig $buildConfig, SocialPostBuilderInterface $postBuilder, bool $forceProcessing)
+    protected function loadFeedPosts(string $connectorName, BuildConfig $buildConfig, SocialPostBuilderInterface $postBuilder, bool $forceProcessing): array
     {
         $posts = [];
         $logContext = [$buildConfig->getFeed()];
@@ -243,12 +192,18 @@ class SocialPostBuilderProcessor
             }
 
             $preFetchedSocialPostEntity = $this->socialPostManager->provideSocialPostEntity($filteredId, $connectorName, $buildConfig->getFeed());
-            if (!$preFetchedSocialPostEntity instanceof Concrete && !$preFetchedSocialPostEntity instanceof SocialPostInterface) {
+
+            if (!$preFetchedSocialPostEntity instanceof Concrete) {
                 $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
                 continue;
             }
 
-            if (!empty($preFetchedSocialPostEntity->getId()) && $forceProcessing === false) {
+            if (!$preFetchedSocialPostEntity instanceof SocialPostInterface) {
+                $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
+                continue;
+            }
+
+            if ($forceProcessing === false && $preFetchedSocialPostEntity->getId() !== null) {
                 $this->logger->debug(
                     sprintf('Social post %s (%d) already has been processed', $preFetchedSocialPostEntity->getSocialId(), $preFetchedSocialPostEntity->getId()),
                     $logContext
@@ -278,15 +233,6 @@ class SocialPostBuilderProcessor
         return $posts;
     }
 
-    /**
-     * @param string                     $type
-     * @param string                     $connectorName
-     * @param BuildConfig                $buildConfig
-     * @param SocialPostBuilderInterface $socialPostBuilder
-     * @param array                      $transferredData
-     *
-     * @return AbstractData|null
-     */
     protected function dispatchSocialPostBuildCycle(
         string $type,
         string $connectorName,
@@ -341,12 +287,7 @@ class SocialPostBuilderProcessor
         return $buildDataTransferObject;
     }
 
-    /**
-     * @param FeedInterface               $feed
-     * @param array|SocialPostInterface[] $posts
-     * @param bool                        $forceProcessing
-     */
-    protected function savePosts(FeedInterface $feed, array $posts, bool $forceProcessing)
+    protected function savePosts(FeedInterface $feed, array $posts, bool $forceProcessing): void
     {
         /** @var Concrete|SocialPostInterface $post */
         foreach ($posts as $post) {

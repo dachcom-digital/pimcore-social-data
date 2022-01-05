@@ -10,10 +10,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class ConnectorDefinitionPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $definition = $container->getDefinition(ConnectorDefinitionRegistry::class);
         foreach ($container->findTaggedServiceIds('social_data.connector_definition', true) as $id => $tags) {

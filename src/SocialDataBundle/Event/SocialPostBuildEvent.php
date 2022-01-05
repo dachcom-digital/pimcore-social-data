@@ -3,45 +3,25 @@
 namespace SocialDataBundle\Event;
 
 use SocialDataBundle\Dto\AbstractData;
-use SocialDataBundle\Dto\FetchData;
-use SocialDataBundle\Dto\FilterData;
-use SocialDataBundle\Dto\TransformData;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class SocialPostBuildEvent extends Event
 {
-    /**
-     * @var string
-     */
-    protected $connectorName;
+    protected string $connectorName;
+    protected AbstractData $data;
 
-    /**
-     * @var FetchData|FilterData|TransformData
-     */
-    protected $data;
-
-    /**
-     * @param string       $connectorName
-     * @param AbstractData $data
-     */
     public function __construct(string $connectorName, AbstractData $data)
     {
         $this->connectorName = $connectorName;
         $this->data = $data;
     }
 
-    /**
-     * @return string
-     */
-    public function getConnectorName()
+    public function getConnectorName(): string
     {
         return $this->connectorName;
     }
 
-    /**
-     * @return FetchData|FilterData|TransformData
-     */
-    public function getData()
+    public function getData(): AbstractData
     {
         return $this->data;
     }

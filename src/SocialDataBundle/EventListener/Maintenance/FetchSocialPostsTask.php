@@ -8,38 +8,17 @@ use SocialDataBundle\Service\LockServiceInterface;
 
 class FetchSocialPostsTask implements TaskInterface
 {
-    const LOCK_ID = 'social_data_maintenance_task_fetch_social_posts';
+    public const LOCK_ID = 'social_data_maintenance_task_fetch_social_posts';
 
-    /**
-     * @var bool
-     */
-    protected $enabled;
+    protected bool $enabled;
+    protected float $interval;
+    protected LockServiceInterface $lockService;
+    protected SocialPostBuilderProcessor $socialPostBuilderProcessor;
 
-    /**
-     * @var float
-     */
-    protected $interval;
-
-    /**
-     * @var LockServiceInterface
-     */
-    protected $lockService;
-
-    /**
-     * @var SocialPostBuilderProcessor
-     */
-    protected $socialPostBuilderProcessor;
-
-    /**
-     * @param bool                       $enabled
-     * @param float                      $interval
-     * @param LockServiceInterface       $lockService
-     * @param SocialPostBuilderProcessor $socialPostBuilderProcessor
-     */
     public function __construct(
         bool $enabled,
         float $interval,
-        LockServiceInterface       $lockService,
+        LockServiceInterface $lockService,
         SocialPostBuilderProcessor $socialPostBuilderProcessor
     ) {
         $this->enabled = $enabled;
@@ -48,23 +27,20 @@ class FetchSocialPostsTask implements TaskInterface
         $this->socialPostBuilderProcessor = $socialPostBuilderProcessor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute()
+    public function execute(): void
     {
         if ($this->enabled === false) {
             $this->lockService->unLock(self::LOCK_ID);
             return;
         }
 
-        $seconds = intval($this->interval * 3600);
+        $seconds = (int) ($this->interval * 3600);
 
-        if ($this->lockService->isLocked(self::LOCK_ID, $seconds)) {
+        if ($this->lockService->isLocked(self::LOCK_ID)) {
             return;
         }
 
-        $this->lockService->lock(self::LOCK_ID);
+        $this->lockService->lock(self::LOCK_ID, $seconds);
         $this->socialPostBuilderProcessor->process(false, null);
     }
 }

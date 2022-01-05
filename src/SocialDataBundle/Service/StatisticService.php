@@ -8,23 +8,14 @@ use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 
 class StatisticService implements StatisticServiceInterface
 {
-    /**
-     * @var SocialPostRepositoryInterface
-     */
-    protected $socialPostRepository;
+    protected SocialPostRepositoryInterface $socialPostRepository;
 
-    /**
-     * @param SocialPostRepositoryInterface $socialPostRepository
-     */
     public function __construct(SocialPostRepositoryInterface $socialPostRepository)
     {
         $this->socialPostRepository = $socialPostRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getWallStatistics(WallInterface $wall)
+    public function getWallStatistics(WallInterface $wall): array
     {
         $unpublishedCounter = 0;
         $publishedCounter = 0;
@@ -32,7 +23,7 @@ class StatisticService implements StatisticServiceInterface
 
         /** @var Concrete $post */
         foreach ($posts as $post) {
-            if ($post->isPublished() == true) {
+            if ($post->isPublished() === true) {
                 $publishedCounter++;
             } else {
                 $unpublishedCounter++;

@@ -22,7 +22,7 @@ Watch out for this information:
 
 ### II. The Connector Configuration
 This is the final step: Setup your Connectors. Each connector has its own configuration and strategies.
-Let's checkout the [Connector](./10_Connectors.md) Guide to learn how to use and install them. 
+Lets checkout the [Connector](./10_Connectors.md) Guide to learn how to use and install them. 
 
 ### III. Enable dynamic Fetch Mode
 
