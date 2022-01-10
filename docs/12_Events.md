@@ -26,17 +26,16 @@ Use this event to interact with `transformed` data by using the `SocialPostBuild
 
 ```yaml
 services:
-    AppBundle\EventListener\SocialDataListener:
+    App\EventListener\SocialDataListener:
         autowire: true
         tags:
             - { name: kernel.event_subscriber }
-
 ```
 
 ```php
 <?php
 
-namespace AppBundle\EventListener;
+namespace App\EventListener;
 
 use SocialDataBundle\Dto\FetchData;
 use SocialDataBundle\Event\SocialPostBuildConfigureEvent;

@@ -6,15 +6,15 @@ To get started, you need register them first:
 ```yaml
 services:
     ## Post Builder
-    AppBundle\SocialData\Connector\MyConnectorType\Builder\SocialPostBuilder: ~
+    App\SocialData\Connector\MyConnectorType\Builder\SocialPostBuilder: ~
 
     ## Definition
-    AppBundle\SocialData\Connector\MyConnectorType\ConnectorDefinition:
+    App\SocialData\Connector\MyConnectorType\ConnectorDefinition:
         tags:
             - {
                 name: social_data.connector_definition,
                 identifier: my_connector_type,
-                socialPostBuilder: AppBundle\SocialData\Connector\MyConnectorType\Builder\SocialPostBuilder
+                socialPostBuilder: App\SocialData\Connector\MyConnectorType\Builder\SocialPostBuilder
             }
 ```
 

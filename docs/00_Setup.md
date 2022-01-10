@@ -6,7 +6,7 @@ If you don't have any pimcore data object to manage your social posts, you need 
 After that, you need to tell SocialDataBundle about it:
 
 ```yaml
-# app/config/config.yml
+# config/packages/social_data.yaml
 social_data:
     social_post_data_class: SocialPost
 ```
@@ -40,7 +40,7 @@ If you don't want to install additional cronjobs, you may want to enable the imp
 This task is **disabled by default**, so you need to enable it first:
 
 ```yaml
-# app/config/config.yml
+# config/packages/social_data.yaml
 social_data:
     maintenance:
         fetch_social_post: 
@@ -53,7 +53,7 @@ Sometimes you may want to remove outdated posts. It's possible to delete posts (
 This task is **disabled by default**, so you need to enable it first:
 
 ```yaml
-# app/config/config.yml
+# config/packages/social_data.yaml
 social_data:
     maintenance:
         clean_up_old_posts: 
