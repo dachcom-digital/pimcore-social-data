@@ -10,10 +10,10 @@ This Bundles allows you to load social data from different networks like Faceboo
 ![image](https://user-images.githubusercontent.com/700119/94448014-bce31980-01aa-11eb-8869-e38bde73d253.png)
 
 ### Release Plan
-| Release | Supported Pimcore Versions        | Supported Symfony Versions | Release Date | Maintained     | Branch     |
-|---------|-----------------------------------|----------------------------|--------------|----------------|------------|
-| **2.x** | `10.1` - `10.2`                   | `5.4`                      | 05.01.2022   | Feature Branch | master     |
-| **1.x** | `6.0` - `6.9`                     | `3.4`, `^4.4`              | 27.04.2020   | Unsupported    | [1.x](https://github.com/dachcom-digital/pimcore-social-data/tree/1.x) |
+| Release | Supported Pimcore Versions | Supported Symfony Versions | Release Date | Maintained     | Branch                                                                 |
+|---------|----------------------------|----------------------------|--------------|----------------|------------------------------------------------------------------------|
+| **2.x** | `10.1` - `10.5`            | `5.4`                      | 05.01.2022   | Feature Branch | master                                                                 |
+| **1.x** | `6.0` - `6.9`              | `3.4`, `^4.4`              | 27.04.2020   | Unsupported    | [1.x](https://github.com/dachcom-digital/pimcore-social-data/tree/1.x) |
 
 ## Installation
 
