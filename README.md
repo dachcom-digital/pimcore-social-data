@@ -2,8 +2,8 @@
 
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Latest Release](https://img.shields.io/packagist/v/dachcom-digital/social-data.svg?style=flat-square)](https://packagist.org/packages/dachcom-digital/social-data)
-[![Tests](https://img.shields.io/github/workflow/status/dachcom-digital/pimcore-social-data/Codeception/master?style=flat-square&logo=github&label=codeception)](https://github.com/dachcom-digital/pimcore-social-data/actions?query=workflow%3ACodeception+branch%3Amaster)
-[![PhpStan](https://img.shields.io/github/workflow/status/dachcom-digital/pimcore-social-data/PHP%20Stan/master?style=flat-square&logo=github&label=phpstan%20level%204)](https://github.com/dachcom-digital/pimcore-social-data/actions?query=workflow%3A"PHP+Stan"+branch%3Amaster)
+[![Tests](https://img.shields.io/github/actions/workflow/status/dachcom-digital/pimcore-social-data/.github/workflows/codeception.yml?branch=master&style=flat-square&logo=github&label=codeception)](https://github.com/dachcom-digital/pimcore-social-data/actions?query=workflow%3ACodeception+branch%3Amaster)
+[![PhpStan](https://img.shields.io/github/actions/workflow/status/dachcom-digital/pimcore-social-data/.github/workflows/php-stan.yml?branch=master&style=flat-square&logo=github&label=phpstan%20level%204)](https://github.com/dachcom-digital/pimcore-social-data/actions?query=workflow%3A"PHP+Stan"+branch%3Amaster)
 
 This Bundles allows you to load social data from different networks like Facebook, Instagram or YouTube.
 
