@@ -115,7 +115,7 @@ class SocialPostManager implements SocialPostManagerInterface
 
     protected function persistMedia(FeedInterface $feed, SocialPostInterface $socialPost, bool $forceProcessing): void
     {
-        if (empty($socialPost->getPosterUrl()) || !is_string($socialPost->getPosterUrl())) {
+        if (empty($socialPost->getPosterUrl())) {
             // @todo: how to handle force processing (e.g. delete current asset?)
             $this->logger->debug(sprintf('No poster url given for social post %s', $socialPost->getSocialId()), [$feed]);
 
