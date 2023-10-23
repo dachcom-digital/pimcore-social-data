@@ -7,5 +7,5 @@ parameters:
     symfony:
         container_xml_path: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
         constant_hassers: false
-    excludes_analyse: []
+    excludePaths: []
     ignoreErrors: []
