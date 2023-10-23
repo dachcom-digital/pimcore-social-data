@@ -11,11 +11,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FeedPostListener implements EventSubscriberInterface
 {
-    protected FeedPostManager $feedPostManager;
-
-    public function __construct(FeedPostManager $feedPostManager)
+    public function __construct(protected FeedPostManager $feedPostManager)
     {
-        $this->feedPostManager = $feedPostManager;
     }
 
     public static function getSubscribedEvents(): array

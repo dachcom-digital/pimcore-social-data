@@ -13,18 +13,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LogManager implements LogManagerInterface
 {
-    protected LogRepositoryInterface $logRepository;
-    protected ConnectorManagerInterface $connectorManager;
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
-        LogRepositoryInterface $logRepository,
-        ConnectorManagerInterface $connectorManager,
-        EntityManagerInterface $entityManager
+        protected LogRepositoryInterface $logRepository,
+        protected ConnectorManagerInterface $connectorManager,
+        protected EntityManagerInterface $entityManager
     ) {
-        $this->logRepository = $logRepository;
-        $this->connectorManager = $connectorManager;
-        $this->entityManager = $entityManager;
     }
 
     public function getForConnectorEngine(int $connectorEngineId): Paginator

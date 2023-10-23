@@ -9,18 +9,11 @@ use SocialDataBundle\Model\WallInterface;
 
 class BuildConfig
 {
-    protected FeedInterface $feed;
-    protected ConnectorEngineConfigurationInterface $engineConfiguration;
-    protected array $definitionConfiguration;
-
     public function __construct(
-        FeedInterface $feed,
-        ConnectorEngineConfigurationInterface $engineConfiguration,
-        array $definitionConfiguration
+        protected FeedInterface $feed,
+        protected ConnectorEngineConfigurationInterface $engineConfiguration,
+        protected array $definitionConfiguration
     ) {
-        $this->feed = $feed;
-        $this->engineConfiguration = $engineConfiguration;
-        $this->definitionConfiguration = $definitionConfiguration;
     }
 
     public function getEngineConfiguration(): ConnectorEngineConfigurationInterface

@@ -9,11 +9,8 @@ use Pimcore\Bundle\AdminBundle\Controller\AdminAbstractController;
 
 class LogController extends AdminAbstractController
 {
-    protected LogManagerInterface $logManager;
-
-    public function __construct(LogManagerInterface $logManager)
+    public function __construct(protected LogManagerInterface $logManager)
     {
-        $this->logManager = $logManager;
     }
 
     public function loadLogsForConnectorAction(Request $request, int $connectorEngineId): JsonResponse

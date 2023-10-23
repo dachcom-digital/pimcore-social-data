@@ -7,11 +7,8 @@ use SocialDataBundle\Service\EnvironmentService;
 
 class SocialPostFactory implements SocialPostFactoryInterface
 {
-    protected EnvironmentService $environmentService;
-
-    public function __construct(EnvironmentService $environmentService)
+    public function __construct(protected EnvironmentService $environmentService)
     {
-        $this->environmentService = $environmentService;
     }
 
     public function create(): SocialPostInterface

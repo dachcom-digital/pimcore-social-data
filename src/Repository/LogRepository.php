@@ -3,7 +3,7 @@
 namespace SocialDataBundle\Repository;
 
 use Carbon\Carbon;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -49,7 +49,7 @@ class LogRepository implements LogRepositoryInterface
 
         $query = $qb->delete()
             ->where('l.creationDate < :expires')
-            ->setParameter('expires', $expireDate->toDateTime(), Type::DATETIME)
+            ->setParameter('expires', $expireDate->toDateTime(), Types::DATETIME_MUTABLE)
             ->getQuery();
 
         $query->execute();

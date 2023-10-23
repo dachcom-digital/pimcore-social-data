@@ -28,27 +28,14 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SocialPostBuilderProcessor
 {
-    protected LoggerInterface $logger;
-    protected LockServiceInterface $lockService;
-    protected EventDispatcherInterface $eventDispatcher;
-    protected WallManagerInterface $wallManager;
-    protected SocialPostManagerInterface $socialPostManager;
-    protected ConnectorManagerInterface $connectorManager;
-
     public function __construct(
-        LoggerInterface $logger,
-        LockServiceInterface $lockService,
-        EventDispatcherInterface $eventDispatcher,
-        WallManagerInterface $wallManager,
-        SocialPostManagerInterface $socialPostManager,
-        ConnectorManagerInterface $connectorManager
+        protected LoggerInterface $logger,
+        protected LockServiceInterface $lockService,
+        protected EventDispatcherInterface $eventDispatcher,
+        protected WallManagerInterface $wallManager,
+        protected SocialPostManagerInterface $socialPostManager,
+        protected ConnectorManagerInterface $connectorManager
     ) {
-        $this->logger = $logger;
-        $this->lockService = $lockService;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->wallManager = $wallManager;
-        $this->socialPostManager = $socialPostManager;
-        $this->connectorManager = $connectorManager;
     }
 
     public function process(bool $forceProcessing, ?int $wallId): void

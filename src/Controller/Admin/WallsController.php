@@ -17,24 +17,13 @@ use SocialDataBundle\Model\WallInterface;
 
 class WallsController extends AdminAbstractController
 {
-    protected LockServiceInterface $lockService;
-    protected LoggerInterface $logger;
-    protected FormFactoryInterface $formFactory;
-    protected WallManagerInterface $wallManager;
-    protected ExtJsDataBuilder $extJsDataBuilder;
-
     public function __construct(
-        LockServiceInterface $lockService,
-        LoggerInterface $logger,
-        FormFactoryInterface $formFactory,
-        WallManagerInterface $wallManager,
-        ExtJsDataBuilder $extJsDataBuilder
+        protected LockServiceInterface $lockService,
+        protected LoggerInterface $logger,
+        protected FormFactoryInterface $formFactory,
+        protected WallManagerInterface $wallManager,
+        protected ExtJsDataBuilder $extJsDataBuilder
     ) {
-        $this->lockService = $lockService;
-        $this->logger = $logger;
-        $this->formFactory = $formFactory;
-        $this->wallManager = $wallManager;
-        $this->extJsDataBuilder = $extJsDataBuilder;
     }
 
     public function fetchAllWallsAction(): JsonResponse

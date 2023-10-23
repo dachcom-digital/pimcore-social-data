@@ -8,11 +8,8 @@ use SocialDataBundle\Repository\SocialPostRepositoryInterface;
 
 class StatisticService implements StatisticServiceInterface
 {
-    protected SocialPostRepositoryInterface $socialPostRepository;
-
-    public function __construct(SocialPostRepositoryInterface $socialPostRepository)
+    public function __construct(protected SocialPostRepositoryInterface $socialPostRepository)
     {
-        $this->socialPostRepository = $socialPostRepository;
     }
 
     public function getWallStatistics(WallInterface $wall): array

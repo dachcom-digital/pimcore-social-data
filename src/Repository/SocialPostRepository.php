@@ -12,11 +12,8 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 class SocialPostRepository implements SocialPostRepositoryInterface
 {
-    protected EnvironmentService $environmentService;
-
-    public function __construct(EnvironmentService $environmentService)
+    public function __construct(protected EnvironmentService $environmentService)
     {
-        $this->environmentService = $environmentService;
     }
 
     public function findOneByIdAndSocialType(string $socialPostId, string $socialPostType, bool $unpublished = false): ?SocialPostInterface

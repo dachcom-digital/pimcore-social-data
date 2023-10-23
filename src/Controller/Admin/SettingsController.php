@@ -16,28 +16,14 @@ use Pimcore\Bundle\AdminBundle\Controller\AdminAbstractController;
 
 class SettingsController extends AdminAbstractController
 {
-    protected FormFactoryInterface $formFactory;
-    protected EnvironmentServiceInterface $environmentService;
-    protected ConnectorManagerInterface $connectorManager;
-    protected ConnectorDefinitionRegistryInterface $connectorRegistry;
-    protected ConnectorServiceInterface $connectorService;
-    protected ExtJsDataBuilder $extJsDataBuilder;
-
     public function __construct(
-
-        FormFactoryInterface $formFactory,
-        EnvironmentServiceInterface $environmentService,
-        ConnectorManagerInterface $connectorManager,
-        ConnectorDefinitionRegistryInterface $connectorRegistry,
-        ConnectorServiceInterface $connectorService,
-        ExtJsDataBuilder $extJsDataBuilder
+        protected FormFactoryInterface $formFactory,
+        protected EnvironmentServiceInterface $environmentService,
+        protected ConnectorManagerInterface $connectorManager,
+        protected ConnectorDefinitionRegistryInterface $connectorRegistry,
+        protected ConnectorServiceInterface $connectorService,
+        protected ExtJsDataBuilder $extJsDataBuilder
     ) {
-        $this->formFactory = $formFactory;
-        $this->environmentService = $environmentService;
-        $this->connectorManager = $connectorManager;
-        $this->connectorRegistry = $connectorRegistry;
-        $this->connectorService = $connectorService;
-        $this->extJsDataBuilder = $extJsDataBuilder;
     }
 
     /**

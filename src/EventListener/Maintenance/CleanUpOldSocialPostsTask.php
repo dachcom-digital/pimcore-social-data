@@ -10,24 +10,13 @@ class CleanUpOldSocialPostsTask implements TaskInterface
 {
     public const LOCK_ID = 'social_data_maintenance_task_cleanup_old_social_posts';
 
-    protected bool $enabled;
-    protected bool $deletePoster;
-    protected int $expirationDays;
-    protected LockServiceInterface $lockService;
-    protected SocialPostRepositoryInterface $socialPostRepository;
-
     public function __construct(
-        bool $enabled,
-        bool $deletePoster,
-        int $expirationDays,
-        LockServiceInterface $lockService,
-        SocialPostRepositoryInterface $socialPostRepository
+        protected bool $enabled,
+        protected bool $deletePoster,
+        protected int $expirationDays,
+        protected LockServiceInterface $lockService,
+        protected SocialPostRepositoryInterface $socialPostRepository
     ) {
-        $this->enabled = $enabled;
-        $this->deletePoster = $deletePoster;
-        $this->expirationDays = $expirationDays;
-        $this->lockService = $lockService;
-        $this->socialPostRepository = $socialPostRepository;
     }
 
     public function execute(): void

@@ -13,11 +13,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TagType extends AbstractType
 {
-    protected EntityManagerInterface $manager;
-
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(protected EntityManagerInterface $manager)
     {
-        $this->manager = $manager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

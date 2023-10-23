@@ -4,14 +4,12 @@ namespace SocialDataBundle\Dto;
 
 abstract class AbstractData
 {
-    protected BuildConfig $buildConfig;
-    protected array $options;
     protected mixed $transferredData = null;
 
-    public function __construct(BuildConfig $buildConfig, array $options)
-    {
-        $this->buildConfig = $buildConfig;
-        $this->options = $options;
+    public function __construct(
+        protected BuildConfig $buildConfig,
+        protected array $options
+    ) {
     }
 
     /**

@@ -16,21 +16,12 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 class SocialPostManager implements SocialPostManagerInterface
 {
-    protected LoggerInterface $logger;
-    protected FeedPostManagerInterface $feedPostManager;
-    protected SocialPostRepositoryInterface $socialPostRepository;
-    protected SocialPostFactoryInterface $socialPostFactory;
-
     public function __construct(
-        LoggerInterface $logger,
-        FeedPostManagerInterface $feedPostManager,
-        SocialPostRepositoryInterface $socialPostRepository,
-        SocialPostFactoryInterface $socialPostFactory
+        protected LoggerInterface $logger,
+        protected FeedPostManagerInterface $feedPostManager,
+        protected SocialPostRepositoryInterface $socialPostRepository,
+        protected SocialPostFactoryInterface $socialPostFactory
     ) {
-        $this->logger = $logger;
-        $this->feedPostManager = $feedPostManager;
-        $this->socialPostRepository = $socialPostRepository;
-        $this->socialPostFactory = $socialPostFactory;
     }
 
     public function checkWallStoragePaths(WallInterface $wall): void

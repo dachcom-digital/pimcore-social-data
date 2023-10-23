@@ -23,15 +23,10 @@ class FeedType extends AbstractType
 {
     use ExtJsTagTransformTrait;
 
-    protected ConnectorManagerInterface $connectorManager;
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
-        ConnectorManagerInterface $connectorManager,
-        EntityManagerInterface $entityManager
+        protected ConnectorManagerInterface $connectorManager,
+        protected EntityManagerInterface $entityManager
     ) {
-        $this->connectorManager = $connectorManager;
-        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

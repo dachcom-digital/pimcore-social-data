@@ -4,11 +4,8 @@ namespace SocialDataBundle\Logger;
 
 class Logger implements LoggerInterface
 {
-    protected \Psr\Log\LoggerInterface $logger;
-
-    public function __construct(\Psr\Log\LoggerInterface $logger)
+    public function __construct(protected \Psr\Log\LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function log(string $level, $message, ?array $context = null): void

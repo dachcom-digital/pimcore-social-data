@@ -11,15 +11,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConnectorEngineChoiceType extends AbstractType
 {
-    protected ConnectorDefinitionRegistry $connectorDefinitionRegistry;
-    protected ConnectorManagerInterface $connectorManager;
-
     public function __construct(
-        ConnectorDefinitionRegistry $connectorDefinitionRegistry,
-        ConnectorManagerInterface $connectorManager
+        protected ConnectorDefinitionRegistry $connectorDefinitionRegistry,
+        protected ConnectorManagerInterface $connectorManager
     ) {
-        $this->connectorDefinitionRegistry = $connectorDefinitionRegistry;
-        $this->connectorManager = $connectorManager;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

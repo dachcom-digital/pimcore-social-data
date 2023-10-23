@@ -10,15 +10,10 @@ use SocialDataBundle\Repository\WallRepositoryInterface;
 
 class WallManager implements WallManagerInterface
 {
-    protected WallRepositoryInterface $wallRepository;
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
-        WallRepositoryInterface $wallRepository,
-        EntityManagerInterface $entityManager
+        protected WallRepositoryInterface $wallRepository,
+        protected EntityManagerInterface $entityManager
     ) {
-        $this->wallRepository = $wallRepository;
-        $this->entityManager = $entityManager;
     }
 
     public function getAll(): array

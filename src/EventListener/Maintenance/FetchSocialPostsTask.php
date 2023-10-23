@@ -10,21 +10,12 @@ class FetchSocialPostsTask implements TaskInterface
 {
     public const LOCK_ID = 'social_data_maintenance_task_fetch_social_posts';
 
-    protected bool $enabled;
-    protected float $interval;
-    protected LockServiceInterface $lockService;
-    protected SocialPostBuilderProcessor $socialPostBuilderProcessor;
-
     public function __construct(
-        bool $enabled,
-        float $interval,
-        LockServiceInterface $lockService,
-        SocialPostBuilderProcessor $socialPostBuilderProcessor
+        protected bool $enabled,
+        protected float $interval,
+        protected LockServiceInterface $lockService,
+        protected SocialPostBuilderProcessor $socialPostBuilderProcessor
     ) {
-        $this->enabled = $enabled;
-        $this->interval = $interval;
-        $this->lockService = $lockService;
-        $this->socialPostBuilderProcessor = $socialPostBuilderProcessor;
     }
 
     public function execute(): void
