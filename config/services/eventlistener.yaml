@@ -1,0 +1,18 @@
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    SocialDataBundle\EventListener\Admin\AssetListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    SocialDataBundle\EventListener\FeedPostListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    SocialDataBundle\EventListener\EntityDeletionListener:
+        tags:
+            - { name: doctrine.event_subscriber }
