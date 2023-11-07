@@ -1,34 +1,27 @@
-pimcore.registerNS('pimcore.plugin.SocialData');
+class SocialDataCore {
 
-pimcore.plugin.SocialData = Class.create(pimcore.plugin.admin, {
+    constructor() {
 
-    getClassName: function () {
-        return 'pimcore.plugin.SocialData';
-    },
-
-    initialize: function () {
-        pimcore.plugin.broker.registerPlugin(this);
-
-        if (!String.prototype.format) {
-            String.prototype.format = function () {
-                var args = arguments;
-                return this.replace(/{(\d+)}/g, function (match, number) {
-                    return typeof args[number] != 'undefined'
-                        ? args[number]
-                        : match
-                        ;
-                });
-            };
+        if (String.prototype.format) {
+            return;
         }
-    },
 
-    uninstall: function () {
-        // void
-    },
+        String.prototype.format = function () {
 
-    pimcoreReady: function (params, broker) {
+            let args = arguments;
 
-        var subMenu = [],
+            return this.replace(/{(\d+)}/g, function (match, number) {
+                return typeof args[number] != 'undefined'
+                    ? args[number]
+                    : match
+                    ;
+            });
+        };
+    }
+
+    init() {
+
+        let subMenu = [],
             user = pimcore.globalmanager.get('user');
 
         if (user.isAllowed('social_data_bundle_menu_settings')) {
@@ -61,24 +54,25 @@ pimcore.plugin.SocialData = Class.create(pimcore.plugin.admin, {
                 }
             });
         }
-    },
+    }
 
-    openSettingsPanel: function () {
+    openSettingsPanel() {
         try {
             pimcore.globalmanager.get('social_data_bundle_settings').activate();
         } catch (e) {
             pimcore.globalmanager.add('social_data_bundle_settings', new SocialData.SettingsPanel());
         }
-    },
+    }
 
-    openWallsPanel: function () {
+    openWallsPanel() {
         try {
             pimcore.globalmanager.get('social_data_bundle_walls').activate();
         } catch (e) {
             pimcore.globalmanager.add('social_data_bundle_walls', new SocialData.WallsPanel());
         }
     }
+}
 
-});
+const socialDataCoreHandler = new SocialDataCore();
 
-new pimcore.plugin.SocialData();
+document.addEventListener(pimcore.events.pimcoreReady, socialDataCoreHandler.init.bind(socialDataCoreHandler));

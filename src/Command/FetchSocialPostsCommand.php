@@ -13,12 +13,8 @@ class FetchSocialPostsCommand extends Command
     protected static $defaultName = 'social-data:fetch:social-posts';
     protected static $defaultDescription = 'Fetch Social Posts';
 
-    protected SocialPostBuilderProcessor $socialPostBuilderProcessor;
-
-    public function __construct(SocialPostBuilderProcessor $socialPostBuilderProcessor)
+    public function __construct(protected SocialPostBuilderProcessor $socialPostBuilderProcessor)
     {
-        $this->socialPostBuilderProcessor = $socialPostBuilderProcessor;
-
         parent::__construct();
     }
 

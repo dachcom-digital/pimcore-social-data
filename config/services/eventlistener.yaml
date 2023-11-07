@@ -5,6 +5,10 @@ services:
         autoconfigure: true
         public: false
 
+    SocialDataBundle\EventListener\Admin\AssetListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
     SocialDataBundle\EventListener\FeedPostListener:
         tags:
             - { name: kernel.event_subscriber }
