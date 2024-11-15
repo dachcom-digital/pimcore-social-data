@@ -55,8 +55,11 @@ This Bundle needs some preparation. Please check out the [Setup](docs/00_Setup.m
 - [Logging](docs/20_Logging.md)
 - [Custom Connector](docs/30_CustomConnector.md)
 
-## Copyright and license
-Copyright: [DACHCOM.DIGITAL](http://dachcom-digital.ch)  
+## License
+**DACHCOM.DIGITAL AG**, Löwenhofstrasse 15, 9424 Rheineck, Schweiz  
+[dachcom.com](https://www.dachcom.com), dcdi@dachcom.ch  
+Copyright © 2024 DACHCOM.DIGITAL. All rights reserved.  
+
 For licensing details please visit [LICENSE.md](LICENSE.md)  
 
 ## Upgrade Info
