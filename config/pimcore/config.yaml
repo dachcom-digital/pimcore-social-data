@@ -2,13 +2,6 @@ doctrine_migrations:
     migrations_paths:
         'SocialDataBundle\Migrations': '@SocialDataBundle/src/Migrations'
 
-doctrine:
-    orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
-        entity_managers:
-            default:
-                auto_mapping: true
-
 monolog:
     channels: ['social_data']
     handlers:
