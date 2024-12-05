@@ -62,10 +62,6 @@ class ConnectorManager implements ConnectorManagerInterface
             return null;
         }
 
-        if (!$connectorDefinition instanceof ConnectorDefinitionInterface) {
-            return null;
-        }
-
         if ($loadEngine === true) {
             $connectorEngine = $this->connectorEngineRepository->findByName($connectorDefinitionName);
             $connectorDefinition->setConnectorEngine($connectorEngine);

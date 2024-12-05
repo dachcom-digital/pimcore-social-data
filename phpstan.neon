@@ -7,3 +7,5 @@ parameters:
     symfony:
         containerXmlPath: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
         constantHassers: false
+    ignoreErrors:
+        - '#Trait SocialDataBundle\\Controller\\Admin\\Traits\\ConnectResponseTrait is used zero times and is not analysed\.#'

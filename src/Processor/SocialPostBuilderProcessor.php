@@ -95,10 +95,6 @@ class SocialPostBuilderProcessor
     protected function processFeed(FeedInterface $feed, bool $forceProcessing): void
     {
         $connectorEngine = $feed->getConnectorEngine();
-        if (!$connectorEngine instanceof ConnectorEngineInterface) {
-            // @todo: dispatch notification?
-            return;
-        }
 
         if (!$connectorEngine->isEnabled()) {
             // @todo: dispatch notification?
@@ -146,14 +142,7 @@ class SocialPostBuilderProcessor
             return [];
         }
 
-        $fetchedItems = $fetchData->getFetchedEntities();
-
-        if (!is_array($fetchedItems)) {
-            $this->logger->debug(sprintf('No elements found during fetch process'), $logContext);
-            return [];
-        }
-
-        foreach ($fetchedItems as $entry) {
+        foreach ($fetchData->getFetchedEntities() as $entry) {
 
             // 2 filter
             $filterData = $this->dispatchSocialPostBuildCycle('filter', $connectorName, $buildConfig, $postBuilder, [
@@ -185,6 +174,7 @@ class SocialPostBuilderProcessor
                 continue;
             }
 
+            /* @phpstan-ignore-next-line */
             if (!$preFetchedSocialPostEntity instanceof SocialPostInterface) {
                 $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
                 continue;

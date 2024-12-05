@@ -230,14 +230,17 @@ class SocialPostRepository implements SocialPostRepositoryInterface
             } catch (\Exception $e) {
                 // fail silently
             }
-
         }
     }
 
     public function getClassId(): string
     {
-        /** @var Concrete $concreteObject */
-        $concreteObject = sprintf('\Pimcore\Model\DataObject\%s', ucfirst($this->environmentService->getSocialPostDataClass()));
+        $dataClassName = ucfirst($this->environmentService->getSocialPostDataClass());
+        $concreteObject = sprintf('\Pimcore\Model\DataObject\%s', $dataClassName);
+
+        if (!is_subclass_of($concreteObject, Concrete::class)) {
+            throw new \Exception(sprintf('Invalid data object class "%s"', $dataClassName));
+        }
 
         return $concreteObject::classId();
     }
