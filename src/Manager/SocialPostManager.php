@@ -144,7 +144,7 @@ class SocialPostManager implements SocialPostManagerInterface
 
         // 2. forced mode enabled or new asset
         // => add new data or try to add new version if data has changed!
-        if ($isNewAsset === false && $forceProcessing === true && md5($asset->getData()) === md5($imageData['content'])) {
+        if ($forceProcessing === true && md5($asset->getData()) === md5($imageData['content'])) {
             $socialPost->setPoster($asset);
             $this->logger->debug(
                 sprintf('Asset %s for post %s forced update skipped since no data has been changed', $asset->getFilename(), $socialPost->getSocialId()),

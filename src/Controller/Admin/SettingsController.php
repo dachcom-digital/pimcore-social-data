@@ -164,10 +164,13 @@ class SettingsController extends AdminAbstractController
 
         $connectorDefinition = $this->connectorManager->getConnectorDefinition($connectorName, true);
 
-        /** @var ConnectorEngineConfigurationInterface $class */
+        $formType = '';
         $class = $connectorDefinition->getEngineConfigurationClass();
+        if (is_string($class) && is_subclass_of($class, ConnectorEngineConfigurationInterface::class)) {
+            $formType = $class::getFormClass();
+        }
 
-        $form = $this->formFactory->create($class::getFormClass(), $connectorDefinition->getEngineConfiguration());
+        $form = $this->formFactory->create($formType, $connectorDefinition->getEngineConfiguration());
 
         $form->submit($configuration);
 

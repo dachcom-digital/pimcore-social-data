@@ -18,24 +18,13 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ExtJsDataBuilder
 {
-    protected NormalizerInterface $serializer;
-    protected Translator $translator;
-    protected ConnectorManagerInterface $connectorManager;
-    protected WallManagerInterface $wallManager;
-    protected StatisticServiceInterface $statisticService;
-
     public function __construct(
-        NormalizerInterface $serializer,
-        Translator $translator,
-        ConnectorManagerInterface $connectorManager,
-        WallManagerInterface $wallManager,
-        StatisticServiceInterface $statisticService
+        protected NormalizerInterface $serializer,
+        protected Translator $translator,
+        protected ConnectorManagerInterface $connectorManager,
+        protected WallManagerInterface $wallManager,
+        protected StatisticServiceInterface $statisticService
     ) {
-        $this->serializer = $serializer;
-        $this->translator = $translator;
-        $this->connectorManager = $connectorManager;
-        $this->wallManager = $wallManager;
-        $this->statisticService = $statisticService;
     }
 
     public function generateConnectorListData(): array
@@ -162,14 +151,13 @@ class ExtJsDataBuilder
     public function generateFormErrorList(FormInterface $form): array
     {
         $errors = [];
-
-        /** @var FormError $e */
         foreach ($form->getErrors(true, true) as $e) {
             $errorMessageTemplate = $e->getMessageTemplate();
             foreach ($e->getMessageParameters() as $key => $value) {
                 $errorMessageTemplate = str_replace($key, $value, $errorMessageTemplate);
             }
-            $errors[] = sprintf('%s: %s', $e->getOrigin()->getConfig()->getName(), $errorMessageTemplate);
+
+            $errors[] = sprintf('%s: %s', $e->getOrigin()?->getConfig()->getName(), $errorMessageTemplate);
         }
 
         return $errors;

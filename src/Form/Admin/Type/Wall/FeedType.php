@@ -66,10 +66,13 @@ class FeedType extends AbstractType
             throw new InvalidConfigurationException(sprintf('No Connector definition found for engine "%s"', $connectorEngine->getName()));
         }
 
-        /** @var ConnectorFeedConfigurationInterface $class */
+        $formType = '';
         $class = $connectorDefinition->getFeedConfigurationClass();
+        if (is_subclass_of($class, ConnectorFeedConfigurationInterface::class)) {
+            $formType = $class::getFormClass();
+        }
 
-        $form->add('configuration', $class::getFormClass());
+        $form->add('configuration', $formType);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

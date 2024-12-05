@@ -28,9 +28,6 @@ class SocialPostBuildConfigureEvent extends Event
         return $this->buildConfig;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function setOption(mixed $key, mixed $value): void
     {
         $this->options[$key] = $value;

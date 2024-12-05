@@ -5,7 +5,7 @@ parameters:
         - %currentWorkingDirectory%/vendor/pimcore/pimcore/stubs/dynamic-constants.php
     reportUnmatchedIgnoredErrors: false
     symfony:
-        container_xml_path: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
-        constant_hassers: false
-    excludePaths: []
-    ignoreErrors: []
+        containerXmlPath: %currentWorkingDirectory%/var/cache/test/TestKernelTestDebugContainer.xml
+        constantHassers: false
+    ignoreErrors:
+        - '#Trait SocialDataBundle\\Controller\\Admin\\Traits\\ConnectResponseTrait is used zero times and is not analysed\.#'
