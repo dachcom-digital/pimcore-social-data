@@ -151,13 +151,7 @@ class ExtJsDataBuilder
     public function generateFormErrorList(FormInterface $form): array
     {
         $errors = [];
-
         foreach ($form->getErrors(true, true) as $e) {
-
-            if (!$e instanceof FormError) {
-                continue;
-            }
-
             $errorMessageTemplate = $e->getMessageTemplate();
             foreach ($e->getMessageParameters() as $key => $value) {
                 $errorMessageTemplate = str_replace($key, $value, $errorMessageTemplate);
