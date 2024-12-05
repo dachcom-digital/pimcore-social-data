@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\DependencyInjection\Compiler;
 
 use SocialDataBundle\Registry\ConnectorDefinitionRegistry;
@@ -16,7 +27,6 @@ final class ConnectorDefinitionPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds('social_data.connector_definition', true) as $id => $tags) {
             $connectorDefinition = $container->getDefinition($id);
             foreach ($tags as $attributes) {
-
                 if (!isset($attributes['identifier'])) {
                     throw new InvalidConfigurationException(sprintf('You need to define a valid identifier for connector "%s"', $id));
                 } elseif (!isset($attributes['socialPostBuilder'])) {

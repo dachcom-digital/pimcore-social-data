@@ -1,7 +1,19 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\Manager;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Pimcore\File;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject;
@@ -12,7 +24,6 @@ use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Model\WallInterface;
 use SocialDataBundle\Repository\SocialPostRepositoryInterface;
-use Doctrine\DBAL\Query\QueryBuilder;
 
 class SocialPostManager implements SocialPostManagerInterface
 {
@@ -190,7 +201,7 @@ class SocialPostManager implements SocialPostManagerInterface
 
         $propAssets = $listing->getAssets();
 
-        /**
+        /*
          * 1. Check if asset exists with property
          * 2. If not, check if asset exists in current path definition to avoid duplicate path issues
          */
@@ -218,6 +229,7 @@ class SocialPostManager implements SocialPostManagerInterface
             $content = $this->getAssetDataFromUrl($posterUrl);
         } catch (\Throwable $e) {
             $this->logger->error(sprintf('Could not load asset data from url "%s". Error: %s', $posterUrl, $e->getMessage()));
+
             return null;
         }
 
@@ -225,11 +237,13 @@ class SocialPostManager implements SocialPostManagerInterface
             $imageData = getimagesizefromstring($content);
         } catch (\Throwable $e) {
             $this->logger->error(sprintf('Could not determinate asset data as image from url "%s". Error: %s', $posterUrl, $e->getMessage()));
+
             return null;
         }
 
         if (!is_array($imageData)) {
             $this->logger->error(sprintf('Could not extract image data from url "%s". Maybe it is not a valid image?', $posterUrl));
+
             return null;
         }
 
@@ -237,6 +251,7 @@ class SocialPostManager implements SocialPostManagerInterface
 
         if ($imageType !== 'image') {
             $this->logger->error(sprintf('Asset should be type of "image" but is type of "%s".', $imageType));
+
             return null;
         }
 
@@ -246,6 +261,7 @@ class SocialPostManager implements SocialPostManagerInterface
             $extension = image_type_to_extension($imageData[2]);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('Could not determinate image extension from url "%s".', $posterUrl));
+
             return null;
         }
 
@@ -258,6 +274,7 @@ class SocialPostManager implements SocialPostManagerInterface
 
         if ($width <= 1 && $height <= 1) {
             $this->logger->warning(sprintf('Image width (%dpx) and height (%dpx) are too mall to import from url "%s".', $width, $height, $posterUrl));
+
             return null;
         }
 

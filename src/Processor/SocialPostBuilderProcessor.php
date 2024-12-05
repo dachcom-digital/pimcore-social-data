@@ -1,12 +1,23 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\Processor;
 
 use Pimcore\Model\DataObject\Concrete;
-use SocialDataBundle\Dto\AbstractData;
-use SocialDataBundle\Dto\BuildConfig;
 use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 use SocialDataBundle\Connector\SocialPostBuilderInterface;
+use SocialDataBundle\Dto\AbstractData;
+use SocialDataBundle\Dto\BuildConfig;
 use SocialDataBundle\Dto\FetchData;
 use SocialDataBundle\Dto\FilterData;
 use SocialDataBundle\Dto\TransformData;
@@ -17,7 +28,6 @@ use SocialDataBundle\Logger\LoggerInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Manager\SocialPostManagerInterface;
 use SocialDataBundle\Manager\WallManagerInterface;
-use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Model\FeedInterface;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Model\WallInterface;
@@ -42,6 +52,7 @@ class SocialPostBuilderProcessor
     {
         if ($this->lockService->isLocked(LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID)) {
             $this->logger->debug(sprintf('Process %s already has been started', LockServiceInterface::SOCIAL_POST_BUILD_PROCESS_ID));
+
             return;
         }
 
@@ -49,6 +60,7 @@ class SocialPostBuilderProcessor
             $walls = $this->wallManager->getById($wallId);
             if (!$walls instanceof WallInterface) {
                 $this->logger->error(sprintf('Wall with id %d not found', $wallId));
+
                 return;
             }
         } else {
@@ -84,6 +96,7 @@ class SocialPostBuilderProcessor
             $this->socialPostManager->checkWallStoragePaths($wall);
         } catch (\Exception $e) {
             $this->logger->error(sprintf($e->getMessage()), [$wall]);
+
             return;
         }
 
@@ -143,7 +156,6 @@ class SocialPostBuilderProcessor
         }
 
         foreach ($fetchData->getFetchedEntities() as $entry) {
-
             // 2 filter
             $filterData = $this->dispatchSocialPostBuildCycle('filter', $connectorName, $buildConfig, $postBuilder, [
                 'transferredData' => $entry
@@ -159,11 +171,13 @@ class SocialPostBuilderProcessor
 
             if ($filteredElement === null) {
                 $this->logger->debug(sprintf('Element%s has been removed during filter process', empty($filteredId) ? '' : sprintf(' "%s"', $filteredId)), $logContext);
+
                 continue;
             }
 
             if (empty($filteredId)) {
                 $this->logger->error(sprintf('Could not resolve social post id'), $logContext);
+
                 continue;
             }
 
@@ -171,12 +185,14 @@ class SocialPostBuilderProcessor
 
             if (!$preFetchedSocialPostEntity instanceof Concrete) {
                 $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
+
                 continue;
             }
 
             /* @phpstan-ignore-next-line */
             if (!$preFetchedSocialPostEntity instanceof SocialPostInterface) {
                 $this->logger->error(sprintf('Could not resolve pre-fetched social post for entity with id "%s"', $filteredId), $logContext);
+
                 continue;
             }
 
@@ -185,6 +201,7 @@ class SocialPostBuilderProcessor
                     sprintf('Social post %s (%d) already has been processed', $preFetchedSocialPostEntity->getSocialId(), $preFetchedSocialPostEntity->getId()),
                     $logContext
                 );
+
                 continue;
             }
 
@@ -201,6 +218,7 @@ class SocialPostBuilderProcessor
             $transformedEntry = $transformData->getTransformedElement();
             if (!$transformedEntry instanceof SocialPostInterface) {
                 $this->logger->debug(sprintf('Element "%s" has been removed during transform process', $filteredId), $logContext);
+
                 continue;
             }
 
@@ -217,7 +235,6 @@ class SocialPostBuilderProcessor
         SocialPostBuilderInterface $socialPostBuilder,
         ?array $transferredData = null
     ): ?AbstractData {
-
         $buildDataTransferObject = null;
         $logContext = [$buildConfig->getFeed()];
 
@@ -254,7 +271,6 @@ class SocialPostBuilderProcessor
             $this->eventDispatcher->dispatch($postEvent, constant($postEventName));
 
             $buildDataTransferObject = $postEvent->getData();
-
         } catch (BuildException $e) {
             $this->logger->error(sprintf('[Build Error] %s', $e->getMessage()), $logContext);
         } catch (\Throwable $e) {
