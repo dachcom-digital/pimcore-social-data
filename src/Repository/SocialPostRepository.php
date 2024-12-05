@@ -1,14 +1,25 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\Repository;
 
 use Carbon\Carbon;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Pimcore\Model\Asset;
 use Pimcore\Model\DataObject\Concrete;
 use Pimcore\Model\DataObject\Listing;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Service\EnvironmentService;
-use Doctrine\DBAL\Query\QueryBuilder;
 
 class SocialPostRepository implements SocialPostRepositoryInterface
 {
@@ -187,7 +198,6 @@ class SocialPostRepository implements SocialPostRepositoryInterface
 
         $aliasFrom = $listing->getDao()->getTableName();
         $listing->onCreateQueryBuilder(function (QueryBuilder $query) use ($joinWallTagTables, $joinFeedTagTables, $aliasFrom) {
-
             $query
                 ->join($aliasFrom, 'social_data_feed_post', 'fp', 'fp.post_id = id')
                 ->join($aliasFrom, 'social_data_feed', 'f', 'f.id = fp.feed_id');
@@ -218,15 +228,12 @@ class SocialPostRepository implements SocialPostRepositoryInterface
 
         /** @var Concrete $socialPost */
         foreach ($listing->getObjects() as $socialPost) {
-
             try {
-
                 if ($deletePoster === true && $socialPost instanceof SocialPostInterface && $socialPost->getPoster() instanceof Asset) {
                     $socialPost->getPoster()->delete();
                 }
 
                 $socialPost->delete();
-
             } catch (\Exception $e) {
                 // fail silently
             }

@@ -1,7 +1,19 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\Builder;
 
+use Pimcore\Translation\Translator;
 use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
 use SocialDataBundle\Connector\ConnectorFeedConfigurationInterface;
@@ -9,9 +21,7 @@ use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Manager\WallManagerInterface;
 use SocialDataBundle\Model\ConnectorEngineInterface;
 use SocialDataBundle\Model\WallInterface;
-use Pimcore\Translation\Translator;
 use SocialDataBundle\Service\StatisticServiceInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -33,7 +43,6 @@ class ExtJsDataBuilder
         $allConnectorDefinitions = $this->connectorManager->getAllConnectorDefinitions(true);
 
         foreach ($allConnectorDefinitions as $connectorDefinitionName => $connectorDefinition) {
-
             $engineConfiguration = [];
             $isInstalled = $connectorDefinition->engineIsLoaded();
 
@@ -168,8 +177,8 @@ class ExtJsDataBuilder
         $feedStore = [];
         foreach ($this->connectorManager->getAllActiveConnectorDefinitions() as $connectorDefinitionName => $connectorDefinition) {
             $feedStore[] = [
-                'label'           => ucFirst($connectorDefinitionName),
-                'connectorName'   => ucFirst($connectorDefinitionName),
+                'label'           => ucfirst($connectorDefinitionName),
+                'connectorName'   => ucfirst($connectorDefinitionName),
                 'connectorEngine' => $connectorDefinition->getConnectorEngine()->getId(),
                 'iconCls'         => sprintf('pimcore_icon_social_data_connector_%s', strtolower($connectorDefinitionName))
             ];
@@ -196,7 +205,6 @@ class ExtJsDataBuilder
                     return $data instanceof ConnectorEngineInterface ? $data->getId() : null;
                 },
                 'configuration'   => function ($data) {
-
                     if ($data instanceof ConnectorFeedConfigurationInterface) {
                         return $this->serializer->normalize($data);
                     }

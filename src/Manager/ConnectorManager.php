@@ -1,12 +1,23 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\Manager;
 
-use SocialDataBundle\Connector\ConnectorDefinitionInterface;
-use SocialDataBundle\Registry\ConnectorDefinitionRegistryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use SocialDataBundle\Connector\ConnectorDefinitionInterface;
 use SocialDataBundle\Model\ConnectorEngine;
 use SocialDataBundle\Model\ConnectorEngineInterface;
+use SocialDataBundle\Registry\ConnectorDefinitionRegistryInterface;
 use SocialDataBundle\Repository\ConnectorEngineRepositoryInterface;
 
 class ConnectorManager implements ConnectorManagerInterface
@@ -25,7 +36,8 @@ class ConnectorManager implements ConnectorManagerInterface
             $this->getAllConnectorDefinitions(true),
             static function (ConnectorDefinitionInterface $connectorDefinition) {
                 return $connectorDefinition->engineIsLoaded() && $connectorDefinition->isConnected();
-            });
+            }
+        );
     }
 
     public function getAllConnectorDefinitions(bool $loadEngine = false): array
@@ -34,7 +46,6 @@ class ConnectorManager implements ConnectorManagerInterface
         $allConnectorDefinitions = $this->connectorDefinitionRegistry->getAll();
 
         foreach ($allConnectorDefinitions as $connectorDefinitionName => $connectorDefinition) {
-
             if (!in_array($connectorDefinitionName, $this->availableConnectors, true)) {
                 continue;
             }

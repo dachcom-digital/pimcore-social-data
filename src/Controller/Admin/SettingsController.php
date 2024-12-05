@@ -1,18 +1,29 @@
 <?php
 
+/*
+ * This source file is available under two different licenses:
+ *   - GNU General Public License version 3 (GPLv3)
+ *   - DACHCOM Commercial License (DCL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @copyright  Copyright (c) DACHCOM.DIGITAL AG (https://www.dachcom-digital.com)
+ * @license    GPLv3 and DCL
+ */
+
 namespace SocialDataBundle\Controller\Admin;
 
+use Pimcore\Bundle\AdminBundle\Controller\AdminAbstractController;
 use SocialDataBundle\Builder\ExtJsDataBuilder;
 use SocialDataBundle\Connector\ConnectorEngineConfigurationInterface;
-use SocialDataBundle\Service\ConnectorServiceInterface;
-use SocialDataBundle\Service\EnvironmentServiceInterface;
 use SocialDataBundle\Manager\ConnectorManagerInterface;
 use SocialDataBundle\Model\SocialPostInterface;
 use SocialDataBundle\Registry\ConnectorDefinitionRegistryInterface;
+use SocialDataBundle\Service\ConnectorServiceInterface;
+use SocialDataBundle\Service\EnvironmentServiceInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Pimcore\Bundle\AdminBundle\Controller\AdminAbstractController;
 
 class SettingsController extends AdminAbstractController
 {
@@ -177,8 +188,10 @@ class SettingsController extends AdminAbstractController
         if (!$form->isValid()) {
             return $this->adminJson([
                 'success' => false,
-                'message' => sprintf('Error while processing backend configuration for %s":<br>%s',
-                    $connectorName, join('<br>', $this->extJsDataBuilder->generateFormErrorList($form))
+                'message' => sprintf(
+                    'Error while processing backend configuration for %s":<br>%s',
+                    $connectorName,
+                    join('<br>', $this->extJsDataBuilder->generateFormErrorList($form))
                 )
             ]);
         }
